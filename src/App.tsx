@@ -1,0 +1,786 @@
+import { useEffect, useState } from 'react';
+import { BrandLogo } from './components/BrandLogo';
+import { WhatsAppAction } from './components/WhatsAppAction';
+import { CONTENT, type Lang, type PackWeight } from './data/content';
+import { buildWhatsAppUrl } from './utils/whatsapp';
+
+export function App() {
+  const [lang, setLang] = useState<Lang>('es');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedGoalId, setSelectedGoalId] = useState<'focus' | 'energy' | 'ritual'>('focus');
+  const [packWeight, setPackWeight] = useState<PackWeight>('250g');
+  const [openSpecId, setOpenSpecId] = useState<string | null>('inca');
+
+  const t = CONTENT[lang];
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  const activeGoal =
+    t.calibrator.goals.find((g) => g.id === selectedGoalId) ?? t.calibrator.goals[0];
+
+  const generalWhatsAppMsg =
+    lang === 'es'
+      ? 'Hola ORO PÚRPURA, quiero información para hacer un pedido con envío gratis en Ecuador. Mi ciudad es: '
+      : 'Hi ORO PÚRPURA, I would like information to place an order with free shipping in Ecuador. My city is: ';
+
+  return (
+    <div id="top">
+      {/* SECTION 0: Batch Drop Ticker */}
+      <div className="batch-ticker" role="region" aria-label="Batch Status">
+        <div className="batch-ticker-inner">
+          <span className="ticker-stream">{t.ticker.text}</span>
+          <span className="ticker-stock">
+            <span className="ticker-pulse" aria-hidden="true" />
+            <span>{t.ticker.availabilityLabel}</span>
+            <strong>{t.ticker.availabilityValue}</strong>
+          </span>
+        </div>
+      </div>
+
+      {/* SECTION 0B: Sticky Header */}
+      <header className="site-header">
+        <div className="container header-inner">
+          <BrandLogo showParentLink parentPrefix={t.common.parentPrefix} />
+
+          <nav className="header-nav" aria-label="Primary">
+            <a href="#why">{t.nav.why}</a>
+            <a href="#calibrator">{t.nav.calibrator}</a>
+            <a href="#shop">{t.nav.shop}</a>
+            <a href="#science">{t.nav.science}</a>
+            <a href="#origin">{t.nav.origin}</a>
+            <a href="#b2b">{t.nav.b2b}</a>
+          </nav>
+
+          <div className="header-controls">
+            <div className="lang-switch" role="group" aria-label="Language">
+              <button
+                type="button"
+                className={`lang-btn ${lang === 'es' ? 'active' : ''}`}
+                onClick={() => setLang('es')}
+              >
+                ES
+              </button>
+              <button
+                type="button"
+                className={`lang-btn ${lang === 'en' ? 'active' : ''}`}
+                onClick={() => setLang('en')}
+              >
+                EN
+              </button>
+            </div>
+
+            <a
+              href={buildWhatsAppUrl(generalWhatsAppMsg)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="header-wa-cta"
+            >
+              {t.nav.cta}
+            </a>
+
+            <button
+              type="button"
+              className="mobile-menu-btn"
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              aria-expanded={mobileMenuOpen}
+              aria-label="Toggle Menu"
+            >
+              {mobileMenuOpen ? '✕' : 'MENU'}
+            </button>
+          </div>
+        </div>
+
+        {mobileMenuOpen && (
+          <div className="mobile-drawer">
+            <a href="#why" onClick={() => setMobileMenuOpen(false)}>
+              {t.nav.why}
+            </a>
+            <a href="#calibrator" onClick={() => setMobileMenuOpen(false)}>
+              {t.nav.calibrator}
+            </a>
+            <a href="#shop" onClick={() => setMobileMenuOpen(false)}>
+              {t.nav.shop}
+            </a>
+            <a href="#science" onClick={() => setMobileMenuOpen(false)}>
+              {t.nav.science}
+            </a>
+            <a href="#origin" onClick={() => setMobileMenuOpen(false)}>
+              {t.nav.origin}
+            </a>
+            <a href="#b2b" onClick={() => setMobileMenuOpen(false)}>
+              {t.nav.b2b}
+            </a>
+            <div style={{ paddingTop: '10px' }}>
+              <WhatsAppAction
+                label={t.nav.cta}
+                message={generalWhatsAppMsg}
+                copyLabel={t.common.copyText}
+                copiedLabel={t.common.copied}
+                fullWidth
+              />
+            </div>
+          </div>
+        )}
+      </header>
+
+      <main>
+        {/* SECTION 1: Hero */}
+        <section className="hero-section">
+          <div className="container hero-grid">
+            <div>
+              <p className="eyebrow">{t.hero.eyebrow}</p>
+              <h1>{t.hero.h1}</h1>
+              <p className="hero-subtitle">{t.hero.subtitle}</p>
+
+              <div className="hero-cta-row">
+                <a href="#shop" className="btn btn-primary">
+                  {t.hero.ctaPrimary}
+                </a>
+                <a href="#calibrator" className="btn btn-secondary">
+                  {t.hero.ctaSecondary}
+                </a>
+              </div>
+
+              <div className="telemetry-grid">
+                {t.hero.telemetry.map((item) => (
+                  <div className="telemetry-cell" key={item.value}>
+                    <div className="telemetry-value">{item.value}</div>
+                    <div className="telemetry-label">{item.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="hero-diptych">
+              <figure className="lab-frame" style={{ margin: 0 }}>
+                <div className="lab-frame-header">
+                  <span>{t.hero.diptychLeftTag}</span>
+                  <span>FMAD // 18 µm</span>
+                </div>
+                <img
+                  src="/images/glassy-fracture.jpg"
+                  alt={t.hero.diptychLeftCaption}
+                  className="lab-frame-img"
+                />
+                <figcaption className="lab-frame-caption">{t.hero.diptychLeftCaption}</figcaption>
+              </figure>
+
+              <figure className="lab-frame" style={{ margin: 0 }}>
+                <div className="lab-frame-header">
+                  <span>{t.hero.diptychRightTag}</span>
+                  <span>NO OIL FILM</span>
+                </div>
+                <img
+                  src="/images/ruby-lavender-elixir.jpg"
+                  alt={t.hero.diptychRightCaption}
+                  className="lab-frame-img"
+                />
+                <figcaption className="lab-frame-caption">{t.hero.diptychRightCaption}</figcaption>
+              </figure>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 2: Category Conflict */}
+        <section id="why" className="section">
+          <div className="container">
+            <div className="section-header">
+              <p className="eyebrow">{t.conflict.eyebrow}</p>
+              <h2>{t.conflict.title}</h2>
+            </div>
+
+            <div className="conflict-thesis">{t.conflict.thesis}</div>
+
+            <div className="comparison-table-wrap">
+              <table className="comparison-table">
+                <thead>
+                  <tr>
+                    <th>{t.conflict.colParam}</th>
+                    <th>{t.conflict.colConventional}</th>
+                    <th className="col-oro">{t.conflict.colOro}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {t.conflict.rows.map((row) => (
+                    <tr key={row.param}>
+                      <td className="col-param">{row.param}</td>
+                      <td className="col-conv">{row.conventional}</td>
+                      <td className="col-oro">
+                        <div>{row.oro}</div>
+                        <span className="delta-tag">{row.deltaTag}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 3: Interactive State & Dose Calibrator */}
+        <section id="calibrator" className="section">
+          <div className="container">
+            <div className="section-header">
+              <p className="eyebrow">{t.calibrator.eyebrow}</p>
+              <h2>{t.calibrator.title}</h2>
+              <p className="section-subtitle">{t.calibrator.subtitle}</p>
+            </div>
+
+            <div className="calibrator-layout">
+              <div>
+                <div className="calibrator-steps-label">{t.calibrator.step1Label}</div>
+                <div className="goal-cards" role="radiogroup" aria-label={t.calibrator.step1Label}>
+                  {t.calibrator.goals.map((goal) => {
+                    const isActive = goal.id === activeGoal.id;
+                    return (
+                      <button
+                        key={goal.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={isActive}
+                        className={`goal-card ${isActive ? 'active' : ''}`}
+                        style={isActive ? { borderLeftColor: goal.accentColor } : undefined}
+                        onClick={() => setSelectedGoalId(goal.id)}
+                      >
+                        <span className="goal-tag">{goal.tag}</span>
+                        <div className="goal-title">{goal.title}</div>
+                        <div className="goal-sub">{goal.subtitle}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <div className="calibrator-steps-label">{t.calibrator.step2Label}</div>
+                <div className="calibrator-output">
+                  <div className="calibrator-output-head">
+                    <h3>{activeGoal.formulaName}</h3>
+                    <span
+                      className="sku-pill"
+                      style={{ backgroundColor: activeGoal.accentColor }}
+                    >
+                      {activeGoal.skuBadge}
+                    </span>
+                  </div>
+
+                  <div className="protocol-grid">
+                    <div className="protocol-box">
+                      <div className="protocol-box-label">{activeGoal.protocolPrimaryLabel}</div>
+                      <div>{activeGoal.protocolPrimary}</div>
+                    </div>
+                    <div className="protocol-box">
+                      <div className="protocol-box-label">{activeGoal.protocolSecondaryLabel}</div>
+                      <div>{activeGoal.protocolSecondary}</div>
+                    </div>
+                  </div>
+
+                  <ul className="biochem-list">
+                    {activeGoal.biochemistry.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+
+                  <div className="calibrator-economics">
+                    <div>
+                      <div className="econ-note">{t.calibrator.costLabel}</div>
+                      <div className="econ-value">{activeGoal.cupCost}</div>
+                      <div className="econ-note">{activeGoal.cafeComparison}</div>
+                    </div>
+                    <div>
+                      <div className="econ-note">{t.calibrator.recommendedLabel}</div>
+                      <div className="econ-value">
+                        {activeGoal.recommendedSet} ({activeGoal.recommendedPrice})
+                      </div>
+                      <div className="econ-note">{t.calibrator.vsCafeLabel}</div>
+                    </div>
+                  </div>
+
+                  <WhatsAppAction
+                    label={t.calibrator.ctaLabel}
+                    message={activeGoal.whatsappMessage}
+                    copyLabel={t.common.copyText}
+                    copiedLabel={t.common.copied}
+                    fullWidth
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 4: D2C Sets & Individual Blocks */}
+        <section id="shop" className="section">
+          <div className="container">
+            <div className="section-header">
+              <p className="eyebrow">{t.shop.eyebrow}</p>
+              <h2>{t.shop.title}</h2>
+              <p className="section-subtitle">{t.shop.subtitle}</p>
+            </div>
+
+            <div className="subsection-bar">
+              <h3 className="mono">{t.shop.setsTabTitle}</h3>
+              <span className="delta-tag">{t.common.freeShippingBadge}</span>
+            </div>
+
+            <div className="sets-grid">
+              {t.shop.sets.map((bundle) => (
+                <article
+                  key={bundle.id}
+                  className={`set-card ${bundle.featured ? 'featured' : ''}`}
+                >
+                  <div>
+                    <span className="set-badge">{bundle.badge}</span>
+                    <div className="set-header-row">
+                      <div>
+                        <div className="mono" style={{ fontSize: '0.78rem', color: 'var(--ink-muted)' }}>
+                          {bundle.code}
+                        </div>
+                        <h3>{bundle.name}</h3>
+                      </div>
+                      <div className="set-price">{bundle.price}</div>
+                    </div>
+                    <div className="set-savings">{bundle.savings}</div>
+
+                    <ul className="set-items" style={{ marginTop: '14px' }}>
+                      {bundle.items.map((item) => (
+                        <li key={item}>• {item}</li>
+                      ))}
+                    </ul>
+
+                    <div className="set-gift" style={{ marginTop: '12px' }}>
+                      {bundle.gift}
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gap: '12px' }}>
+                    <div className="set-meta-row">
+                      <span>{bundle.netWeight}</span>
+                      <span>{bundle.yieldSummary}</span>
+                    </div>
+                    <WhatsAppAction
+                      label={bundle.ctaLabel}
+                      message={bundle.whatsappMessage}
+                      copyLabel={t.common.copyText}
+                      copiedLabel={t.common.copied}
+                      fullWidth
+                    />
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            {/* 4.2 Individual Blocks Configurator */}
+            <div className="subsection-bar">
+              <div>
+                <h3>{t.shop.blocksTitle}</h3>
+                <p className="section-subtitle" style={{ marginTop: '6px', fontSize: '0.95rem' }}>
+                  {t.shop.blocksSubtitle}
+                </p>
+              </div>
+
+              <div className="weight-switcher" role="group" aria-label="Weight Selector">
+                {(['250g', '500g', '1000g'] as PackWeight[]).map((weight) => (
+                  <button
+                    key={weight}
+                    type="button"
+                    className={`weight-btn ${packWeight === weight ? 'active' : ''}`}
+                    onClick={() => setPackWeight(weight)}
+                  >
+                    {weight === '1000g' ? '1000 g (1 kg)' : weight.replace('g', ' g')}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="weight-geometry-bar">
+              <span>{t.shop.weightLabels[packWeight].cells}</span>
+              <span>{t.shop.weightLabels[packWeight].weightNote}</span>
+            </div>
+
+            <div className="sku-list">
+              {t.shop.skus.map((sku) => {
+                const isOpen = openSpecId === sku.id;
+                const currentPrice = sku.prices[packWeight];
+                const blockMessage =
+                  lang === 'es'
+                    ? `Hola ORO PÚRPURA, quiero pedir ${sku.name} en formato ${packWeight} (${currentPrice} USD). Mi ciudad es: `
+                    : `Hi ORO PÚRPURA, I want to order ${sku.name} in ${packWeight} format (${currentPrice} USD). My city is: `;
+
+                return (
+                  <article key={sku.id} className={`sku-card accent-${sku.accentToken}`}>
+                    <div className="sku-main">
+                      <div className="sku-top">
+                        <div>
+                          <div className="mono" style={{ fontSize: '0.75rem', color: 'var(--ink-muted)' }}>
+                            {sku.code} • {sku.cacaoPercent}
+                          </div>
+                          <h3 style={{ marginTop: '4px' }}>{sku.name}</h3>
+                          <p style={{ margin: '6px 0 0', color: 'var(--ink-muted)', fontSize: '0.94rem' }}>
+                            {sku.tagline}
+                          </p>
+                        </div>
+
+                        <div className="sku-price-block">
+                          <div className="sku-price">{currentPrice}</div>
+                          <div className="sku-unit">{sku.unitCost[packWeight]}</div>
+                        </div>
+                      </div>
+
+                      <div className="sku-actions-row">
+                        <button
+                          type="button"
+                          className="btn-spec-toggle"
+                          aria-expanded={isOpen}
+                          onClick={() => setOpenSpecId(isOpen ? null : sku.id)}
+                        >
+                          {isOpen ? t.shop.closeSpecLabel : t.shop.openSpecLabel}
+                        </button>
+
+                        <WhatsAppAction
+                          label={`${t.shop.orderBlockCta} (${packWeight})`}
+                          message={blockMessage}
+                          copyLabel={t.common.copyText}
+                          copiedLabel={t.common.copied}
+                          variant="compact"
+                        />
+                      </div>
+                    </div>
+
+                    {isOpen && (
+                      <div className="sku-drawer">
+                        <div>
+                          <h4 className="mono" style={{ margin: '0 0 12px', fontSize: '0.82rem' }}>
+                            {t.shop.ingredientsTitle}
+                          </h4>
+                          <table className="spec-table">
+                            <tbody>
+                              {sku.ingredients.map((ing) => (
+                                <tr key={ing.name}>
+                                  <td style={{ fontWeight: 600, width: '38%' }}>{ing.name}</td>
+                                  <td className="mono" style={{ width: '16%', color: 'var(--purple-raw)' }}>
+                                    {ing.share}
+                                  </td>
+                                  <td style={{ color: 'var(--ink-muted)' }}>{ing.functionDesc}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div>
+                          <h4 className="mono" style={{ margin: '0 0 12px', fontSize: '0.82rem' }}>
+                            {t.shop.nutritionTitle} ({sku.servingLabel})
+                          </h4>
+                          <table className="spec-table">
+                            <thead>
+                              <tr>
+                                <th>Nutrient</th>
+                                <th>{t.shop.col100g}</th>
+                                <th>{t.shop.colServing}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {sku.nutrition.map((row) => (
+                                <tr key={row.label}>
+                                  <td>{row.label}</td>
+                                  <td className="mono">{row.per100g}</td>
+                                  <td className="mono" style={{ color: 'var(--purple-raw)' }}>
+                                    {row.perServing}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 5: Science & Synergy */}
+        <section id="science" className="section">
+          <div className="container">
+            <div className="section-header">
+              <p className="eyebrow">{t.science.eyebrow}</p>
+              <h2>{t.science.title}</h2>
+              <p className="section-subtitle">{t.science.subtitle}</p>
+            </div>
+
+            <h3 className="mono" style={{ marginBottom: '16px', fontSize: '0.88rem' }}>
+              {t.science.cascadeTitle}
+            </h3>
+            <div className="cascade-grid">
+              {t.science.cascadeCards.map((card) => (
+                <div key={card.dp} className="cascade-card">
+                  <div className="cascade-dp">{card.dp}</div>
+                  <h3>{card.name}</h3>
+                  <div className="cascade-window">{card.window}</div>
+                  <p style={{ margin: 0, fontSize: '0.92rem', color: 'var(--ink-muted)' }}>
+                    {card.mechanism}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <h3 className="mono" style={{ marginBottom: '6px', fontSize: '0.88rem' }}>
+              {t.science.synergyTitle}
+            </h3>
+            <p style={{ margin: '0 0 18px', color: 'var(--ink-muted)' }}>{t.science.synergySubtitle}</p>
+
+            <div className="contours-grid">
+              {t.science.contours.map((contour) => (
+                <div key={contour.code} className="contour-card">
+                  <div className="mono" style={{ fontSize: '0.75rem', color: 'var(--ink-muted)' }}>
+                    {contour.code}
+                  </div>
+                  <h3 style={{ marginTop: '4px' }}>{contour.title}</h3>
+                  <div className="contour-actives">{contour.actives}</div>
+                  <p style={{ margin: 0, fontSize: '0.92rem' }}>{contour.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 6: Origin, Proyecto TZNK & Founder */}
+        <section id="origin" className="section">
+          <div className="container">
+            <div className="section-header">
+              <p className="eyebrow">{t.origin.eyebrow}</p>
+              <h2>{t.origin.title}</h2>
+            </div>
+
+            <div className="origin-grid">
+              <div>
+                <div className="origin-card">
+                  <h3>{t.origin.terroirTitle}</h3>
+                  <div className="terroir-list">
+                    {t.origin.terroirPoints.map((pt) => (
+                      <div key={pt.label} className="terroir-item">
+                        <div className="terroir-label">{pt.label}</div>
+                        <div style={{ marginTop: '4px' }}>{pt.value}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="tznk-box">
+                    <div className="mono" style={{ fontSize: '0.76rem', color: 'var(--guayusa-emerald)' }}>
+                      {t.origin.tznkBadge}
+                    </div>
+                    <p style={{ margin: '8px 0 0', fontSize: '0.92rem' }}>{t.origin.tznkDesc}</p>
+                    <a
+                      href="https://tzunki.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="tznk-link"
+                    >
+                      {t.origin.tznkLinkLabel}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="founder-card">
+                  <div className="mono" style={{ fontSize: '0.74rem', color: 'var(--purple-raw)' }}>
+                    {t.origin.founderRole}
+                  </div>
+                  <h3 style={{ marginTop: '4px' }}>{t.origin.founderName}</h3>
+                  <p style={{ margin: '10px 0 14px', fontSize: '0.94rem', color: 'var(--ink-muted)' }}>
+                    {t.origin.founderBio}
+                  </p>
+                  <div style={{ fontSize: '0.84rem', fontWeight: 600 }}>{t.origin.verifiedLabel}</div>
+                  <div className="founder-links">
+                    <a
+                      href="https://facebook.com/eugenio.ec"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-chip"
+                    >
+                      Facebook Verified ↗
+                    </a>
+                    <a
+                      href="https://tiktok.com/@ayachui.ec"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-chip"
+                    >
+                      TikTok @ayachui.ec ↗
+                    </a>
+                    <a
+                      href="https://incatrailfoods.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-chip"
+                    >
+                      incatrailfoods.com ↗
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="origin-media-stack">
+                <figure className="lab-frame" style={{ margin: 0 }}>
+                  <div className="lab-frame-header">
+                    <span>{t.origin.packagingTag}</span>
+                    <span>EPSON C6500</span>
+                  </div>
+                  <img
+                    src="/images/apothecary-packaging.jpg"
+                    alt={t.origin.packagingTag}
+                    className="lab-frame-img"
+                  />
+                </figure>
+
+                <figure className="lab-frame" style={{ margin: 0 }}>
+                  <div className="lab-frame-header">
+                    <span>{t.origin.terroirTag}</span>
+                    <span>900–1,362 m</span>
+                  </div>
+                  <img
+                    src="/images/zamora-origin.jpg"
+                    alt={t.origin.terroirTag}
+                    className="lab-frame-img"
+                    style={{ aspectRatio: '16 / 9' }}
+                  />
+                </figure>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 7: B2B / HoReCa / 5–7 Bean Challenge */}
+        <section id="b2b" className="section section-dark">
+          <div className="container">
+            <div className="section-header">
+              <p className="eyebrow eyebrow-light">{t.b2b.eyebrow}</p>
+              <h2>{t.b2b.title}</h2>
+              <p className="section-subtitle">{t.b2b.subtitle}</p>
+            </div>
+
+            <div className="b2b-grid">
+              <div className="b2b-panel">
+                <h3 className="mono" style={{ fontSize: '0.9rem', color: 'var(--chrome-silver)' }}>
+                  {t.b2b.wholesaleTitle}
+                </h3>
+                <ul className="b2b-list">
+                  {t.b2b.wholesalePoints.map((pt) => (
+                    <li key={pt}>{pt}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="b2b-panel">
+                <h3 className="mono" style={{ fontSize: '0.9rem', color: 'var(--chrome-silver)' }}>
+                  {t.b2b.challengeTitle}
+                </h3>
+                <p style={{ margin: '12px 0 0', color: 'var(--chrome-silver)', fontSize: '0.94rem' }}>
+                  {t.b2b.challengeDesc}
+                </p>
+
+                <div className="phases-grid">
+                  {t.b2b.phases.map((ph) => (
+                    <div key={ph.step} className="phase-box">
+                      <div className="phase-step">{ph.step}</div>
+                      <div style={{ fontWeight: 600, marginBottom: '4px' }}>{ph.title}</div>
+                      <div style={{ fontSize: '0.84rem', color: 'var(--chrome-silver)' }}>{ph.detail}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <WhatsAppAction
+                  label={t.b2b.ctaLabel}
+                  message={t.b2b.whatsappMessage}
+                  copyLabel={t.common.copyText}
+                  copiedLabel={t.common.copied}
+                  variant="dark"
+                  fullWidth
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 8: Trust & Local Ecuador Payments */}
+        <section className="section">
+          <div className="container">
+            <div className="section-header">
+              <p className="eyebrow">{t.trust.eyebrow}</p>
+              <h2>{t.trust.title}</h2>
+            </div>
+
+            <div className="trust-grid">
+              <div className="trust-card">
+                <h3>{t.trust.shippingTitle}</h3>
+                <p style={{ margin: '10px 0 0', color: 'var(--ink-muted)' }}>
+                  {t.trust.shippingDesc}
+                </p>
+              </div>
+
+              <div className="trust-card">
+                <h3>{t.trust.paymentsTitle}</h3>
+                <div className="payment-rows">
+                  {t.trust.paymentsList.map((p) => (
+                    <div key={p.method} className="payment-row">
+                      <div className="mono" style={{ fontSize: '0.88rem', color: 'var(--purple-raw)' }}>
+                        {p.method}
+                      </div>
+                      <div style={{ fontSize: '0.9rem', color: 'var(--ink-muted)' }}>{p.detail}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="site-footer">
+        <div className="container footer-inner">
+          <div>
+            <BrandLogo inverted />
+            <p style={{ margin: '14px 0 0', fontSize: '0.88rem', color: 'var(--chrome-silver)' }}>
+              {t.footer.address}
+            </p>
+          </div>
+
+          <div className="footer-meta">
+            <div>{t.footer.ecosystem}</div>
+            <div className="footer-links">
+              <a
+                href={buildWhatsAppUrl(generalWhatsAppMsg)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                WhatsApp Business
+              </a>
+              <a href="https://facebook.com/eugenio.ec" target="_blank" rel="noopener noreferrer">
+                Facebook
+              </a>
+              <a href="https://tiktok.com/@ayachui.ec" target="_blank" rel="noopener noreferrer">
+                TikTok
+              </a>
+              <a href="https://incatrailfoods.com" target="_blank" rel="noopener noreferrer">
+                The Inca Trail Foods
+              </a>
+              <a href="https://tzunki.com" target="_blank" rel="noopener noreferrer">
+                Proyecto TZNK
+              </a>
+            </div>
+            <div className="mono" style={{ fontSize: '0.75rem', marginTop: '6px' }}>
+              {t.footer.rights}
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default App;
