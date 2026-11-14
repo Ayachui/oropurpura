@@ -87,7 +87,11 @@ export interface LocaleContent {
   };
   hero: {
     eyebrow: string;
-    h1: string;
+    h1Prefix: string;
+    h1Number: string;
+    h1Rest: string;
+    hookLead: string;
+    hookPillars: Array<{ code: string; text: string }>;
     subtitle: string;
     ctaPrimary: string;
     ctaSecondary: string;
@@ -229,9 +233,17 @@ export const CONTENT: Record<Lang, LocaleContent> = {
     },
     hero: {
       eyebrow: 'ZAMORA-CHINCHIPE, ECUADOR • CUNA MUNDIAL DEL CACAO (5,300 AÑOS)',
-      h1: 'ORIGEN 5300: NO ES CHOCOLATE. ES CACAO VIVO.',
+      h1Prefix: 'ORIGEN ',
+      h1Number: '5300',
+      h1Rest: ': NO ES CHOCOLATE. ES CACAO VIVO.',
+      hookLead: 'Energía neuronal y vascular directa desde Zamora a tu puerta en 24–48 h:',
+      hookPillars: [
+        { code: '01', text: 'Bloques modulares de pasta viva (250 g–1 kg) para comer o batir en agua' },
+        { code: '02', text: 'Hasta 10× más (-)-epicatequina que el chocolate tostado' },
+        { code: '03', text: 'Sets desde $45 con envío gratis Servientrega y pago en WhatsApp' },
+      ],
       subtitle:
-        'Pastas funcionales sinérgicas (250 g – 1 kg) y Elixir de Guayusa elaborados con cacao púrpura ancestral sin fermentar ni tostar. Celdas modulares listas para comer directamente o batir en agua caliente.',
+        'Pastas funcionales sinérgicas y Elixir de Guayusa elaborados con cacao púrpura ancestral sin fermentar ni tostar. Sin azúcar refinada ni aditivos.',
       ctaPrimary: 'Explorar Sets con Envío Gratis',
       ctaSecondary: 'Calibrar mi dosis (30 seg)',
       telemetry: [
@@ -708,9 +720,17 @@ export const CONTENT: Record<Lang, LocaleContent> = {
     },
     hero: {
       eyebrow: 'ZAMORA-CHINCHIPE, ECUADOR • WORLD CRADLE OF CACAO (5,300 YEARS)',
-      h1: "ORIGIN 5300: IT'S NOT CHOCOLATE. IT'S LIVING CACAO.",
+      h1Prefix: 'ORIGIN ',
+      h1Number: '5300',
+      h1Rest: ": IT'S NOT CHOCOLATE. IT'S LIVING CACAO.",
+      hookLead: 'Direct neuro & vascular fuel from Zamora to your door in 24–48 h:',
+      hookPillars: [
+        { code: '01', text: 'Modular living cacao blocks (250 g–1 kg) to eat or whisk in hot water' },
+        { code: '02', text: 'Up to 10× more (-)-epicatechin than roasted craft chocolate' },
+        { code: '03', text: 'Curated Sets from $45 with free Ecuador shipping via WhatsApp' },
+      ],
       subtitle:
-        'Synergistic functional pastes (250 g – 1 kg) and Guayusa Elixir crafted from unfermented, unroasted ancestral purple cacao. Modular cells calibrated to eat directly or whisk into hot water.',
+        'Synergistic functional pastes and Guayusa Elixir crafted from unfermented, unroasted ancestral purple cacao. Zero refined sugar or fillers.',
       ctaPrimary: 'Explore Sets with Free Shipping',
       ctaSecondary: 'Calibrate my dose (30 sec)',
       telemetry: [

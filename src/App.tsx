@@ -131,8 +131,24 @@ export function App() {
           <div className="container hero-grid">
             <div>
               <p className="eyebrow">{t.hero.eyebrow}</p>
-              <h1>{t.hero.h1}</h1>
+              <h1>
+                {t.hero.h1Prefix}
+                <span className="h1-num">{t.hero.h1Number}</span>
+                {t.hero.h1Rest}
+              </h1>
               <p className="hero-subtitle">{t.hero.subtitle}</p>
+
+              <div className="hero-hook-box">
+                <div className="hero-hook-lead">{t.hero.hookLead}</div>
+                <div className="hero-hook-list">
+                  {t.hero.hookPillars.map((pillar) => (
+                    <div className="hero-hook-item" key={pillar.code}>
+                      <span className="hero-hook-code">{pillar.code}</span>
+                      <span>{pillar.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               <div className="hero-cta-row">
                 <a href="#shop" className="btn btn-primary">

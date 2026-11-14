@@ -16,29 +16,35 @@ export function BrandLogo({
     <div className="brand-lockup">
       <a href="#top" className="brand-main" aria-label="ORO PÚRPURA — Origen 5300">
         <svg
-          width="40"
-          height="40"
+          width="44"
+          height="44"
           viewBox="0 0 100 100"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
           className="brand-monolith"
+          shapeRendering="geometricPrecision"
         >
+          {/* Outer Monolith with 45° Glassy Crunch chamfer at top-right */}
           <path
-            d="M5 5 H75 L95 25 V95 H5 V5 Z"
-            stroke={strokeColor}
-            strokeWidth="6"
-            strokeLinejoin="miter"
-          />
-          <path
-            d="M21 21 H68 L79 32 V79 H21 V37 H63 V63 H37"
+            d="M8 8 H72 L92 28 V92 H8 V8 Z"
             stroke={strokeColor}
             strokeWidth="5"
             strokeLinejoin="miter"
+            strokeLinecap="square"
           />
-          <rect x="42" y="42" width="4" height="16" fill={coreColor} />
-          <rect x="49" y="39" width="4" height="19" fill={coreColor} />
-          <rect x="56" y="43" width="4" height="15" fill={coreColor} />
+          {/* Palanda 2-turn orthogonal spiral */}
+          <path
+            d="M22 22 H67 L78 33 V78 H22 V36 H64 V64 H36"
+            stroke={strokeColor}
+            strokeWidth="4.2"
+            strokeLinejoin="miter"
+            strokeLinecap="square"
+          />
+          {/* Las 3 Lajas (Central Mayo-Chinchipe stelae) */}
+          <rect x="40" y="42" width="5" height="16" fill={coreColor} />
+          <rect x="48" y="38" width="5" height="20" fill={coreColor} />
+          <rect x="56" y="44" width="5" height="14" fill={coreColor} />
         </svg>
         <div className="brand-text">
           <span className="brand-wordmark">ORO PÚRPURA</span>
