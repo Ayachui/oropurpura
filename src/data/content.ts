@@ -402,7 +402,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       setsTabTitle: '3 SETS RITUALES (ENVÍO GRATIS SERVIENTREGA)',
       blocksTitle: 'BLOQUES INDIVIDUALES & CONFIGURADOR POR PESO',
       blocksSubtitle:
-        'Moldes profesionales de policarbonato calibrados para dosificar sin báscula. Selecciona el gramaje para ver precio y ficha técnica.',
+        'Bloques modulares calibrados para dosificar sin báscula. Selecciona el gramaje para ver precio y ficha técnica.',
       weightLabels: {
         '250g': { cells: '12 CELDAS × 20.8 g', weightNote: 'Starter / Daily' },
         '500g': { cells: '12 CELDAS × 41.7 g', weightNote: 'Course / Ceremonial' },
@@ -481,7 +481,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           name: 'INCA Ancestral Silk',
           tagline: 'Neuro-activador de 4 circuitos con reología aterciopelada Form V.',
           accentToken: 'purple',
-          cacaoPercent: '68.50% Cacao Vivo (63% pasta 18 µm + 5.5% manteca VMC)',
+          cacaoPercent: '68.50% Cacao Vivo (63% pasta 18 µm + 5.5% manteca prensada en frío)',
           prices: { '250g': '$24.50', '500g': '$44.50', '1000g': '$80.00' },
           unitCost: {
             '250g': '$2.04 / taza (20.8 g)',
@@ -491,7 +491,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           servingLabel: '1 celda (20.8 g)',
           ingredients: [
             { name: 'Pasta viva púrpura Cacao Zamora (18 µm con vella)', share: '63.00%', functionDesc: 'Flavanoles DP1–DP7, teobromina 2.4%, fibra prebiótica.' },
-            { name: 'Manteca dorada nativa VMC prensada en frío', share: '5.50%', functionDesc: 'Extracción lipofílica (60 °C Spice Blooming) sin disparo excesivo de CCK.' },
+            { name: 'Manteca dorada nativa prensada en frío', share: '5.50%', functionDesc: 'Extracción lipofílica suave para máxima absorción y textura seda.' },
             { name: 'Micropulverizado de panela orgánica', share: '27.00%', functionDesc: 'D-glucosa para activar transporte intestinal SGLT1.' },
             { name: 'Maca gelatinizada + Hibisco + Guayusa + Vainilla', share: '3.13%', functionDesc: 'Inhibición FAAH (macamidas), quelación de fitatos y L-teanina.' },
             { name: 'Sal marina + Ishpingo + Pimienta negra + Moringa + Copaiba', share: '1.37%', functionDesc: 'Bloqueo UGT1A9/COMT, supresión TAS2R y agonismo CB2.' },
@@ -512,7 +512,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           name: 'Andean Gold Craft (Salted & Vanilla)',
           tagline: 'Estándar puro del terroir de Zamora con notas de cereza silvestre y melaza.',
           accentToken: 'ochre',
-          cacaoPercent: '70.00% Cacao Vivo (65% pasta 18 µm + 5.0% manteca VMC)',
+          cacaoPercent: '70.00% Cacao Vivo (65% pasta 18 µm + 5.0% manteca prensada en frío)',
           prices: { '250g': '$22.00', '500g': '$39.00', '1000g': '$72.00' },
           unitCost: {
             '250g': '$1.83 / taza (20.8 g)',
@@ -522,7 +522,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           servingLabel: '1 celda (20.8 g)',
           ingredients: [
             { name: 'Pasta viva púrpura Cacao Zamora (18 µm con vella)', share: '65.00%', functionDesc: 'Matriz intacta de polifenoles DP1–DP7 y teobromina.' },
-            { name: 'Manteca dorada nativa VMC prensada en frío', share: '5.00%', functionDesc: 'Brillo especular y chasquido vítreo (Silk Forma V).' },
+            { name: 'Manteca dorada nativa prensada en frío', share: '5.00%', functionDesc: 'Brillo especular y chasquido vítreo (Silk Forma V).' },
             { name: 'Micropulverizado de panela orgánica', share: '29.00%', functionDesc: 'Equilibrio mineral y co-transporte de glucosa SGLT1.' },
             { name: 'Vaina de vainilla natural en polvo', share: '0.55%', functionDesc: 'Redondeo aromático floral sin esencias sintéticas.' },
             { name: 'Sal marina cristalina', share: '0.45%', functionDesc: 'Iones Na+ para SGLT1 y bloqueo de amargor TAS2R14/39.' },
@@ -643,7 +643,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       ],
       tznkBadge: 'PASAPORTE DIGITAL DE LOTE • PROYECTO TZNK / EAS',
       tznkDesc:
-        'Cada etiqueta impresa en nuestra unidad Epson C6500 (10×10 cm) lleva un QR dinámico vinculado al protocolo de atestación TZNK con coordenadas, altitud y hora exacta de estabilización.',
+        'Cada etiqueta (10×10 cm) lleva un código QR dinámico vinculado al protocolo de atestación TZNK con coordenadas, altitud y hora exacta de estabilización.',
       tznkLinkLabel: 'Verificar protocolo en tzunki.com ↗',
       packagingTag: 'SISTEMA APOTHECARY GRID • 10 × 10 CM',
       terroirTag: 'CHAKRAS SHUAR • ZAMORA-CHINCHIPE',
@@ -889,7 +889,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       setsTabTitle: '3 RITUAL SETS (FREE SERVIENTREGA DELIVERY)',
       blocksTitle: 'INDIVIDUAL BLOCKS & WEIGHT CONFIGURATOR',
       blocksSubtitle:
-        'Professional polycarbonate molds calibrated for scale-free dosing. Toggle weight to inspect pricing and technical sheets.',
+        'Modular blocks calibrated for scale-free dosing. Toggle weight to inspect pricing and technical sheets.',
       weightLabels: {
         '250g': { cells: '12 CELLS × 20.8 g', weightNote: 'Starter / Daily' },
         '500g': { cells: '12 CELLS × 41.7 g', weightNote: 'Course / Ceremonial' },
@@ -968,7 +968,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           name: 'INCA Ancestral Silk',
           tagline: '4-circuit neuro-activator with velvety Form V Silk rheology.',
           accentToken: 'purple',
-          cacaoPercent: '68.50% Living Cacao (63% 18 µm paste + 5.5% VMC butter)',
+          cacaoPercent: '68.50% Living Cacao (63% 18 µm paste + 5.5% cold-pressed butter)',
           prices: { '250g': '$24.50', '500g': '$44.50', '1000g': '$80.00' },
           unitCost: {
             '250g': '$2.04 / cup (20.8 g)',
@@ -978,7 +978,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           servingLabel: '1 cell (20.8 g)',
           ingredients: [
             { name: 'Living purple Cacao Zamora paste (18 µm w/ vella)', share: '63.00%', functionDesc: 'DP1–DP7 flavanols, 2.4% theobromine, prebiotic fiber.' },
-            { name: 'Cold-pressed native VMC golden butter', share: '5.50%', functionDesc: 'Lipophilic extraction (60 °C Spice Blooming) without CCK spike.' },
+            { name: 'Cold-pressed native golden cacao butter', share: '5.50%', functionDesc: 'Gentle lipophilic extraction for fast absorption and silky melt.' },
             { name: 'Organic panela micropowder', share: '27.00%', functionDesc: 'D-glucose to activate SGLT1 intestinal transport.' },
             { name: 'Gelatinized maca + Hibiscus + Guayusa + Vanilla', share: '3.13%', functionDesc: 'FAAH inhibition (macamides), phytate chelation, L-theanine.' },
             { name: 'Sea salt + Ishpingo + Black pepper + Moringa + Copaiba', share: '1.37%', functionDesc: 'UGT1A9/COMT blockade, TAS2R suppression, CB2 agonism.' },
@@ -999,7 +999,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           name: 'Andean Gold Craft (Salted & Vanilla)',
           tagline: 'Pure Zamora terroir benchmark with wild cherry and molasses notes.',
           accentToken: 'ochre',
-          cacaoPercent: '70.00% Living Cacao (65% 18 µm paste + 5.0% VMC butter)',
+          cacaoPercent: '70.00% Living Cacao (65% 18 µm paste + 5.0% cold-pressed butter)',
           prices: { '250g': '$22.00', '500g': '$39.00', '1000g': '$72.00' },
           unitCost: {
             '250g': '$1.83 / cup (20.8 g)',
@@ -1009,7 +1009,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           servingLabel: '1 cell (20.8 g)',
           ingredients: [
             { name: 'Living purple Cacao Zamora paste (18 µm w/ vella)', share: '65.00%', functionDesc: 'Intact DP1–DP7 polyphenol and theobromine matrix.' },
-            { name: 'Cold-pressed native VMC golden butter', share: '5.00%', functionDesc: 'Mirror gloss and crisp Form V Silk snap.' },
+            { name: 'Cold-pressed native golden cacao butter', share: '5.00%', functionDesc: 'Mirror gloss and crisp Form V Silk snap.' },
             { name: 'Organic panela micropowder', share: '29.00%', functionDesc: 'Mineral balance and SGLT1 glucose co-transport.' },
             { name: 'Natural vanilla bean powder', share: '0.55%', functionDesc: 'Floral aromatic rounding with zero synthetic extracts.' },
             { name: 'Crystalline sea salt', share: '0.45%', functionDesc: 'Na+ ions for SGLT1 and TAS2R14/39 bitterness suppression.' },
@@ -1130,7 +1130,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       ],
       tznkBadge: 'DIGITAL BATCH PASSPORT • PROYECTO TZNK / EAS',
       tznkDesc:
-        'Every 10×10 cm label printed on our Epson C6500 carries a dynamic QR linked to the TZNK attestation protocol with coordinates, elevation, and exact stabilization timestamp.',
+        'Every 10×10 cm label carries a dynamic QR linked to the TZNK attestation protocol with coordinates, elevation, and exact stabilization timestamp.',
       tznkLinkLabel: 'Verify protocol at tzunki.com ↗',
       packagingTag: 'APOTHECARY GRID SYSTEM • 10 × 10 CM',
       terroirTag: 'SHUAR CHAKRAS • ZAMORA-CHINCHIPE',

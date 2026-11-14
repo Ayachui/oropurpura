@@ -687,7 +687,7 @@ export function App() {
                 <figure className="lab-frame" style={{ margin: 0 }}>
                   <div className="lab-frame-header">
                     <span>{t.origin.packagingTag}</span>
-                    <span>EPSON C6500</span>
+                    <span>QR • TZNK LOTE №01</span>
                   </div>
                   <img
                     src="/images/apothecary-packaging.jpg"
