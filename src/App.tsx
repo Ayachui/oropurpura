@@ -285,6 +285,20 @@ export function App() {
                     </span>
                   </div>
 
+                  <div className="calibrator-visual">
+                    <img
+                      src={
+                        activeGoal.id === 'focus'
+                          ? '/images/sku-inca-silk.jpg'
+                          : activeGoal.id === 'energy'
+                            ? '/images/ruby-lavender-elixir.jpg'
+                            : '/images/sku-andean-gold.jpg'
+                      }
+                      alt={activeGoal.formulaName}
+                      className="calibrator-visual-img"
+                    />
+                  </div>
+
                   <div className="protocol-grid">
                     <div className="protocol-box">
                       <div className="protocol-box-label">{activeGoal.protocolPrimaryLabel}</div>
@@ -351,6 +365,19 @@ export function App() {
                   className={`set-card ${bundle.featured ? 'featured' : ''}`}
                 >
                   <div>
+                    <div className="set-visual">
+                      <img
+                        src={
+                          bundle.id === 'set-01'
+                            ? '/images/sku-inca-silk.jpg'
+                            : bundle.id === 'set-02'
+                              ? '/images/set-alquimia-bundle.jpg'
+                              : '/images/apothecary-packaging.jpg'
+                        }
+                        alt={bundle.name}
+                        className="set-visual-img"
+                      />
+                    </div>
                     <span className="set-badge">{bundle.badge}</span>
                     <div className="set-header-row">
                       <div>
@@ -432,14 +459,27 @@ export function App() {
                   <article key={sku.id} className={`sku-card accent-${sku.accentToken}`}>
                     <div className="sku-main">
                       <div className="sku-top">
-                        <div>
-                          <div className="mono" style={{ fontSize: '0.75rem', color: 'var(--ink-muted)' }}>
-                            {sku.code} • {sku.cacaoPercent}
+                        <div className="sku-identity">
+                          <img
+                            src={
+                              sku.id === 'inca'
+                                ? '/images/sku-inca-silk.jpg'
+                                : sku.id === 'andean'
+                                  ? '/images/sku-andean-gold.jpg'
+                                  : '/images/ruby-lavender-elixir.jpg'
+                            }
+                            alt={sku.name}
+                            className="sku-thumb"
+                          />
+                          <div>
+                            <div className="mono" style={{ fontSize: '0.75rem', color: 'var(--ink-muted)' }}>
+                              {sku.code} • {sku.cacaoPercent}
+                            </div>
+                            <h3 style={{ marginTop: '4px' }}>{sku.name}</h3>
+                            <p style={{ margin: '6px 0 0', color: 'var(--ink-muted)', fontSize: '0.94rem' }}>
+                              {sku.tagline}
+                            </p>
                           </div>
-                          <h3 style={{ marginTop: '4px' }}>{sku.name}</h3>
-                          <p style={{ margin: '6px 0 0', color: 'var(--ink-muted)', fontSize: '0.94rem' }}>
-                            {sku.tagline}
-                          </p>
                         </div>
 
                         <div className="sku-price-block">
