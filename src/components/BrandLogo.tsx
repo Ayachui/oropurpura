@@ -25,26 +25,26 @@ export function BrandLogo({
           className="brand-monolith"
           shapeRendering="geometricPrecision"
         >
-          {/* Outer Monolith with 45° Glassy Crunch chamfer at top-right */}
+          {/* Outer Monolith with 45° Glassy Crunch chamfer */}
           <path
-            d="M8 8 H72 L92 28 V92 H8 V8 Z"
+            d="M8 8 H68 L92 32 V92 H8 V8 Z"
             stroke={strokeColor}
-            strokeWidth="5"
+            strokeWidth="7"
             strokeLinejoin="miter"
             strokeLinecap="square"
           />
-          {/* Palanda 2-turn orthogonal spiral */}
+          {/* Open Palanda orthogonal spiral turn */}
           <path
-            d="M22 22 H67 L78 33 V78 H22 V36 H64 V64 H36"
+            d="M24 24 H63 L76 37 V76 H24 V44"
             stroke={strokeColor}
-            strokeWidth="4.2"
+            strokeWidth="5.5"
             strokeLinejoin="miter"
             strokeLinecap="square"
           />
-          {/* Las 3 Lajas (Central Mayo-Chinchipe stelae) */}
-          <rect x="40" y="42" width="5" height="16" fill={coreColor} />
-          <rect x="48" y="38" width="5" height="20" fill={coreColor} />
-          <rect x="56" y="44" width="5" height="14" fill={coreColor} />
+          {/* Las 3 Lajas — bold staggered stelae */}
+          <rect x="36" y="40" width="7" height="24" fill={coreColor} />
+          <rect x="47" y="34" width="7" height="30" fill={coreColor} />
+          <rect x="58" y="44" width="7" height="20" fill={coreColor} />
         </svg>
         <div className="brand-text">
           <span className="brand-wordmark">ORO PÚRPURA</span>
