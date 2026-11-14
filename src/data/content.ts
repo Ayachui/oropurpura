@@ -229,7 +229,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       science: 'Ciencia DP1–7',
       origin: 'Origen TZNK',
       b2b: 'B2B / Chefs',
-      cta: 'Pedir por WhatsApp',
+      cta: 'WhatsApp',
     },
     hero: {
       eyebrow: 'ZAMORA-CHINCHIPE, ECUADOR • CUNA MUNDIAL DEL CACAO (5,300 AÑOS)',
@@ -716,7 +716,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       science: 'DP1–7 Science',
       origin: 'TZNK Origin',
       b2b: 'B2B / Chefs',
-      cta: 'Order on WhatsApp',
+      cta: 'WhatsApp',
     },
     hero: {
       eyebrow: 'ZAMORA-CHINCHIPE, ECUADOR • WORLD CRADLE OF CACAO (5,300 YEARS)',

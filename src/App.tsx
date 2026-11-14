@@ -42,7 +42,7 @@ export function App() {
       {/* SECTION 0B: Sticky Header */}
       <header className="site-header">
         <div className="container header-inner">
-          <BrandLogo showParentLink parentPrefix={t.common.parentPrefix} />
+          <BrandLogo />
 
           <nav className="header-nav" aria-label="Primary">
             <a href="#why">{t.nav.why}</a>
@@ -77,7 +77,8 @@ export function App() {
               rel="noopener noreferrer"
               className="header-wa-cta"
             >
-              {t.nav.cta}
+              <span className="wa-dot" aria-hidden="true" />
+              <span>{t.nav.cta}</span>
             </a>
 
             <button
@@ -114,7 +115,7 @@ export function App() {
             </a>
             <div style={{ paddingTop: '10px' }}>
               <WhatsAppAction
-                label={t.nav.cta}
+                label={t.common.orderViaWa}
                 message={generalWhatsAppMsg}
                 copyLabel={t.common.copyText}
                 copiedLabel={t.common.copied}
@@ -133,7 +134,7 @@ export function App() {
               <p className="eyebrow">{t.hero.eyebrow}</p>
               <h1>
                 {t.hero.h1Prefix}
-                <span className="h1-num">{t.hero.h1Number}</span>
+                {t.hero.h1Number}
                 {t.hero.h1Rest}
               </h1>
               <p className="hero-subtitle">{t.hero.subtitle}</p>
