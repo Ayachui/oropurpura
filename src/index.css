@@ -34,6 +34,12 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 html {
   scroll-behavior: smooth;
   font-size: 16px;
@@ -67,7 +73,7 @@ button {
   width: 100%;
   max-width: 1240px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 16px;
 }
 
 /* Mono utility strictly for telemetry, tags, prices, tables */
@@ -96,12 +102,13 @@ h2 {
   font-family: var(--font-display);
   margin: 0;
   text-transform: uppercase;
+  overflow-wrap: break-word;
 }
 
 h1 {
   font-weight: 800;
-  font-size: clamp(2rem, 4.4vw, 3.75rem);
-  line-height: 1.02;
+  font-size: clamp(1.65rem, 6.2vw, 3.75rem);
+  line-height: 1.04;
   letter-spacing: 0.02em;
 }
 
@@ -643,13 +650,12 @@ h3 {
 .comparison-table-wrap {
   border: 1px solid var(--border-strong);
   background: var(--bg-alabaster);
-  overflow-x: auto;
+  overflow: hidden;
 }
 
 .comparison-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 680px;
 }
 
 .comparison-table th,
@@ -688,6 +694,53 @@ h3 {
   background: rgba(59, 7, 100, 0.04);
   font-weight: 600;
   width: 42%;
+}
+
+@media (max-width: 767px) {
+  .comparison-table thead {
+    display: none;
+  }
+
+  .comparison-table,
+  .comparison-table tbody,
+  .comparison-table tr,
+  .comparison-table td {
+    display: block;
+    width: 100% !important;
+  }
+
+  .comparison-table tr {
+    border-bottom: 2px solid var(--border-strong);
+  }
+
+  .comparison-table tr:last-child {
+    border-bottom: none;
+  }
+
+  .comparison-table td {
+    padding: 12px 14px;
+  }
+
+  .comparison-table td.col-param {
+    background: var(--bg-porcelain);
+    border-bottom: 1px solid var(--border-strong);
+    font-size: 0.96rem;
+  }
+
+  .comparison-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+
+  .comparison-table td.col-oro[data-label]::before {
+    color: var(--purple-raw);
+  }
 }
 
 .delta-tag {
@@ -963,6 +1016,8 @@ h3 {
 /* Weight Configurator */
 .weight-switcher {
   display: inline-flex;
+  flex-wrap: wrap;
+  max-width: 100%;
   border: 1px solid var(--border-strong);
   background: var(--bg-alabaster);
   border-radius: var(--radius-sharp);
@@ -970,14 +1025,16 @@ h3 {
 
 .weight-btn {
   min-height: 48px;
-  padding: 0 18px;
+  padding: 0 14px;
+  flex: 1 1 auto;
   border: none;
   border-right: 1px solid var(--border-subtle);
   background: transparent;
   font-family: var(--font-mono);
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 500;
   color: var(--ink-primary);
+  white-space: nowrap;
 }
 
 .weight-btn:last-child {

@@ -223,8 +223,10 @@ export function App() {
                   {t.conflict.rows.map((row) => (
                     <tr key={row.param}>
                       <td className="col-param">{row.param}</td>
-                      <td className="col-conv">{row.conventional}</td>
-                      <td className="col-oro">
+                      <td className="col-conv" data-label={t.conflict.colConventional}>
+                        {row.conventional}
+                      </td>
+                      <td className="col-oro" data-label={t.conflict.colOro}>
                         <div>{row.oro}</div>
                         <span className="delta-tag">{row.deltaTag}</span>
                       </td>
