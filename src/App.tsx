@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BrandLogo } from './components/BrandLogo';
+import { OroAdminModal } from './components/OroAdminModal';
+import { TraceabilityPassport } from './components/TraceabilityPassport';
 import { WhatsAppAction } from './components/WhatsAppAction';
 import { CONTENT, type Lang, type PackWeight } from './data/content';
+import type { OroPublicState, OroSetId, OroSkuId } from './types/liveInventory';
 import { buildWhatsAppUrl } from './utils/whatsapp';
 
 export function App() {
@@ -10,8 +13,60 @@ export function App() {
   const [selectedGoalId, setSelectedGoalId] = useState<'focus' | 'energy' | 'ritual'>('focus');
   const [packWeight, setPackWeight] = useState<PackWeight>('250g');
   const [openSpecId, setOpenSpecId] = useState<string | null>('inca');
+  const [liveInventory, setLiveInventory] = useState<OroPublicState | null>(null);
+  const [adminModalOpen, setAdminModalOpen] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return (
+      window.location.pathname.startsWith('/admin') ||
+      new URLSearchParams(window.location.search).get('admin') === '1'
+    );
+  });
+  const [urlBatchCode] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const params = new URLSearchParams(window.location.search);
+    const fromQuery = params.get('batch')?.trim();
+    if (fromQuery) return fromQuery.toUpperCase();
+    const traceMatch = window.location.pathname.match(/\/trace\/([^/]+)/i);
+    return traceMatch?.[1] ? decodeURIComponent(traceMatch[1]).toUpperCase() : null;
+  });
 
   const t = CONTENT[lang];
+
+  const fetchInventory = useCallback(async () => {
+    try {
+      const res = await fetch('/api/oropurpura/public', { cache: 'no-store' });
+      if (!res.ok) return;
+      const json = (await res.json()) as { ok?: boolean; state?: OroPublicState };
+      if (json.ok && json.state) {
+        setLiveInventory(json.state);
+      }
+    } catch {
+      // Graceful fallback to static catalog when API is unreachable
+    }
+  }, []);
+
+  useEffect(() => {
+    void fetchInventory();
+  }, [fetchInventory]);
+
+  useEffect(() => {
+    if (!urlBatchCode || !liveInventory) return;
+    const skuIds: OroSkuId[] = ['inca', 'andean', 'guayusa'];
+    for (const id of skuIds) {
+      const sku = liveInventory.skus[id];
+      const matched =
+        sku?.activeBatches?.some((b) => b.batchCode === urlBatchCode) ||
+        sku?.primaryBatch?.batchCode === urlBatchCode;
+      if (matched) {
+        setOpenSpecId(id);
+        const el = document.getElementById(`sku-${id}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        break;
+      }
+    }
+  }, [urlBatchCode, liveInventory]);
 
   useEffect(() => {
     document.documentElement.lang = lang;
@@ -25,16 +80,24 @@ export function App() {
       ? 'Hola ORO PÚRPURA, quiero información para hacer un pedido con envío gratis en Ecuador. Mi ciudad es: '
       : 'Hi ORO PÚRPURA, I would like information to place an order with free shipping in Ecuador. My city is: ';
 
+  const tickerText = liveInventory?.ticker?.activeBatchCodes?.length
+    ? `${lang === 'es' ? 'LOTES ACTIVOS' : 'LIVE BATCHES'}: ${liveInventory.ticker.activeBatchCodes.join(' · ')} (${liveInventory.ticker.primaryOrigin.toUpperCase()}) • ${t.ticker.text}`
+    : t.ticker.text;
+
+  const tickerAvailability = liveInventory
+    ? `${liveInventory.ticker.totalSetsRemaining} / ${liveInventory.ticker.totalSetsQuota} SETS`
+    : t.ticker.availabilityValue;
+
   return (
     <div id="top">
       {/* SECTION 0: Batch Drop Ticker */}
       <div className="batch-ticker" role="region" aria-label="Batch Status">
         <div className="batch-ticker-inner">
-          <span className="ticker-stream">{t.ticker.text}</span>
+          <span className="ticker-stream">{tickerText}</span>
           <span className="ticker-stock">
             <span className="ticker-pulse" aria-hidden="true" />
             <span>{t.ticker.availabilityLabel}</span>
-            <strong>{t.ticker.availabilityValue}</strong>
+            <strong>{tickerAvailability}</strong>
           </span>
         </div>
       </div>
@@ -359,63 +422,92 @@ export function App() {
             </div>
 
             <div className="sets-grid">
-              {t.shop.sets.map((bundle) => (
-                <article
-                  key={bundle.id}
-                  className={`set-card ${bundle.featured ? 'featured' : ''}`}
-                >
-                  <div>
-                    <div className="set-visual">
-                      <img
-                        src={
-                          bundle.id === 'set-01'
-                            ? '/images/sku-inca-silk.jpg'
-                            : bundle.id === 'set-02'
-                              ? '/images/set-alquimia-bundle.jpg'
-                              : '/images/apothecary-packaging.jpg'
-                        }
-                        alt={bundle.name}
-                        className="set-visual-img"
+              {t.shop.sets.map((bundle) => {
+                const setInv = liveInventory?.sets?.[bundle.id as OroSetId];
+                const hasLiveSets = Boolean(liveInventory && setInv);
+                const isSetPreorder = Boolean(hasLiveSets && setInv && setInv.remainingCount <= 0);
+                const setCtaLabel = isSetPreorder
+                  ? lang === 'es'
+                    ? `Reservar Preventa ${bundle.code} (${bundle.price}) por WhatsApp`
+                    : `Pre-order ${bundle.code} (${bundle.price}) via WhatsApp`
+                  : bundle.ctaLabel;
+                const setWaMessage = isSetPreorder
+                  ? lang === 'es'
+                    ? `Hola ORO PÚRPURA, quiero reservar en PREVENTA el ${bundle.code} ${bundle.name} (${bundle.price} con envío gratis Servientrega). Mi ciudad es: `
+                    : `Hi ORO PÚRPURA, I want to PRE-ORDER ${bundle.code} ${bundle.name} (${bundle.price} with free shipping in Ecuador). My city is: `
+                  : bundle.whatsappMessage;
+
+                return (
+                  <article
+                    key={bundle.id}
+                    className={`set-card ${bundle.featured ? 'featured' : ''}`}
+                  >
+                    <div>
+                      <div className="set-visual">
+                        <img
+                          src={
+                            bundle.id === 'set-01'
+                              ? '/images/sku-inca-silk.jpg'
+                              : bundle.id === 'set-02'
+                                ? '/images/set-alquimia-bundle.jpg'
+                                : '/images/apothecary-packaging.jpg'
+                          }
+                          alt={bundle.name}
+                          className="set-visual-img"
+                        />
+                      </div>
+                      <div className="set-badges-row">
+                        <span className="set-badge">{bundle.badge}</span>
+                        {hasLiveSets && setInv ? (
+                          <span className={`stock-pill ${isSetPreorder ? 'stock-preorder' : 'stock-in'}`}>
+                            {isSetPreorder
+                              ? lang === 'es'
+                                ? 'PREVENTA • PRÓXIMO LOTE'
+                                : 'PRE-ORDER • NEXT BATCH'
+                              : lang === 'es'
+                                ? `Disponible: ${setInv.remainingCount} / ${setInv.quotaTotal}`
+                                : `In Stock: ${setInv.remainingCount} / ${setInv.quotaTotal}`}
+                          </span>
+                        ) : null}
+                      </div>
+                      <div className="set-header-row">
+                        <div>
+                          <div className="mono" style={{ fontSize: '0.78rem', color: 'var(--ink-muted)' }}>
+                            {bundle.code}
+                          </div>
+                          <h3>{bundle.name}</h3>
+                        </div>
+                        <div className="set-price">{bundle.price}</div>
+                      </div>
+                      <div className="set-savings">{bundle.savings}</div>
+
+                      <ul className="set-items" style={{ marginTop: '14px' }}>
+                        {bundle.items.map((item) => (
+                          <li key={item}>• {item}</li>
+                        ))}
+                      </ul>
+
+                      <div className="set-gift" style={{ marginTop: '12px' }}>
+                        {bundle.gift}
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gap: '12px' }}>
+                      <div className="set-meta-row">
+                        <span>{bundle.netWeight}</span>
+                        <span>{bundle.yieldSummary}</span>
+                      </div>
+                      <WhatsAppAction
+                        label={setCtaLabel}
+                        message={setWaMessage}
+                        copyLabel={t.common.copyText}
+                        copiedLabel={t.common.copied}
+                        fullWidth
                       />
                     </div>
-                    <span className="set-badge">{bundle.badge}</span>
-                    <div className="set-header-row">
-                      <div>
-                        <div className="mono" style={{ fontSize: '0.78rem', color: 'var(--ink-muted)' }}>
-                          {bundle.code}
-                        </div>
-                        <h3>{bundle.name}</h3>
-                      </div>
-                      <div className="set-price">{bundle.price}</div>
-                    </div>
-                    <div className="set-savings">{bundle.savings}</div>
-
-                    <ul className="set-items" style={{ marginTop: '14px' }}>
-                      {bundle.items.map((item) => (
-                        <li key={item}>• {item}</li>
-                      ))}
-                    </ul>
-
-                    <div className="set-gift" style={{ marginTop: '12px' }}>
-                      {bundle.gift}
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gap: '12px' }}>
-                    <div className="set-meta-row">
-                      <span>{bundle.netWeight}</span>
-                      <span>{bundle.yieldSummary}</span>
-                    </div>
-                    <WhatsAppAction
-                      label={bundle.ctaLabel}
-                      message={bundle.whatsappMessage}
-                      copyLabel={t.common.copyText}
-                      copiedLabel={t.common.copied}
-                      fullWidth
-                    />
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
 
             {/* 4.2 Individual Blocks Configurator */}
@@ -450,13 +542,25 @@ export function App() {
               {t.shop.skus.map((sku) => {
                 const isOpen = openSpecId === sku.id;
                 const currentPrice = sku.prices[packWeight];
-                const blockMessage =
-                  lang === 'es'
+                const skuAvail = liveInventory?.skus?.[sku.id as OroSkuId];
+                const hasLiveSku = Boolean(liveInventory && skuAvail);
+                const isPackInStock = skuAvail ? skuAvail.packsAvailable[packWeight] : true;
+                const isSkuPreorder = hasLiveSku && !isPackInStock;
+                const blockCtaLabel = isSkuPreorder
+                  ? lang === 'es'
+                    ? `Pre-ordenar bloque (${packWeight})`
+                    : `Pre-order block (${packWeight})`
+                  : `${t.shop.orderBlockCta} (${packWeight})`;
+                const blockMessage = isSkuPreorder
+                  ? lang === 'es'
+                    ? `Hola ORO PÚRPURA, quiero reservar en PREVENTA ${sku.name} en formato ${packWeight} (${currentPrice} USD). Mi ciudad es: `
+                    : `Hi ORO PÚRPURA, I want to PRE-ORDER ${sku.name} in ${packWeight} format (${currentPrice} USD). My city is: `
+                  : lang === 'es'
                     ? `Hola ORO PÚRPURA, quiero pedir ${sku.name} en formato ${packWeight} (${currentPrice} USD). Mi ciudad es: `
                     : `Hi ORO PÚRPURA, I want to order ${sku.name} in ${packWeight} format (${currentPrice} USD). My city is: `;
 
                 return (
-                  <article key={sku.id} className={`sku-card accent-${sku.accentToken}`}>
+                  <article id={`sku-${sku.id}`} key={sku.id} className={`sku-card accent-${sku.accentToken}`}>
                     <div className="sku-main">
                       <div className="sku-top">
                         <div className="sku-identity">
@@ -479,6 +583,21 @@ export function App() {
                             <p style={{ margin: '6px 0 0', color: 'var(--ink-muted)', fontSize: '0.94rem' }}>
                               {sku.tagline}
                             </p>
+                            {hasLiveSku && skuAvail ? (
+                              <div style={{ marginTop: '8px' }}>
+                                <span
+                                  className={`stock-pill ${isSkuPreorder ? 'stock-preorder' : 'stock-in'}`}
+                                >
+                                  {isSkuPreorder
+                                    ? lang === 'es'
+                                      ? `PREVENTA • PRÓXIMO LOTE (${skuAvail.totalRemainingKg} kg disp.)`
+                                      : `PRE-ORDER • NEXT BATCH (${skuAvail.totalRemainingKg} kg left)`
+                                    : lang === 'es'
+                                      ? `Disponible • ${skuAvail.totalRemainingKg} kg en lote`
+                                      : `In Stock • ${skuAvail.totalRemainingKg} kg ready`}
+                                </span>
+                              </div>
+                            ) : null}
                           </div>
                         </div>
 
@@ -499,13 +618,19 @@ export function App() {
                         </button>
 
                         <WhatsAppAction
-                          label={`${t.shop.orderBlockCta} (${packWeight})`}
+                          label={blockCtaLabel}
                           message={blockMessage}
                           copyLabel={t.common.copyText}
                           copiedLabel={t.common.copied}
                           variant="compact"
                         />
                       </div>
+
+                      <TraceabilityPassport
+                        lang={lang}
+                        availability={skuAvail}
+                        initialBatchCode={urlBatchCode}
+                      />
                     </div>
 
                     {isOpen && (
@@ -687,7 +812,11 @@ export function App() {
                 <figure className="lab-frame" style={{ margin: 0 }}>
                   <div className="lab-frame-header">
                     <span>{t.origin.packagingTag}</span>
-                    <span>QR • TZNK LOTE №01</span>
+                    <span>
+                      {liveInventory?.ticker?.activeBatchCodes?.length
+                        ? `QR • ${liveInventory.ticker.activeBatchCodes[0]}`
+                        : 'QR • TZNK LOTE №01'}
+                    </span>
                   </div>
                   <img
                     src="/images/apothecary-packaging.jpg"
@@ -831,6 +960,13 @@ export function App() {
               <a href="https://tzunki.com" target="_blank" rel="noopener noreferrer">
                 Proyecto TZNK
               </a>
+              <button
+                type="button"
+                className="footer-admin-btn"
+                onClick={() => setAdminModalOpen(true)}
+              >
+                Admin (Base L2)
+              </button>
             </div>
             <div className="mono" style={{ fontSize: '0.75rem', marginTop: '6px' }}>
               {t.footer.rights}
@@ -838,6 +974,12 @@ export function App() {
           </div>
         </div>
       </footer>
+
+      <OroAdminModal
+        open={adminModalOpen}
+        onClose={() => setAdminModalOpen(false)}
+        onChanged={() => void fetchInventory()}
+      />
     </div>
   );
 }
