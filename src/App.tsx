@@ -36,9 +36,20 @@ export function App() {
     try {
       const res = await fetch('/api/oropurpura/public', { cache: 'no-store' });
       if (!res.ok) return;
-      const json = (await res.json()) as { ok?: boolean; state?: OroPublicState };
-      if (json.ok && json.state) {
+      const json = (await res.json()) as {
+        ok?: boolean;
+        state?: OroPublicState;
+      } & Partial<OroPublicState>;
+      if (!json.ok) return;
+      if (json.state) {
         setLiveInventory(json.state);
+      } else if (json.skus && json.sets && json.ticker) {
+        setLiveInventory({
+          generatedAt: json.generatedAt ?? Date.now(),
+          skus: json.skus,
+          sets: json.sets,
+          ticker: json.ticker,
+        });
       }
     } catch {
       // Graceful fallback to static catalog when API is unreachable
@@ -589,9 +600,13 @@ export function App() {
                                   className={`stock-pill ${isSkuPreorder ? 'stock-preorder' : 'stock-in'}`}
                                 >
                                   {isSkuPreorder
-                                    ? lang === 'es'
-                                      ? `PREVENTA • PRÓXIMO LOTE (${skuAvail.totalRemainingKg} kg disp.)`
-                                      : `PRE-ORDER • NEXT BATCH (${skuAvail.totalRemainingKg} kg left)`
+                                    ? skuAvail.totalRemainingKg <= 0
+                                      ? lang === 'es'
+                                        ? 'Sin stock • Preventa próximo lote'
+                                        : 'Out of stock • Pre-order next batch'
+                                      : lang === 'es'
+                                        ? `PREVENTA ${packWeight} (${skuAvail.totalRemainingKg} kg disp.)`
+                                        : `PRE-ORDER ${packWeight} (${skuAvail.totalRemainingKg} kg left)`
                                     : lang === 'es'
                                       ? `Disponible • ${skuAvail.totalRemainingKg} kg en lote`
                                       : `In Stock • ${skuAvail.totalRemainingKg} kg ready`}
@@ -733,7 +748,7 @@ export function App() {
           </div>
         </section>
 
-        {/* SECTION 6: Origin, Proyecto TZNK & Founder */}
+        {/* SECTION 6: Origin, Traceability & Founder */}
         <section id="origin" className="section">
           <div className="container">
             <div className="section-header">
@@ -760,7 +775,10 @@ export function App() {
                     </div>
                     <p style={{ margin: '8px 0 0', fontSize: '0.92rem' }}>{t.origin.tznkDesc}</p>
                     <a
-                      href="https://tzunki.com"
+                      href={
+                        liveInventory?.skus?.inca?.primaryBatch?.consumedLots?.[0]?.traceUrl ||
+                        'https://incatrailfoods.com/products'
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                       className="tznk-link"
@@ -815,7 +833,7 @@ export function App() {
                     <span>
                       {liveInventory?.ticker?.activeBatchCodes?.length
                         ? `QR • ${liveInventory.ticker.activeBatchCodes[0]}`
-                        : 'QR • TZNK LOTE №01'}
+                        : 'QR • LOTE №01'}
                     </span>
                   </div>
                   <img
@@ -957,8 +975,8 @@ export function App() {
               <a href="https://incatrailfoods.com" target="_blank" rel="noopener noreferrer">
                 The Inca Trail Foods
               </a>
-              <a href="https://tzunki.com" target="_blank" rel="noopener noreferrer">
-                Proyecto TZNK
+              <a href="https://incatrailfoods.com/products" target="_blank" rel="noopener noreferrer">
+                Cacao Reserve B2B
               </a>
               <button
                 type="button"

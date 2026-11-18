@@ -218,16 +218,16 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       parentPrefix: 'por',
     },
     ticker: {
-      text: 'LOTE №01 • COSECHA NAPURAK (ZAMORA-CHINCHIPE) • 0% FERMENTACIÓN • ENVÍO GRATIS A TODO EL ECUADOR POR SERVIENTREGA',
+      text: 'CACAO NACIONAL VIVO • COSECHA ZAMORA-CHINCHIPE • 0% FERMENTACIÓN • ENVÍO GRATIS A TODO EL ECUADOR POR SERVIENTREGA',
       availabilityLabel: 'DISPONIBLE:',
-      availabilityValue: '38 / 100 SETS',
+      availabilityValue: 'EN VITRINA',
     },
     nav: {
       why: 'El Porqué',
       calibrator: 'Calibrador',
       shop: 'Sets & Bloques',
       science: 'Ciencia DP1–7',
-      origin: 'Origen TZNK',
+      origin: 'Origen Zamora',
       b2b: 'B2B / Chefs',
       cta: 'WhatsApp',
     },
@@ -398,7 +398,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       eyebrow: '04 // VITRINA DIRECTA (D2C)',
       title: 'SETS CURADOS CON ENVÍO GRATIS',
       subtitle:
-        'Cada Set está calibrado por debajo de 2 kg para incluir envío gratis por Servientrega a las 24 provincias del Ecuador. Pago seguro en conversación (Deuna!, transferencia o PayPhone).',
+        'Cada Set está calibrado por debajo de 2 kg para incluir envío gratis por Servientrega a las 24 provincias del Ecuador. Pago seguro en conversación (Deuna! o transferencia bancaria).',
       setsTabTitle: '3 SETS RITUALES (ENVÍO GRATIS SERVIENTREGA)',
       blocksTitle: 'BLOQUES INDIVIDUALES & CONFIGURADOR POR PESO',
       blocksSubtitle:
@@ -633,7 +633,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
     },
     origin: {
       eyebrow: '06 // TRAZABILIDAD & TRANSPARENCIA',
-      title: 'ORIGEN ZAMORA, PROYECTO TZNK Y FUNDADOR',
+      title: 'ORIGEN ZAMORA, TRAZABILIDAD Y FUNDADOR',
       terroirTitle: 'CUNA ARQUEOLÓGICA (5,300 AÑOS) & DIRECT TRADE SHUAR',
       terroirPoints: [
         { label: 'Altitud de cosecha', value: '900 – 1,362 m s.n.m. (Salto del Inca, San Francisco del Vergel, Playas de Cuje)' },
@@ -641,10 +641,10 @@ export const CONTENT: Record<Lang, LocaleContent> = {
         { label: 'Conservación forestal', value: 'Cacao Nacional relicto bajo dosel nativo — cero deforestación por CCN-51' },
         { label: 'Regla 7–10 horas', value: 'Del corte en chakra a estabilización al vacío y sellado en Zamora en < 10 horas' },
       ],
-      tznkBadge: 'PASAPORTE DIGITAL DE LOTE • PROYECTO TZNK / EAS',
+      tznkBadge: 'PASAPORTE DIGITAL DE LOTE • BASE L2 / EAS',
       tznkDesc:
-        'Cada etiqueta (10×10 cm) lleva un código QR dinámico vinculado al protocolo de atestación TZNK con coordenadas, altitud y hora exacta de estabilización.',
-      tznkLinkLabel: 'Verificar protocolo en tzunki.com ↗',
+        'Cada etiqueta (10×10 cm) lleva un código QR dinámico vinculado al expediente de trazabilidad de The Inca Trail Foods con coordenadas, altitud y hora exacta de estabilización.',
+      tznkLinkLabel: 'Verificar lotes verificados en incatrailfoods.com ↗',
       packagingTag: 'SISTEMA APOTHECARY GRID • 10 × 10 CM',
       terroirTag: 'CHAKRAS SHUAR • ZAMORA-CHINCHIPE',
       founderRole: 'FUNDADOR & INGENIERO DE PROCESOS ALIMENTARIOS',
@@ -686,13 +686,12 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       paymentsList: [
         { method: 'Deuna! (QR 0% comisión)', detail: 'Pago instantáneo desde tu app bancaria' },
         { method: 'Transferencia Bancaria', detail: 'Banco Pichincha • Banco Guayaquil • Produbanco' },
-        { method: 'Tarjetas vía PayPhone', detail: 'Visa / Mastercard / Amex mediante link seguro en WhatsApp' },
       ],
     },
     footer: {
       address: 'Taller de Estabilización & Molienda: Zamora, Zamora-Chinchipe, Ecuador.',
       ecosystem:
-        'oropurpura.incatrailfoods.com — Proyecto de consumo directo impulsado por The Inca Trail Foods / Cacao Zamora & Proyecto TZNK.',
+        'oropurpura.incatrailfoods.com — Proyecto de consumo directo impulsado por The Inca Trail Foods / Cacao Zamora.',
       rights: '© 2026 ORO PÚRPURA. Cacao vivo sin fermentar ni tostar.',
     },
   },
@@ -705,16 +704,16 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       parentPrefix: 'by',
     },
     ticker: {
-      text: 'BATCH №01 • NAPURAK HARVEST (ZAMORA-CHINCHIPE) • 0% FERMENTATION • FREE SERVIENTREGA SHIPPING ACROSS ECUADOR',
+      text: 'LIVING CACAO NACIONAL • ZAMORA-CHINCHIPE HARVEST • 0% FERMENTATION • FREE SERVIENTREGA SHIPPING ACROSS ECUADOR',
       availabilityLabel: 'AVAILABLE:',
-      availabilityValue: '38 / 100 SETS',
+      availabilityValue: 'IN VITRINE',
     },
     nav: {
       why: 'Why',
       calibrator: 'Calibrator',
       shop: 'Sets & Blocks',
       science: 'DP1–7 Science',
-      origin: 'TZNK Origin',
+      origin: 'Zamora Origin',
       b2b: 'B2B / Chefs',
       cta: 'WhatsApp',
     },
@@ -885,7 +884,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       eyebrow: '04 // DIRECT STOREFRONT (D2C)',
       title: 'CURATED SETS WITH FREE SHIPPING',
       subtitle:
-        'Every Set stays under the 2 kg Servientrega tier so we include honest free courier shipping to all 24 provinces in Ecuador. Pay safely in chat (Deuna!, bank transfer, or PayPhone card link).',
+        'Every Set stays under the 2 kg Servientrega tier so we include honest free courier shipping to all 24 provinces in Ecuador. Pay safely in chat (Deuna! or local bank transfer).',
       setsTabTitle: '3 RITUAL SETS (FREE SERVIENTREGA DELIVERY)',
       blocksTitle: 'INDIVIDUAL BLOCKS & WEIGHT CONFIGURATOR',
       blocksSubtitle:
@@ -1120,7 +1119,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
     },
     origin: {
       eyebrow: '06 // TRACEABILITY & TRANSPARENCY',
-      title: 'ZAMORA ORIGIN, PROYECTO TZNK & FOUNDER',
+      title: 'ZAMORA ORIGIN, TRACEABILITY & FOUNDER',
       terroirTitle: '5,300-YEAR CRADLE & SHUAR DIRECT TRADE',
       terroirPoints: [
         { label: 'Harvest elevation', value: '900 – 1,362 m a.s.l. (Salto del Inca, San Francisco del Vergel, Playas de Cuje)' },
@@ -1128,10 +1127,10 @@ export const CONTENT: Record<Lang, LocaleContent> = {
         { label: 'Forest stewardship', value: 'Relict Cacao Nacional under native canopy — zero CCN-51 deforestation' },
         { label: '7–10 hour rule', value: 'Pod opening to vacuum stabilization & sealing in Zamora under 10 hours' },
       ],
-      tznkBadge: 'DIGITAL BATCH PASSPORT • PROYECTO TZNK / EAS',
+      tznkBadge: 'DIGITAL BATCH PASSPORT • BASE L2 / EAS',
       tznkDesc:
-        'Every 10×10 cm label carries a dynamic QR linked to the TZNK attestation protocol with coordinates, elevation, and exact stabilization timestamp.',
-      tznkLinkLabel: 'Verify protocol at tzunki.com ↗',
+        'Every 10×10 cm label carries a dynamic QR linked to the Inca Trail Foods traceability dossier with coordinates, elevation, and exact stabilization timestamp.',
+      tznkLinkLabel: 'Verify lots at incatrailfoods.com ↗',
       packagingTag: 'APOTHECARY GRID SYSTEM • 10 × 10 CM',
       terroirTag: 'SHUAR CHAKRAS • ZAMORA-CHINCHIPE',
       founderRole: 'FOUNDER & FOOD PROCESS ENGINEER',
@@ -1173,13 +1172,12 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       paymentsList: [
         { method: 'Deuna! (QR 0% fee)', detail: 'Instant payment from your Ecuadorian banking app' },
         { method: 'Local Bank Transfer', detail: 'Banco Pichincha • Banco Guayaquil • Produbanco' },
-        { method: 'Cards via PayPhone', detail: 'Visa / Mastercard / Amex via secure PayPhone link in WhatsApp' },
       ],
     },
     footer: {
       address: 'Stabilization & Grinding Workshop: Zamora, Zamora-Chinchipe, Ecuador.',
       ecosystem:
-        'oropurpura.incatrailfoods.com — Direct-to-consumer initiative powered by The Inca Trail Foods / Cacao Zamora & Proyecto TZNK.',
+        'oropurpura.incatrailfoods.com — Direct-to-consumer initiative powered by The Inca Trail Foods / Cacao Zamora.',
       rights: '© 2026 ORO PÚRPURA. Unfermented, unroasted living cacao.',
     },
   },

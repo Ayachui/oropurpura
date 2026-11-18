@@ -3,6 +3,45 @@ import type { OroProductionBatch, OroSetId, OroSetInventory } from '../types/liv
 
 const STORAGE_KEY = 'oro_ecosystem_admin_token';
 
+function consumeHashToken(): string {
+  if (typeof window === 'undefined') return '';
+  const hash = window.location.hash || '';
+  const m = /eco_token=([^&]+)/.exec(hash);
+  if (!m?.[1]) return '';
+  const tok = decodeURIComponent(m[1]).trim();
+  try {
+    window.localStorage.setItem(STORAGE_KEY, tok);
+    window.sessionStorage.setItem(STORAGE_KEY, tok);
+  } catch {
+    // ignore storage quota errors
+  }
+  window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+  return tok;
+}
+
+function readStoredToken(): string {
+  if (typeof window === 'undefined') return '';
+  try {
+    return window.localStorage.getItem(STORAGE_KEY) || window.sessionStorage.getItem(STORAGE_KEY) || '';
+  } catch {
+    return window.sessionStorage.getItem(STORAGE_KEY) || '';
+  }
+}
+
+function persistStoredToken(tok: string): void {
+  try {
+    if (tok) {
+      window.localStorage.setItem(STORAGE_KEY, tok);
+      window.sessionStorage.setItem(STORAGE_KEY, tok);
+    } else {
+      window.localStorage.removeItem(STORAGE_KEY);
+      window.sessionStorage.removeItem(STORAGE_KEY);
+    }
+  } catch {
+    // ignore
+  }
+}
+
 function toHexUtf8(str: string): string {
   const bytes = new TextEncoder().encode(str);
   return (
@@ -26,15 +65,13 @@ export function OroAdminModal({
   onClose: () => void;
   onChanged: () => void;
 }) {
-  const [token, setToken] = useState(() => {
-    if (typeof window === 'undefined') return '';
-    return window.sessionStorage.getItem(STORAGE_KEY) || '';
-  });
+  const [token, setToken] = useState(() => readStoredToken());
   const [wallet, setWallet] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [batches, setBatches] = useState<OroProductionBatch[]>([]);
   const [sets, setSets] = useState<Record<OroSetId, OroSetInventory> | null>(null);
+  const [hasInjectedWallet, setHasInjectedWallet] = useState(true);
 
   const loadAdmin = useCallback(async (tok: string) => {
     const headers: Record<string, string> = tok ? { Authorization: `Bearer ${tok}` } : {};
@@ -51,8 +88,13 @@ export function OroAdminModal({
   }, []);
 
   useEffect(() => {
-    if (!open) return;
-    const saved = window.sessionStorage.getItem(STORAGE_KEY) || '';
+    setHasInjectedWallet(
+      typeof window !== 'undefined' && Boolean((window as unknown as { ethereum?: unknown }).ethereum),
+    );
+    const fromHash = consumeHashToken();
+    if (fromHash) setToken(fromHash);
+    if (!open && !fromHash) return;
+    const saved = fromHash || readStoredToken();
     void fetch('/api/ecosystem/session', {
       headers: saved ? { Authorization: `Bearer ${saved}` } : {},
       credentials: 'include',
@@ -61,6 +103,7 @@ export function OroAdminModal({
       .then((d: { sessionValid?: boolean; wallet?: string }) => {
         if (d.sessionValid && d.wallet) {
           setWallet(d.wallet);
+          if (saved) setToken(saved);
           void loadAdmin(saved);
         }
       })
@@ -69,15 +112,19 @@ export function OroAdminModal({
 
   if (!open) return null;
 
+  const openBaseSso = () => {
+    const ret = encodeURIComponent(`${window.location.origin}/admin`);
+    window.location.href = `https://www.tzunki.com/base/ops?returnTo=${ret}`;
+  };
+
   const handleSignIn = async () => {
     setBusy(true);
     setError(null);
     try {
       const eth = (window as unknown as { ethereum?: Eip1193Provider }).ethereum;
       if (!eth) {
-        throw new Error(
-          'No se detectó wallet en este navegador. Abre tzunki.com/base/ops para entrar con Base Account.',
-        );
+        openBaseSso();
+        return;
       }
       const accounts = (await eth.request({ method: 'eth_requestAccounts' })) as string[];
       const addr = accounts?.[0]?.toLowerCase();
@@ -98,7 +145,7 @@ export function OroAdminModal({
       });
       const json = (await res.json()) as { ok?: boolean; token?: string; wallet?: string; error?: string };
       if (!res.ok || !json.ok || !json.token) throw new Error(json.error || 'No autorizado');
-      window.sessionStorage.setItem(STORAGE_KEY, json.token);
+      persistStoredToken(json.token);
       setToken(json.token);
       setWallet(json.wallet || addr);
       await loadAdmin(json.token);
@@ -159,24 +206,51 @@ export function OroAdminModal({
             </div>
             <h3 style={{ margin: '4px 0 0' }}>Oro Púrpura • Inventario Rápido</h3>
           </div>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
             <a
-              href="https://tzunki.com/base/ops"
+              href="https://www.tzunki.com/base/ops"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-spec-toggle"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                whiteSpace: 'nowrap',
+                textDecoration: 'none',
+                minHeight: '40px',
+                padding: '0 12px',
+              }}
             >
-              Consola Completa Base Ops ↗
+              Base Ops ↗
             </a>
-            <button type="button" className="btn-spec-toggle" onClick={onClose}>
+            {wallet ? (
+              <button
+                type="button"
+                className="btn-spec-toggle"
+                style={{ minHeight: '40px', padding: '0 10px' }}
+                onClick={() => {
+                  persistStoredToken('');
+                  setToken('');
+                  setWallet('');
+                }}
+              >
+                Salir
+              </button>
+            ) : null}
+            <button
+              type="button"
+              className="btn-spec-toggle"
+              style={{ minHeight: '40px', padding: '0 12px' }}
+              onClick={onClose}
+            >
               ✕
             </button>
           </div>
         </div>
 
         {!wallet ? (
-          <div style={{ padding: '24px 0', textAlign: 'center' }}>
-            <p style={{ color: 'var(--ink-muted)', fontSize: '0.92rem' }}>
+          <div style={{ padding: '24px 0', textAlign: 'center', display: 'grid', gap: '10px', justifyItems: 'center' }}>
+            <p style={{ color: 'var(--ink-muted)', fontSize: '0.92rem', margin: 0 }}>
               Conecta y firma con el mismo wallet Base L2 administrador de Campo.
             </p>
             <button
@@ -184,11 +258,25 @@ export function OroAdminModal({
               disabled={busy}
               onClick={() => void handleSignIn()}
               className="btn-wa"
-              style={{ marginTop: '12px' }}
+              style={{ marginTop: '6px' }}
             >
-              {busy ? 'Firmando…' : 'Firmar entrada Base L2'}
+              {busy
+                ? 'Firmando…'
+                : hasInjectedWallet
+                  ? 'Firmar entrada Base L2'
+                  : 'Entrar con Base Account / WalletConnect ↗'}
             </button>
-            {error ? <p style={{ color: '#991b1b', fontSize: '0.82rem' }}>{error}</p> : null}
+            {hasInjectedWallet ? (
+              <button
+                type="button"
+                className="btn-spec-toggle"
+                style={{ minHeight: '40px', fontSize: '0.76rem' }}
+                onClick={openBaseSso}
+              >
+                Entrar con Base Account Passkey ↗
+              </button>
+            ) : null}
+            {error ? <p style={{ color: '#991b1b', fontSize: '0.82rem', margin: 0 }}>{error}</p> : null}
           </div>
         ) : (
           <div style={{ display: 'grid', gap: '18px', marginTop: '16px' }}>

@@ -30,9 +30,9 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
   const isEs = lang === 'es';
   const labels = isEs
     ? {
-        title: 'PASAPORTE DE TRAZABILIDAD DE LOTE (CAMPO → INCA TRAIL → ORO PÚRPURA)',
+        title: 'PASAPORTE DE TRAZABILIDAD DE LOTE (FINCA → INCA TRAIL → ORO PÚRPURA)',
         activeBatches: 'Lotes activos disponibles:',
-        stage1: '01 // ORIGEN EN CAMPO (TZUNKI)',
+        stage1: '01 // ORIGEN FINCA SHUAR (ZAMORA)',
         stage2: '02 // LOTE MATERIA PRIMA & BASE L2',
         stage3: '03 // PRODUCCIÓN ORO PÚRPURA',
         farmer: 'Agricultor',
@@ -46,14 +46,16 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
         standards: 'Estándares',
         verifyRaw: 'Ver expediente completo del lote ↗',
         verifyNft: 'Ver NFT en Basescan ↗',
-        pendingTitle: 'Trazabilidad verificada de origen Zamora-Chinchipe',
+        pendingTitle: 'Sin lote molido en stock inmediato (Disponible bajo pre-orden)',
         pendingBody:
-          'Este SKU se elabora bajo pedido o en próximo lote desde lotes de cacao Nacional con NFT verificado en Base L2 vía incatrailfoods.com.',
+          'Este SKU se formula por micro-lotes desde cacao Nacional con NFT verificado en Base L2. Puedes reservar en preventa por WhatsApp o revisar los lotes de materia prima disponibles en bodega:',
+        browseReserve: 'Ver lotes verificados en incatrailfoods.com ↗',
+        depletedTag: 'Agotado (0 kg)',
       }
     : {
-        title: 'END-TO-END LOT TRACEABILITY PASSPORT (CAMPO → INCA TRAIL → ORO PÚRPURA)',
+        title: 'END-TO-END LOT TRACEABILITY PASSPORT (FARM → INCA TRAIL → ORO PÚRPURA)',
         activeBatches: 'Active batches in stock:',
-        stage1: '01 // CAMPO ORIGIN (TZUNKI)',
+        stage1: '01 // SHUAR FARM ORIGIN (ZAMORA)',
         stage2: '02 // RAW CACAO LOT & BASE L2',
         stage3: '03 // ORO PÚRPURA PRODUCTION',
         farmer: 'Farmer',
@@ -67,9 +69,11 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
         standards: 'Quality Standards',
         verifyRaw: 'Open full raw lot trace ↗',
         verifyNft: 'View NFT on Basescan ↗',
-        pendingTitle: 'Verified Zamora-Chinchipe Origin Traceability',
+        pendingTitle: 'Currently awaiting next micro-batch (Available for pre-order)',
         pendingBody:
-          'This SKU is crafted in small batches from Base L2 NFT-verified Nacional cacao lots via incatrailfoods.com.',
+          'Crafted on demand from Base L2 NFT-verified Nacional cacao lots. Reserve via WhatsApp pre-order or inspect live raw cacao lots in our reserve:',
+        browseReserve: 'Browse verified raw cacao lots at incatrailfoods.com ↗',
+        depletedTag: 'Sold out (0 kg)',
       };
 
   if (!activeBatch) {
@@ -81,6 +85,11 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
         <p style={{ margin: '8px 0 0', fontSize: '0.86rem', color: 'var(--ink-muted)' }}>
           <strong>{labels.pendingTitle}:</strong> {labels.pendingBody}
         </p>
+        <div className="trace-links-row" style={{ paddingTop: '10px' }}>
+          <a href="https://incatrailfoods.com/products" target="_blank" rel="noopener noreferrer">
+            {labels.browseReserve}
+          </a>
+        </div>
       </div>
     );
   }
@@ -93,7 +102,8 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
       <div className="trace-passport-head">
         <span className="mono">{labels.title}</span>
         <span className="trace-batch-pill mono">
-          {activeBatch.batchCode} • {activeBatch.remainingKg} kg
+          {activeBatch.batchCode} •{' '}
+          {activeBatch.remainingKg > 0 ? `${activeBatch.remainingKg} kg` : labels.depletedTag}
         </span>
       </div>
 
@@ -116,7 +126,7 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
       ) : null}
 
       <div className="trace-passport-grid">
-        {/* Layer 1: Campo */}
+        {/* Layer 1: Farm Origin */}
         <div className="trace-stage">
           <div className="trace-stage-label mono">{labels.stage1}</div>
           {primaryRaw ? (
@@ -156,10 +166,7 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
               </div>
               <div>
                 <dt>{labels.nft}</dt>
-                <dd className="mono">
-                  NFT #{primaryRaw.nftTokenId || 'Base L2'}
-                  {primaryRaw.tznkBurned ? ` • ${primaryRaw.tznkBurned} $TZNK` : ''}
-                </dd>
+                <dd className="mono">NFT #{primaryRaw.nftTokenId || 'Base L2'}</dd>
               </div>
             </dl>
           ) : null}
