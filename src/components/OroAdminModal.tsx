@@ -3,20 +3,11 @@ import type { OroProductionBatch, OroSetId, OroSetInventory } from '../types/liv
 
 const STORAGE_KEY = 'oro_ecosystem_admin_token';
 
-function consumeHashToken(): string {
+function readHashToken(): string {
   if (typeof window === 'undefined') return '';
   const hash = window.location.hash || '';
   const m = /eco_token=([^&]+)/.exec(hash);
-  if (!m?.[1]) return '';
-  const tok = decodeURIComponent(m[1]).trim();
-  try {
-    window.localStorage.setItem(STORAGE_KEY, tok);
-    window.sessionStorage.setItem(STORAGE_KEY, tok);
-  } catch {
-    // ignore storage quota errors
-  }
-  window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
-  return tok;
+  return m?.[1] ? decodeURIComponent(m[1]).trim() : '';
 }
 
 function readStoredToken(): string {
@@ -65,13 +56,15 @@ export function OroAdminModal({
   onClose: () => void;
   onChanged: () => void;
 }) {
-  const [token, setToken] = useState(() => readStoredToken());
+  const [token, setToken] = useState(() => readHashToken() || readStoredToken());
   const [wallet, setWallet] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [batches, setBatches] = useState<OroProductionBatch[]>([]);
   const [sets, setSets] = useState<Record<OroSetId, OroSetInventory> | null>(null);
-  const [hasInjectedWallet, setHasInjectedWallet] = useState(true);
+  const [hasInjectedWallet] = useState(
+    () => typeof window !== 'undefined' && Boolean((window as unknown as { ethereum?: unknown }).ethereum),
+  );
 
   const loadAdmin = useCallback(async (tok: string) => {
     const headers: Record<string, string> = tok ? { Authorization: `Bearer ${tok}` } : {};
@@ -88,27 +81,30 @@ export function OroAdminModal({
   }, []);
 
   useEffect(() => {
-    setHasInjectedWallet(
-      typeof window !== 'undefined' && Boolean((window as unknown as { ethereum?: unknown }).ethereum),
-    );
-    const fromHash = consumeHashToken();
-    if (fromHash) setToken(fromHash);
-    if (!open && !fromHash) return;
-    const saved = fromHash || readStoredToken();
+    if (!open) return;
+    let cancelled = false;
+    const hashTok = readHashToken();
+    if (hashTok) {
+      persistStoredToken(hashTok);
+      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+    }
+    const saved = hashTok || token || readStoredToken();
     void fetch('/api/ecosystem/session', {
       headers: saved ? { Authorization: `Bearer ${saved}` } : {},
       credentials: 'include',
     })
       .then((r) => r.json())
       .then((d: { sessionValid?: boolean; wallet?: string }) => {
-        if (d.sessionValid && d.wallet) {
+        if (!cancelled && d.sessionValid && d.wallet) {
           setWallet(d.wallet);
-          if (saved) setToken(saved);
           void loadAdmin(saved);
         }
       })
       .catch(() => {});
-  }, [open, loadAdmin]);
+    return () => {
+      cancelled = true;
+    };
+  }, [open, token, loadAdmin]);
 
   if (!open) return null;
 

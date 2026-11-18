@@ -30,7 +30,7 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
   const isEs = lang === 'es';
   const labels = isEs
     ? {
-        title: 'PASAPORTE DE TRAZABILIDAD DE LOTE (FINCA → INCA TRAIL → ORO PÚRPURA)',
+        title: 'FINCA → INCA TRAIL → ORO PÚRPURA',
         activeBatches: 'Lotes activos disponibles:',
         stage1: '01 // ORIGEN FINCA SHUAR (ZAMORA)',
         stage2: '02 // LOTE MATERIA PRIMA & BASE L2',
@@ -53,7 +53,7 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
         depletedTag: 'Agotado (0 kg)',
       }
     : {
-        title: 'END-TO-END LOT TRACEABILITY PASSPORT (FARM → INCA TRAIL → ORO PÚRPURA)',
+        title: 'FARM → INCA TRAIL → ORO PÚRPURA',
         activeBatches: 'Active batches in stock:',
         stage1: '01 // SHUAR FARM ORIGIN (ZAMORA)',
         stage2: '02 // RAW CACAO LOT & BASE L2',
@@ -82,14 +82,18 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
         <div className="trace-passport-head">
           <span className="mono">{labels.title}</span>
         </div>
-        <p style={{ margin: '8px 0 0', fontSize: '0.86rem', color: 'var(--ink-muted)' }}>
+        <p style={{ margin: '10px 0 12px', fontSize: '0.92rem', color: 'var(--ink-primary)' }}>
           <strong>{labels.pendingTitle}:</strong> {labels.pendingBody}
         </p>
-        <div className="trace-links-row" style={{ paddingTop: '10px' }}>
-          <a href="https://incatrailfoods.com/products" target="_blank" rel="noopener noreferrer">
-            {labels.browseReserve}
-          </a>
-        </div>
+        <a
+          href="https://incatrailfoods.com/products"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="tznk-link"
+          style={{ marginTop: 0 }}
+        >
+          {labels.browseReserve}
+        </a>
       </div>
     );
   }
@@ -126,7 +130,6 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
       ) : null}
 
       <div className="trace-passport-grid">
-        {/* Layer 1: Farm Origin */}
         <div className="trace-stage">
           <div className="trace-stage-label mono">{labels.stage1}</div>
           {primaryRaw ? (
@@ -149,7 +152,6 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
           ) : null}
         </div>
 
-        {/* Layer 2: Inca Trail & Base L2 */}
         <div className="trace-stage">
           <div className="trace-stage-label mono">{labels.stage2}</div>
           {primaryRaw ? (
@@ -184,7 +186,6 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
           ) : null}
         </div>
 
-        {/* Layer 3: Oro Púrpura */}
         <div className="trace-stage">
           <div className="trace-stage-label mono">{labels.stage3}</div>
           <dl className="trace-dl">

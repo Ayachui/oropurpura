@@ -2,22 +2,34 @@ interface BrandLogoProps {
   inverted?: boolean;
   showParentLink?: boolean;
   parentPrefix?: string;
+  onNavigateHome?: () => void;
 }
 
 export function BrandLogo({
   inverted = false,
   showParentLink = false,
   parentPrefix = 'by',
+  onNavigateHome,
 }: BrandLogoProps) {
   const strokeColor = inverted ? '#F4F2F7' : '#121016';
   const coreColor = inverted ? '#C084FC' : '#3B0764';
 
   return (
     <div className="brand-lockup">
-      <a href="#top" className="brand-main" aria-label="ORO PÚRPURA — Origen 5300">
+      <a
+        href="#top"
+        className="brand-main"
+        aria-label="ORO PÚRPURA — Origen 5300"
+        onClick={(e) => {
+          if (onNavigateHome) {
+            e.preventDefault();
+            onNavigateHome();
+          }
+        }}
+      >
         <svg
-          width="44"
-          height="44"
+          width="42"
+          height="42"
           viewBox="0 0 100 100"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

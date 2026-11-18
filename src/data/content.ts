@@ -7,12 +7,14 @@ export interface CalibratorGoal {
   title: string;
   subtitle: string;
   formulaName: string;
+  skuId: 'inca' | 'andean' | 'guayusa';
   skuBadge: string;
   accentColor: string;
-  protocolPrimaryLabel: string;
-  protocolPrimary: string;
-  protocolSecondaryLabel: string;
-  protocolSecondary: string;
+  prepPrimaryLabel: string;
+  prepPrimary: string;
+  prepSecondaryLabel: string;
+  prepSecondary: string;
+  plainBenefits: string[];
   biochemistry: string[];
   cupCost: string;
   cafeComparison: string;
@@ -22,12 +24,14 @@ export interface CalibratorGoal {
 }
 
 export interface SetBundle {
-  id: string;
+  id: 'set-01' | 'set-02' | 'set-03';
   code: string;
   name: string;
   price: string;
+  cupPriceHighlight: string;
   savings: string;
   badge: string;
+  image: string;
   featured?: boolean;
   items: string[];
   gift: string;
@@ -53,12 +57,15 @@ export interface IndividualSku {
   id: 'inca' | 'andean' | 'guayusa';
   code: string;
   name: string;
-  tagline: string;
+  shortBenefit: string;
+  tasteNote: string;
   accentToken: 'purple' | 'ochre' | 'ruby';
   cacaoPercent: string;
+  image: string;
   prices: Record<PackWeight, string>;
   unitCost: Record<PackWeight, string>;
   servingLabel: string;
+  prepHint: string;
   ingredients: SkuIngredient[];
   nutrition: SkuNutritionRow[];
 }
@@ -70,6 +77,8 @@ export interface LocaleContent {
     freeShippingBadge: string;
     orderViaWa: string;
     parentPrefix: string;
+    backToStorefront: string;
+    closeModal: string;
   };
   ticker: {
     text: string;
@@ -77,29 +86,34 @@ export interface LocaleContent {
     availabilityValue: string;
   };
   nav: {
-    why: string;
-    calibrator: string;
     shop: string;
-    science: string;
+    calibrator: string;
+    why: string;
     origin: string;
     b2b: string;
     cta: string;
   };
   hero: {
     eyebrow: string;
-    h1Prefix: string;
-    h1Number: string;
-    h1Rest: string;
-    hookLead: string;
-    hookPillars: Array<{ code: string; text: string }>;
+    originBadge: string;
+    h1Main: string;
     subtitle: string;
     ctaPrimary: string;
     ctaSecondary: string;
-    telemetry: Array<{ value: string; label: string }>;
+    proofs: Array<{ value: string; label: string }>;
+    visualTab1: string;
+    visualTab2: string;
     diptychLeftTag: string;
     diptychLeftCaption: string;
     diptychRightTag: string;
     diptychRightCaption: string;
+  };
+  why: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    cards: Array<{ num: string; title: string; detail: string; badge: string }>;
+    openLabTableLabel: string;
   };
   conflict: {
     eyebrow: string;
@@ -108,25 +122,12 @@ export interface LocaleContent {
     colParam: string;
     colConventional: string;
     colOro: string;
-    filterLabel: string;
     rows: Array<{
       param: string;
       conventional: string;
       oro: string;
       deltaTag: string;
     }>;
-  };
-  calibrator: {
-    eyebrow: string;
-    title: string;
-    subtitle: string;
-    step1Label: string;
-    step2Label: string;
-    costLabel: string;
-    vsCafeLabel: string;
-    recommendedLabel: string;
-    ctaLabel: string;
-    goals: CalibratorGoal[];
   };
   shop: {
     eyebrow: string;
@@ -137,7 +138,7 @@ export interface LocaleContent {
     blocksSubtitle: string;
     weightLabels: Record<PackWeight, { cells: string; weightNote: string }>;
     openSpecLabel: string;
-    closeSpecLabel: string;
+    openPassportLabel: string;
     ingredientsTitle: string;
     nutritionTitle: string;
     col100g: string;
@@ -146,10 +147,30 @@ export interface LocaleContent {
     sets: SetBundle[];
     skus: IndividualSku[];
   };
+  calibrator: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    step1Label: string;
+    step2Label: string;
+    costLabel: string;
+    vsCafeLabel: string;
+    recommendedLabel: string;
+    biochemToggleOpen: string;
+    biochemToggleClose: string;
+    ctaLabel: string;
+    goals: CalibratorGoal[];
+  };
   science: {
     eyebrow: string;
     title: string;
     subtitle: string;
+    timeline: Array<{ time: string; title: string; summary: string }>;
+    openDossierLabel: string;
+    modalTitle: string;
+    tabCascade: string;
+    tabCircuits: string;
+    tabTable: string;
     cascadeTitle: string;
     cascadeCards: Array<{
       dp: string;
@@ -181,14 +202,24 @@ export interface LocaleContent {
     founderBio: string;
     verifiedLabel: string;
   };
+  b2bTeaser: {
+    eyebrow: string;
+    title: string;
+    desc: string;
+    cta: string;
+  };
   b2b: {
     eyebrow: string;
     title: string;
     subtitle: string;
+    heroTag: string;
+    heroCaption: string;
     wholesaleTitle: string;
     wholesalePoints: string[];
     challengeTitle: string;
     challengeDesc: string;
+    kitContentsTitle: string;
+    kitContents: string[];
     phases: Array<{ step: string; title: string; detail: string }>;
     ctaLabel: string;
     whatsappMessage: string;
@@ -204,6 +235,7 @@ export interface LocaleContent {
   footer: {
     address: string;
     ecosystem: string;
+    b2bLink: string;
     rights: string;
   };
 }
@@ -211,61 +243,85 @@ export interface LocaleContent {
 export const CONTENT: Record<Lang, LocaleContent> = {
   es: {
     common: {
-      copyText: 'Copiar pedido',
+      copyText: 'Copiar texto',
       copied: 'Copiado ✓',
       freeShippingBadge: 'ENVÍO GRATIS ECUADOR',
       orderViaWa: 'Pedir por WhatsApp',
-      parentPrefix: 'por',
+      parentPrefix: 'by',
+      backToStorefront: '← Volver a la vitrina D2C',
+      closeModal: 'Cerrar',
     },
     ticker: {
-      text: 'CACAO NACIONAL VIVO • COSECHA ZAMORA-CHINCHIPE • 0% FERMENTACIÓN • ENVÍO GRATIS A TODO EL ECUADOR POR SERVIENTREGA',
+      text: 'CACAO NACIONAL VIVO • COSECHA ZAMORA-CHINCHIPE • 0% FERMENTACIÓN • ENVÍO GRATIS ECUADOR',
       availabilityLabel: 'DISPONIBLE:',
       availabilityValue: 'EN VITRINA',
     },
     nav: {
-      why: 'El Porqué',
-      calibrator: 'Calibrador',
       shop: 'Sets & Bloques',
-      science: 'Ciencia DP1–7',
-      origin: 'Origen Zamora',
-      b2b: 'B2B / Chefs',
+      calibrator: '¿Para ti?',
+      why: '¿Por qué Vivo?',
+      origin: 'Origen',
+      b2b: 'Chefs · 5 Bean Challenge',
       cta: 'WhatsApp',
     },
     hero: {
-      eyebrow: 'ZAMORA-CHINCHIPE, ECUADOR • CUNA MUNDIAL DEL CACAO (5,300 AÑOS)',
-      h1Prefix: 'ORIGEN ',
-      h1Number: '5300',
-      h1Rest: ': NO ES CHOCOLATE. ES CACAO VIVO.',
-      hookLead: 'Energía neuronal y vascular directa desde Zamora a tu puerta en 24–48 h:',
-      hookPillars: [
-        { code: '01', text: 'Bloques modulares de pasta viva (250 g–1 kg) para comer o batir en agua' },
-        { code: '02', text: 'Hasta 10× más (-)-epicatequina que el chocolate tostado' },
-        { code: '03', text: 'Sets desde $45 con envío gratis Servientrega y pago en WhatsApp' },
-      ],
+      eyebrow: 'ZAMORA-CHINCHIPE, ECUADOR • CUNA MUNDIAL DEL CACAO',
+      originBadge: 'ORIGEN 5300 AÑOS',
+      h1Main: 'NO ES CHOCOLATE. ES CACAO VIVO.',
       subtitle:
-        'Pastas funcionales sinérgicas y Elixir de Guayusa elaborados con cacao púrpura ancestral sin fermentar ni tostar. Sin azúcar refinada ni aditivos.',
-      ctaPrimary: 'Explorar Sets con Envío Gratis',
-      ctaSecondary: 'Calibrar mi dosis (30 seg)',
-      telemetry: [
-        { value: '0 DÍAS', label: 'Fermentación (0% ácido acético)' },
-        { value: '≤ 75–80 °C', label: 'Estabilización al vacío (7–10 h)' },
-        { value: '17.0–19.5 mg/g', label: '(-)-Epicatequina nativa (DP1)' },
-        { value: '24 PROVINCIAS', label: 'Envío gratis Servientrega' },
+        'Cacao púrpura ancestral sin fermentar ni tostar, porcionado en bloques o elixir. Come un cuadro directo o bátelo en agua caliente en 30 segundos: claridad mental sostenida, cero azúcar refinada y envío gratis en Ecuador.',
+      ctaPrimary: 'Ver Sets con Envío Gratis',
+      ctaSecondary: '¿Cuál es para mí? (30 seg)',
+      proofs: [
+        { value: '0% FERMENTACIÓN', label: 'Secado al vacío (< 10 h)' },
+        { value: 'EAT OR BREW', label: 'Celdas listas sin usar báscula' },
+        { value: 'ENVÍO GRATIS', label: 'A las 24 provincias Ecuador' },
       ],
+      visualTab1: '01 · Grano Púrpura Vivo',
+      visualTab2: '02 · Elixir en Taza (75 °C)',
       diptychLeftTag: 'CUT-TEST: PÚRPURA NATIVO',
-      diptychLeftCaption: 'Fractura vítrea (Glassy Crunch) vs. grano fermentado marrón',
+      diptychLeftCaption: 'Grano vivo sin fermentar (izq.) vs. grano marrón tostado común (centro)',
       diptychRightTag: 'BREW: 72–75 °C',
-      diptychRightCaption: 'Suspensión rubí-lavanda sin película grasa',
+      diptychRightCaption: 'Suspensión rubí-lavanda con espuma natural y cero grasa flotante',
+    },
+    why: {
+      eyebrow: '01 // LA DIFERENCIA EN 10 SEGUNDOS',
+      title: '¿POR QUÉ SE SIENTE DISTINTO AL CHOCOLATE COMÚN?',
+      subtitle:
+        'El chocolate artesanal es un postre delicioso, pero el calor del tueste (140 °C) destruye hasta el 80% de los antioxidantes activos. En ORO PÚRPURA conservamos el grano vivo desde Zamora.',
+      cards: [
+        {
+          num: '01',
+          badge: '0% TUESTE • ≤ 75–80 °C',
+          title: 'Púrpura real, sin quemar',
+          detail:
+            'Detenemos la oxidación en menos de 10 horas desde la cosecha. El interior sigue siendo púrpura pizarra con notas frutales limpias y 0% acidez de vinagre.',
+        },
+        {
+          num: '02',
+          badge: 'HASTA 10× MÁS ACTIVOS',
+          title: 'Claridad sin nerviosismo',
+          detail:
+            'Conserva 17–19.5 mg/g de (-)-epicatequina y 2.4% de teobromina nativa para horas de enfoque sereno y mejor circulación, sin taquicardia ni bajón.',
+        },
+        {
+          num: '03',
+          badge: 'LISTO EN 30 SEGUNDOS',
+          title: 'Come un cuadro o bátelo',
+          detail:
+            'Cada bloque viene dividido en celdas exactas para derretir en boca como snack funcional o batir en 180 ml de agua caliente sin sedimentos pesados.',
+        },
+      ],
+      openLabTableLabel: 'Ver comparativa bioquímica completa (6 parámetros) →',
     },
     conflict: {
-      eyebrow: '02 // CONFLICTO DE CATEGORÍAS',
+      eyebrow: 'DOSIER COMPARATIVO // LABORATORIO',
       title: 'MUERTE TÉRMICA VS. MATRIZ VIVA',
       thesis:
-        'La fermentación y el tueste (120–145 °C) son el arte de crear un postre aromático. Pero el calor oxida hasta el 80% de los flavanoles vivos y convierte el grano en marrón. En ORO PÚRPURA detenemos el tiempo en menos de 10 horas desde la cosecha Shuar para preservar la matriz viva del fruto.',
+        'La fermentación y el tueste (120–145 °C) crean un postre aromático. Pero el calor oxida hasta el 80% de los flavanoles vivos y vuelve marrón el grano. En ORO PÚRPURA estabilizamos la matriz viva en <10 horas desde la cosecha Shuar.',
       colParam: 'Parámetro Bioquímico',
       colConventional: 'Chocolate Convencional / Artesanal',
       colOro: 'ORO PÚRPURA (Cacao Vivo FMAD)',
-      filterLabel: 'Diferencia clave',
       rows: [
         {
           param: 'Procesamiento térmico',
@@ -305,132 +361,45 @@ export const CONTENT: Record<Lang, LocaleContent> = {
         },
       ],
     },
-    calibrator: {
-      eyebrow: '03 // CALIBRADOR DE ESTADO Y DOSIS',
-      title: 'CALIBRA TU PROTOCOLO EN 30 SEGUNDOS',
-      subtitle:
-        'Selecciona tu objetivo fisiológico. El algoritmo calcula la fórmula exacta, dosis por celda, temperatura del agua y el Set óptimo con envío gratis.',
-      step1Label: 'PASO 01 // ELIGE TU ESCENARIO',
-      step2Label: 'PASO 02 // PROTOCOLO CALIBRADO',
-      costLabel: 'Costo por taza calculado',
-      vsCafeLabel: 'vs. $3.50–$4.50 cafetería en Quito / Cuenca',
-      recommendedLabel: 'Set recomendado',
-      ctaLabel: 'Pedir este protocolo por WhatsApp',
-      goals: [
-        {
-          id: 'focus',
-          tag: 'NEURO-SINERGIA • 0% CAFEÍNA AÑADIDA',
-          title: 'Enfoque profundo sin cafeína',
-          subtitle: 'Para trabajo cognitivo, programación, diseño y decisiones de alto nivel sin temblor ni bajón.',
-          formulaName: 'SKU 01: INCA Ancestral Silk',
-          skuBadge: '68.5% CACAO VIVO • 4 CIRCUITOS',
-          accentColor: '#3B0764',
-          protocolPrimaryLabel: 'BREW (Bebida funcional)',
-          protocolPrimary: '1 celda (20.8 g) batida con espumador en 180 ml de agua a 72–75 °C.',
-          protocolSecondaryLabel: 'EAT (Microdosis directa)',
-          protocolSecondary: '1/2 celda (10.4 g) disuelta lentamente antes de tu bloque de trabajo.',
-          biochemistry: [
-            '~245 mg (-)-epicatequina DP1 por celda',
-            'Teobromina 2.4% + L-teanina de guayusa (ondas Alfa 8–12 Hz)',
-            'Macamidas de maca (inhiben FAAH) + Copaiba (CB2)',
-            'Piperina + Moringa (bloqueo UGT1A9 / COMT)',
-          ],
-          cupCost: '$1.88 – $2.04 / taza',
-          cafeComparison: 'Ahorras >45% frente al café de especialidad',
-          recommendedSet: 'Set 01 «Origen 5300»',
-          recommendedPrice: '$45.00 USD',
-          whatsappMessage:
-            'Hola ORO PÚRPURA, usé el Calibrador para [Enfoque profundo sin cafeína] y quiero pedir [Set 01 «Origen 5300»] ($45.00 con envío gratis Servientrega). Mi ciudad es: ',
-        },
-        {
-          id: 'energy',
-          tag: 'VASCULAR NO • ZERO-WASTE PRENSADO EN FRÍO',
-          title: 'Energía matinal y tono vascular',
-          subtitle: 'Óxido nítrico (NO), flujo sanguíneo, pre-entrenamiento limpio y fibra prebiótica de vella.',
-          formulaName: 'SKU 03: Purple Guayusa Elixir',
-          skuBadge: '68% TORTA DESGRASADA + 12% GUAYUSA',
-          accentColor: '#881337',
-          protocolPrimaryLabel: 'BREW (Elixir rubí-lavanda)',
-          protocolPrimary: '2 cucharaditas (10 g) batidas en 180–200 ml de agua caliente a 75–80 °C (sin sedimento).',
-          protocolSecondaryLabel: 'BOOST (Potenciador diario)',
-          protocolSecondary: '5–7 g (1 cdta) en tu smoothie, proteína o café filtrado (Amazonian Mocha).',
-          biochemistry: [
-            '26–30 mg/g de (-)-epicatequina en torta prensada en frío',
-            '33 kcal • 0.79 g grasa • 2.88 g fibra prebiótica por 10 g',
-            '~30 mg cafeína suave de guayusa + L-teanina (4–6 h estables)',
-            'Hibisco pH 3.8–4.2 (quelación de fitatos) + SGLT1',
-          ],
-          cupCost: '$0.79 – $0.96 / taza',
-          cafeComparison: '4× más económico que un pre-entreno o latte',
-          recommendedSet: 'Set 02 «Alquimia 360°»',
-          recommendedPrice: '$65.00 USD',
-          whatsappMessage:
-            'Hola ORO PÚRPURA, usé el Calibrador para [Energía matinal y tono vascular] y quiero pedir [Set 02 «Alquimia 360°»] ($65.00 con envío gratis Servientrega). Mi ciudad es: ',
-        },
-        {
-          id: 'ritual',
-          tag: 'TERRUAR PURO • EAT / BREW / CEREMONIA',
-          title: 'Ritual diario, familia o ceremonia',
-          subtitle: 'Perfil frutal-floral nativo de Zamora con sal marina y vainilla real, sin especias picantes.',
-          formulaName: 'SKU 02: Andean Gold Craft',
-          skuBadge: '70% CACAO VIVO • SAL & VAINILLA',
-          accentColor: '#9A6B16',
-          protocolPrimaryLabel: 'EAT / BREW (Uso diario)',
-          protocolPrimary: '1/2 a 1 celda (10.4–20.8 g) como snack cristalino o bebida vespertina en agua a 72–75 °C.',
-          protocolSecondaryLabel: 'CEREMONY (Dosis ceremonial)',
-          protocolSecondary: '2 celdas de 250 g (41.7 g) o 1 celda del bloque de 500 g (41.7 g).',
-          biochemistry: [
-            '~550 mg epicatequina + ~580 mg teobromina por dosis ceremonial (41.7 g)',
-            'Sal marina bloquea receptores de amargor TAS2R14/39',
-            'Panela orgánica + Na+ activan bomba SGLT1',
-            'Templado Silk Forma V: quiebre sonoro y fundido a 36.6 °C',
-          ],
-          cupCost: '$1.20 – $1.83 / taza',
-          cafeComparison: 'Estándar ceremonial calibrado sin báscula',
-          recommendedSet: 'Set 03 «Ritual Mensual / Dúo»',
-          recommendedPrice: '$118.00 USD',
-          whatsappMessage:
-            'Hola ORO PÚRPURA, usé el Calibrador para [Ritual diario, familia o ceremonia] y quiero pedir [Set 03 «Ritual Mensual / Dúo»] ($118.00 con envío gratis Servientrega). Mi ciudad es: ',
-        },
-      ],
-    },
     shop: {
-      eyebrow: '04 // VITRINA DIRECTA (D2C)',
-      title: 'SETS CURADOS CON ENVÍO GRATIS',
+      eyebrow: '02 // VITRINA DIRECTA (D2C)',
+      title: 'ELIGE TU SET CON ENVÍO GRATIS',
       subtitle:
-        'Cada Set está calibrado por debajo de 2 kg para incluir envío gratis por Servientrega a las 24 provincias del Ecuador. Pago seguro en conversación (Deuna! o transferencia bancaria).',
-      setsTabTitle: '3 SETS RITUALES (ENVÍO GRATIS SERVIENTREGA)',
-      blocksTitle: 'BLOQUES INDIVIDUALES & CONFIGURADOR POR PESO',
+        'Todo pedido se confirma directo por WhatsApp en 1 minuto (sin tarjetas en formularios). Entrega a domicilio en 24–48 h vía Servientrega en todo Ecuador.',
+      setsTabTitle: '3 SETS CURADOS (ENVÍO GRATIS A LAS 24 PROVINCIAS)',
+      blocksTitle: 'BLOQUES Y ELIXIR INDIVIDUALES',
       blocksSubtitle:
-        'Bloques modulares calibrados para dosificar sin báscula. Selecciona el gramaje para ver precio y ficha técnica.',
+        '¿Prefieres una sola fórmula? Selecciona el peso para ver el precio y abre la ficha técnica o el pasaporte de lote solo si lo necesitas.',
       weightLabels: {
-        '250g': { cells: '12 CELDAS × 20.8 g', weightNote: 'Starter / Daily' },
-        '500g': { cells: '12 CELDAS × 41.7 g', weightNote: 'Course / Ceremonial' },
-        '1000g': { cells: '15 CELDAS × 66.7 g', weightNote: 'Family / Facilitator / Pro' },
+        '250g': { cells: '12 CELDAS × 20.8 g', weightNote: 'Uso diario • 12 a 24 días' },
+        '500g': { cells: '12 CELDAS × 41.7 g', weightNote: 'Dúo / Ceremonia • 24 a 48 días' },
+        '1000g': { cells: '15 CELDAS × 66.7 g', weightNote: 'Familia / Pro • Máximo ahorro' },
       },
-      openSpecLabel: 'Ficha Técnica & Nutricional +',
-      closeSpecLabel: 'Ocultar Ficha −',
+      openSpecLabel: 'Ficha técnica y nutrientes',
+      openPassportLabel: 'Pasaporte de lote / QR',
       ingredientsTitle: 'Fórmula & Función Bioquímica',
       nutritionTitle: 'Información Nutricional Estimada',
       col100g: 'Por 100 g',
       colServing: 'Por porción',
-      orderBlockCta: 'Pedir bloque por WhatsApp',
+      orderBlockCta: 'Pedir en WhatsApp',
       sets: [
         {
           id: 'set-01',
           code: 'SET 01',
           name: '«ORIGEN 5300»',
           price: '$45.00',
+          cupPriceHighlight: '$1.88 / taza',
           savings: 'Ahorras $7.00 con envío incluido',
-          badge: 'INICIO • DOS POLOS DEL CACAO VIVO',
+          badge: 'INICIO • DOS FÓRMULAS EN BLOQUE',
+          image: '/images/set-origen-bundle.jpg',
           items: [
-            'INCA Ancestral Silk — Bloque 250 g (12 celdas × 20.8 g)',
-            'Andean Gold Craft — Bloque 250 g (12 celdas × 20.8 g)',
+            'INCA Ancestral Silk — Bloque 250 g (12 celdas)',
+            'Andean Gold Craft — Bloque 250 g (12 celdas)',
           ],
-          gift: 'Regalo Unboxing: 30 g granos enteros Glassy Crunch (Test 5–7 Bean Challenge)',
+          gift: 'Regalo incluido: 30 g granos enteros Glassy Crunch (Test 5 Bean Challenge)',
           netWeight: '530 g neto',
-          yieldSummary: '24 tazas ($1.88/taza) o 48 dosis snack ($0.94/dosis)',
-          ctaLabel: 'Pedir Set 01 ($45) por WhatsApp',
+          yieldSummary: '24 tazas funcionales o 48 porciones snack',
+          ctaLabel: 'Pedir Set 01 · $45',
           whatsappMessage:
             'Hola ORO PÚRPURA, quiero pedir el Set 01 «Origen 5300» ($45.00 con envío gratis Servientrega). Mi ciudad es: ',
         },
@@ -439,18 +408,20 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           code: 'SET 02',
           name: '«ALQUIMIA 360°»',
           price: '$65.00',
+          cupPriceHighlight: '$1.33 / taza',
           savings: 'Ahorras $11.00 con envío incluido',
-          badge: 'MÁS ELEGIDO • CICLO MAÑANA / DÍA / NOCHE',
+          badge: '★ MÁS ELEGIDO • CICLO COMPLETO',
+          image: '/images/set-alquimia-bundle.jpg',
           featured: true,
           items: [
-            'INCA Ancestral Silk — Bloque 250 g (12 celdas × 20.8 g)',
-            'Andean Gold Craft — Bloque 250 g (12 celdas × 20.8 g)',
-            'Purple Guayusa Elixir — Doypack 250 g (25–50 bebidas)',
+            'INCA Ancestral Silk — Bloque 250 g (Enfoque)',
+            'Andean Gold Craft — Bloque 250 g (Ritual puro)',
+            'Purple Guayusa Elixir — Doypack 250 g (Energía AM)',
           ],
-          gift: 'Regalo Unboxing: 30 g granos enteros Glassy Crunch',
+          gift: 'Regalo incluido: 30 g granos enteros Glassy Crunch (Test 5 Bean Challenge)',
           netWeight: '780 g neto',
-          yieldSummary: '49 bebidas funcionales ($1.33/taza promedio)',
-          ctaLabel: 'Pedir Set 02 ($65) por WhatsApp',
+          yieldSummary: '49 bebidas o hasta 70 dosis combinadas',
+          ctaLabel: 'Pedir Set 02 · $65',
           whatsappMessage:
             'Hola ORO PÚRPURA, quiero pedir el Set 02 «Alquimia 360°» ($65.00 con envío gratis Servientrega). Mi ciudad es: ',
         },
@@ -459,17 +430,19 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           code: 'SET 03',
           name: '«RITUAL MENSUAL / DÚO»',
           price: '$118.00',
+          cupPriceHighlight: '$1.20 / taza',
           savings: 'Ahorras $16.00 con envío incluido',
-          badge: 'MÁXIMO RENDIMIENTO • PAREJAS O PRÁCTICA DIARIA',
+          badge: 'MÁXIMO RENDIMIENTO • PAREJAS',
+          image: '/images/set-ritual-bundle.jpg',
           items: [
-            'INCA Ancestral Silk — Bloque 500 g (12 celdas × 41.7 g)',
-            'Andean Gold Craft — Bloque 500 g (12 celdas × 41.7 g)',
+            'INCA Ancestral Silk — Bloque 500 g (12 × 41.7 g)',
+            'Andean Gold Craft — Bloque 500 g (12 × 41.7 g)',
             'Purple Guayusa Elixir — Doypack 500 g (50–100 bebidas)',
           ],
-          gift: 'Regalo Unboxing: 30 g granos enteros Glassy Crunch',
+          gift: 'Regalo incluido: 30 g granos enteros Glassy Crunch (Test 5 Bean Challenge)',
           netWeight: '1,530 g neto',
-          yieldSummary: '98 tazas estándar ($1.20/taza) o 48 ceremonias de 41.7 g',
-          ctaLabel: 'Pedir Set 03 ($118) por WhatsApp',
+          yieldSummary: '98 tazas estándar o 48 dosis ceremoniales',
+          ctaLabel: 'Pedir Set 03 · $118',
           whatsappMessage:
             'Hola ORO PÚRPURA, quiero pedir el Set 03 «Ritual Mensual / Dúo» ($118.00 con envío gratis Servientrega). Mi ciudad es: ',
         },
@@ -477,11 +450,14 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       skus: [
         {
           id: 'inca',
-          code: 'SKU 01 // FLAGSHIP',
+          code: 'SKU 01 // ENFOQUE',
           name: 'INCA Ancestral Silk',
-          tagline: 'Neuro-activador de 4 circuitos con reología aterciopelada Form V.',
+          shortBenefit:
+            'Claridad mental profunda sin cafeína. Cacao púrpura sedoso potenciado con maca, guayusa y especias amazónicas.',
+          tasteNote: 'Sabor: Especiado suave, aterciopelado, dulzor mínimo de panela orgánica.',
           accentToken: 'purple',
-          cacaoPercent: '68.50% Cacao Vivo (63% pasta 18 µm + 5.5% manteca prensada en frío)',
+          cacaoPercent: '68.5% Cacao Vivo',
+          image: '/images/sku-inca-silk.jpg',
           prices: { '250g': '$24.50', '500g': '$44.50', '1000g': '$80.00' },
           unitCost: {
             '250g': '$2.04 / taza (20.8 g)',
@@ -489,6 +465,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
             '1000g': '$1.78 / taza (22.2 g)',
           },
           servingLabel: '1 celda (20.8 g)',
+          prepHint: 'Derrite 1/2 celda en boca o bate 1 celda en 180 ml de agua a 72–75 °C.',
           ingredients: [
             { name: 'Pasta viva púrpura Cacao Zamora (18 µm con vella)', share: '63.00%', functionDesc: 'Flavanoles DP1–DP7, teobromina 2.4%, fibra prebiótica.' },
             { name: 'Manteca dorada nativa prensada en frío', share: '5.50%', functionDesc: 'Extracción lipofílica suave para máxima absorción y textura seda.' },
@@ -508,11 +485,14 @@ export const CONTENT: Record<Lang, LocaleContent> = {
         },
         {
           id: 'andean',
-          code: 'SKU 02 // BASE GASTRONÓMICA',
-          name: 'Andean Gold Craft (Salted & Vanilla)',
-          tagline: 'Estándar puro del terroir de Zamora con notas de cereza silvestre y melaza.',
+          code: 'SKU 02 // TERROIR PURO',
+          name: 'Andean Gold Craft',
+          shortBenefit:
+            'El sabor puro de Zamora con cristales de sal marina y vainilla real, sin especias picantes. Ideal para todos los días o ceremonia.',
+          tasteNote: 'Sabor: Cereza silvestre, floral nativo y toque salino equilibrado.',
           accentToken: 'ochre',
-          cacaoPercent: '70.00% Cacao Vivo (65% pasta 18 µm + 5.0% manteca prensada en frío)',
+          cacaoPercent: '70.0% Cacao Vivo',
+          image: '/images/sku-andean-gold.jpg',
           prices: { '250g': '$22.00', '500g': '$39.00', '1000g': '$72.00' },
           unitCost: {
             '250g': '$1.83 / taza (20.8 g)',
@@ -520,6 +500,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
             '1000g': '$1.60 / taza (22.2 g)',
           },
           servingLabel: '1 celda (20.8 g)',
+          prepHint: 'Snack crujiente de 1/2 celda o bebida ceremonial con 1–2 celdas en agua caliente.',
           ingredients: [
             { name: 'Pasta viva púrpura Cacao Zamora (18 µm con vella)', share: '65.00%', functionDesc: 'Matriz intacta de polifenoles DP1–DP7 y teobromina.' },
             { name: 'Manteca dorada nativa prensada en frío', share: '5.00%', functionDesc: 'Brillo especular y chasquido vítreo (Silk Forma V).' },
@@ -539,11 +520,14 @@ export const CONTENT: Record<Lang, LocaleContent> = {
         },
         {
           id: 'guayusa',
-          code: 'SKU 03 // ZERO-WASTE ELIXIR',
+          code: 'SKU 03 // BEBIDA LIGERA',
           name: 'Purple Guayusa Elixir',
-          tagline: 'Polvo micronizado (<80 µm) de torta prensada en frío + guayusa amazónica.',
+          shortBenefit:
+            'Polvo micronizado de cacao prensado en frío + hoja de guayusa amazónica y flor de jamaica. Solo 33 kcal por bebida, cero grasa flotante.',
+          tasteNote: 'Sabor: Refrescante rubí-lavanda con acidez frutal ligera.',
           accentToken: 'ruby',
-          cacaoPercent: '68.00% Torta Desgrasada Púrpura (1.58× Epicatequina)',
+          cacaoPercent: '68.0% Torta Desgrasada + 12% Guayusa',
+          image: '/images/ruby-lavender-elixir.jpg',
           prices: { '250g': '$24.00', '500g': '$44.00', '1000g': '$79.00' },
           unitCost: {
             '250g': '$0.96 / bebida (10 g)',
@@ -551,6 +535,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
             '1000g': '$0.79 / bebida (10 g)',
           },
           servingLabel: '2 cdta (10 g)',
+          prepHint: 'Bate 2 cucharaditas (10 g) en 180–200 ml de agua caliente a 75–80 °C.',
           ingredients: [
             { name: 'Torta desgrasada púrpura Cacao Zamora (<80 µm)', share: '68.00%', functionDesc: 'Superconcentración: 26–30 mg/g DP1 y 3.5% teobromina.' },
             { name: 'Hoja de Guayusa amazónica (Ilex guayusa)', share: '12.00%', functionDesc: 'L-teanina + ~30 mg cafeína suave para 4–6 h de claridad.' },
@@ -570,11 +555,146 @@ export const CONTENT: Record<Lang, LocaleContent> = {
         },
       ],
     },
+    calibrator: {
+      eyebrow: '03 // GUÍA RÁPIDA EN 30 SEGUNDOS',
+      title: '¿NO SABES CUÁL ELEGIR? CALIBRA TU OBJETIVO',
+      subtitle: 'Toca tu momento del día y mira al instante la dosis, preparación y Set recomendado.',
+      step1Label: '1. ELIGE TU OBJETIVO',
+      step2Label: '2. TU FÓRMULA Y PREPARACIÓN',
+      costLabel: 'Costo por porción',
+      vsCafeLabel: 'vs. $3.50–$4.50 cafetería en Quito / Cuenca',
+      recommendedLabel: 'Set ideal para ti',
+      biochemToggleOpen: 'Ver detalle bioquímico de esta fórmula +',
+      biochemToggleClose: 'Ocultar detalle bioquímico −',
+      ctaLabel: 'Pedir este Set por WhatsApp',
+      goals: [
+        {
+          id: 'focus',
+          tag: 'SIN CAFEÍNA • TRABAJO PROFUNDO',
+          title: 'Enfoque mental sin nervios',
+          subtitle: 'Ideal para estudiar, programar, diseñar o trabajar horas con mente clara y sin caída.',
+          formulaName: 'INCA Ancestral Silk',
+          skuId: 'inca',
+          skuBadge: '68.5% CACAO VIVO • SIN CAFEÍNA AÑADIDA',
+          accentColor: '#3B0764',
+          prepPrimaryLabel: 'En taza (Brew)',
+          prepPrimary: 'Bate 1 celda (20.8 g) en 180 ml de agua caliente (72–75 °C) con espumador.',
+          prepSecondaryLabel: 'Directo (Eat)',
+          prepSecondary: 'Deja derretir 1/2 celda lentamente en boca antes de tu bloque de trabajo.',
+          plainBenefits: [
+            'Concentración serena de 3 a 5 horas sin ansiedad',
+            'Mejor circulación cerebral y sensación cálida de bienestar',
+            'Cero azúcar refinada y fibra natural que cuida tu digestión',
+          ],
+          biochemistry: [
+            '~245 mg (-)-epicatequina DP1 por celda',
+            'Teobromina 2.4% + L-teanina de guayusa (ondas Alfa 8–12 Hz)',
+            'Macamidas de maca (inhiben FAAH) + Copaiba (CB2)',
+            'Piperina + Moringa (bloqueo UGT1A9 / COMT)',
+          ],
+          cupCost: '$1.88 – $2.04 / taza',
+          cafeComparison: 'Más de 45% de ahorro frente al café de especialidad',
+          recommendedSet: 'Set 01 «Origen 5300»',
+          recommendedPrice: '$45.00 USD',
+          whatsappMessage:
+            'Hola ORO PÚRPURA, usé la Guía para [Enfoque mental sin nervios] y quiero pedir [Set 01 «Origen 5300»] ($45.00 con envío gratis Servientrega). Mi ciudad es: ',
+        },
+        {
+          id: 'energy',
+          tag: 'MAÑANA & DEPORTE • 33 KCAL',
+          title: 'Energía matinal y pre-entreno',
+          subtitle: 'Para arrancar la mañana ligero o entrenar con más flujo sanguíneo y fibra prebiótica.',
+          formulaName: 'Purple Guayusa Elixir',
+          skuId: 'guayusa',
+          skuBadge: '68% TORTA PRENSADA EN FRÍO + GUAYUSA',
+          accentColor: '#881337',
+          prepPrimaryLabel: 'Elixir rubí-lavanda',
+          prepPrimary: 'Bate 2 cucharaditas (10 g) en 180–200 ml de agua caliente (75–80 °C).',
+          prepSecondaryLabel: 'Boost diario',
+          prepSecondary: 'Suma 1 cucharadita (5 g) a tu smoothie, proteína o café filtrado.',
+          plainBenefits: [
+            'Impulso cardiovascular limpio (óxido nítrico) ideal pre-entreno',
+            'Energía estable de 4–6 h gracias a la guayusa amazónica (~30 mg cafeína)',
+            'Ultra ligero: solo 33 kcal, 0.79 g grasa y sin sedimento en taza',
+          ],
+          biochemistry: [
+            '26–30 mg/g de (-)-epicatequina en torta prensada en frío',
+            '33 kcal • 0.79 g grasa • 2.88 g fibra prebiótica por 10 g',
+            '~30 mg cafeína suave de guayusa + L-teanina (4–6 h estables)',
+            'Hibisco pH 3.8–4.2 (quelación de fitatos) + SGLT1',
+          ],
+          cupCost: '$0.79 – $0.96 / bebida',
+          cafeComparison: '4× más económico que un latte o pre-entreno',
+          recommendedSet: 'Set 02 «Alquimia 360°»',
+          recommendedPrice: '$65.00 USD',
+          whatsappMessage:
+            'Hola ORO PÚRPURA, usé la Guía para [Energía matinal y pre-entreno] y quiero pedir [Set 02 «Alquimia 360°»] ($65.00 con envío gratis Servientrega). Mi ciudad es: ',
+        },
+        {
+          id: 'ritual',
+          tag: 'SABOR PURO • FAMILIA O CEREMONIA',
+          title: 'Ritual diario o ceremonial',
+          subtitle: 'Sabor frutal-floral puro de Zamora con sal marina y vainilla natural, para compartir o meditar.',
+          formulaName: 'Andean Gold Craft',
+          skuId: 'andean',
+          skuBadge: '70% CACAO VIVO • SAL MARINA & VAINILLA',
+          accentColor: '#9A6B16',
+          prepPrimaryLabel: 'Uso diario (Eat / Brew)',
+          prepPrimary: '1/2 a 1 celda (10.4–20.8 g) como snack cristalino o bebida suave vespertina.',
+          prepSecondaryLabel: 'Dosis ceremonial',
+          prepSecondary: '2 celdas de bloque 250 g (41.7 g) o 1 celda grande de bloque 500 g.',
+          plainBenefits: [
+            'Notas auténticas de cereza silvestre y cacao vivo sin amargor agresivo',
+            'Textura sedosa que se funde limpia en boca o en agua caliente',
+            'Porcionado exacto para compartir en casa o guiar ceremonias sin báscula',
+          ],
+          biochemistry: [
+            '~550 mg epicatequina + ~580 mg teobromina por dosis ceremonial (41.7 g)',
+            'Sal marina bloquea receptores de amargor TAS2R14/39',
+            'Panela orgánica + Na+ activan bomba SGLT1',
+            'Templado Silk Forma V: quiebre sonoro y fundido a 36.6 °C',
+          ],
+          cupCost: '$1.20 – $1.83 / taza',
+          cafeComparison: 'Dosis ceremonial calibrada lista para usar',
+          recommendedSet: 'Set 03 «Ritual Mensual / Dúo»',
+          recommendedPrice: '$118.00 USD',
+          whatsappMessage:
+            'Hola ORO PÚRPURA, usé la Guía para [Ritual diario o ceremonial] y quiero pedir [Set 03 «Ritual Mensual / Dúo»] ($118.00 con envío gratis Servientrega). Mi ciudad es: ',
+        },
+      ],
+    },
     science: {
-      eyebrow: '05 // CIENCIA & FARMACOCINÉTICA',
-      title: 'CASCADA FENÓLICA DP1–DP7 Y 4 CIRCUITOS DE SINERGIA',
+      eyebrow: '04 // CIENCIA SIN COMPLICACIONES',
+      title: 'QUÉ PASA EN TU CUERPO HORA A HORA',
       subtitle:
-        'La pasta 100% cruda sin formular es astringente y de baja absorción. Nuestra matriz resuelve la biodisponibilidad en cuatro niveles fisiológicos.',
+        'A diferencia del cacao crudo amargo que se absorbe poco, nuestras fórmulas combinan ingredientes amazónicos para que tu cuerpo aproveche cada miligramo.',
+      timeline: [
+        {
+          time: '60 MIN',
+          title: 'Flujo y calor natural',
+          summary: 'Los flavanoles intactos activan el óxido nítrico y mejoran la circulación periférica.',
+        },
+        {
+          time: '2–4 H',
+          title: 'Enfoque sereno',
+          summary: 'La teobromina y L-teanina sostienen un estado de alerta limpia, sin picos ni caídas.',
+        },
+        {
+          time: '4–8 H',
+          title: 'Energía estable',
+          summary: 'Polifenoles de cadena media protegen tus vasos y suavizan la respuesta metabólica.',
+        },
+        {
+          time: '12–24 H',
+          title: 'Prebiótico real',
+          summary: 'La cascarilla interna (vella) nutre la microbiota beneficiosa de forma natural.',
+        },
+      ],
+      openDossierLabel: 'Abrir dosier científico completo (DP1–DP7, 4 Circuitos y Tabla Lab) →',
+      modalTitle: 'Dosier Científico & Farmacocinética ORO PÚRPURA',
+      tabCascade: 'Cascada DP1–DP7',
+      tabCircuits: '4 Circuitos INCA',
+      tabTable: 'Comparativa 6×3',
       cascadeTitle: 'CASCADA DE POLIFENOLES INTACTOS (DP1–DP7)',
       cascadeCards: [
         {
@@ -632,126 +752,165 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       ],
     },
     origin: {
-      eyebrow: '06 // TRAZABILIDAD & TRANSPARENCIA',
-      title: 'ORIGEN ZAMORA, TRAZABILIDAD Y FUNDADOR',
-      terroirTitle: 'CUNA ARQUEOLÓGICA (5,300 AÑOS) & DIRECT TRADE SHUAR',
+      eyebrow: '05 // TRAZABILIDAD & CONFIANZA',
+      title: 'HECHO EN ZAMORA CON FAMILIAS SHUAR',
+      terroirTitle: 'CUNA DEL CACAO (5,300 AÑOS) & TRAZABILIDAD BASE L2',
       terroirPoints: [
         { label: 'Altitud de cosecha', value: '900 – 1,362 m s.n.m. (Salto del Inca, San Francisco del Vergel, Playas de Cuje)' },
-        { label: 'Alianza Direct Trade', value: 'Familias agricultoras Shuar (Comunidad Napurak / Asociación Los Bayanes)' },
-        { label: 'Conservación forestal', value: 'Cacao Nacional relicto bajo dosel nativo — cero deforestación por CCN-51' },
-        { label: 'Regla 7–10 horas', value: 'Del corte en chakra a estabilización al vacío y sellado en Zamora en < 10 horas' },
+        { label: 'Direct Trade Shuar', value: 'Alianza directa con familias de la comunidad Napurak / Asociación Los Bayanes' },
+        { label: 'Regla 7–10 horas', value: 'Del corte en chakra al secado al vacío y sellado en Zamora en menos de 10 h' },
+        { label: 'Bosque nativo', value: 'Cacao Nacional relicto bajo dosel amazónico — cero deforestación por CCN-51' },
       ],
       tznkBadge: 'PASAPORTE DIGITAL DE LOTE • BASE L2 / EAS',
       tznkDesc:
-        'Cada etiqueta (10×10 cm) lleva un código QR dinámico vinculado al expediente de trazabilidad de The Inca Trail Foods con coordenadas, altitud y hora exacta de estabilización.',
-      tznkLinkLabel: 'Verificar lotes verificados en incatrailfoods.com ↗',
-      packagingTag: 'SISTEMA APOTHECARY GRID • 10 × 10 CM',
+        'Cada etiqueta (10×10 cm) lleva un QR verificado vinculado al expediente de The Inca Trail Foods con coordenadas, altitud y hora exacta de estabilización.',
+      tznkLinkLabel: 'Ver lotes verificados en incatrailfoods.com ↗',
+      packagingTag: 'EMPAQUE APOTHECARY • 10 × 10 CM',
       terroirTag: 'CHAKRAS SHUAR • ZAMORA-CHINCHIPE',
-      founderRole: 'FUNDADOR & INGENIERO DE PROCESOS ALIMENTARIOS',
+      founderRole: 'FUNDADOR & INGENIERO DE PROCESOS',
       founderName: 'Eugenio Ayachui',
       founderBio:
-        'Más de 11 años en Ecuador desarrollando tecnología de estabilización en frío (FMAD / VMC) junto a comunidades amazónicas. Creador de The Inca Trail Foods / Cacao Zamora, plataforma alineada con la declaración patrimonial de la Asamblea Nacional sobre Palanda como cuna mundial del cacao.',
-      verifiedLabel: 'Perfiles verificados para comprobar autenticidad antes de pedir:',
+        'Más de 11 años en Ecuador desarrollando estabilización en frío junto a comunidades amazónicas. Creador de The Inca Trail Foods / Cacao Zamora.',
+      verifiedLabel: 'Perfiles verificados para comprobar autenticidad:',
+    },
+    b2bTeaser: {
+      eyebrow: 'PROFESIONALES • ALTA COCINA • RETIROS',
+      title: '¿Eres chef, dueño de restaurante o facilitador de retiros?',
+      desc: 'Separamos nuestra área mayorista y el protocolo sensorial «The 5 Bean Challenge» en una sección dedicada.',
+      cta: 'Ir a Chefs, B2B y The 5 Bean Challenge →',
     },
     b2b: {
-      eyebrow: '07 // B2B • ALTA GASTRONOMÍA • CENTROS DE RETIRO',
-      title: 'PROTOCOLO «THE 5–7 BEAN CHALLENGE» PARA CHEFS Y FACILITADORES',
+      eyebrow: 'B2B • ALTA GASTRONOMÍA • CENTROS DE RETIRO',
+      title: 'THE 5 BEAN CHALLENGE & MAYORISTAS',
       subtitle:
-        'Abastecemos directamente desde Zamora a restaurantes de alta cocina en Quito, Cuenca y Guayaquil, y centros de retiro / yoga en Vilcabamba y Mindo.',
+        'Abastecimiento directo desde Zamora para cocinas de autor en Quito, Cuenca y Guayaquil, y centros de retiro o yoga en Vilcabamba y Mindo.',
+      heroTag: 'KIT SENSORIAL • 5 GRANOS EXACTOS',
+      heroCaption: '5 granos enteros Glassy Crunch + 1 grano fermentado testigo para prueba comparativa',
       wholesaleTitle: 'CONDICIONES MAYORISTAS B2B',
       wholesalePoints: [
-        'Formatos profesionales: bloques 500 g (12 × 41.7 g) y 1,000 g (15 × 66.7 g)',
+        'Bloques profesionales: 500 g (12 × 41.7 g) y 1,000 g (15 × 66.7 g)',
         'Tarifa B2B desde $44.00 – $48.00 / kg según fórmula y volumen mensual',
         'Pigmento púrpura pizarra nativo, 0% notas de quemado o vinagre acético',
         'Despacho el mismo día vía cooperativa Zamora → Loja → Cuenca o Servientrega',
       ],
-      challengeTitle: 'KIT DE CATA SENSORIAL DE 15 MINUTOS',
+      challengeTitle: 'PROTOCOLO SENSORIAL DE 15 MINUTOS',
       challengeDesc:
-        'Solicita nuestro kit B2B (20 granos enteros Glassy Crunch + grano fermentado testigo + muestras de INCA, Andean Gold y vial de Purple Guayusa Elixir) para vivir la prueba somatosensorial:',
+        'La prueba somatosensorial directa con exactamente 5 granos enteros para comprobar en vivo la diferencia entre cacao vivo y cacao fermentado:',
+      kitContentsTitle: 'QUÉ INCLUYE EL KIT DE CATA B2B:',
+      kitContents: [
+        '20 granos enteros Glassy Crunch (para 4 pruebas completas de 5 granos)',
+        'Granos fermentados testigo para comparar corte, aroma y acidez',
+        'Muestras de INCA Ancestral Silk, Andean Gold Craft y vial de Purple Guayusa Elixir',
+      ],
       phases: [
         { step: 'FASE 01', title: 'Snap Test', detail: 'Chasquido vítreo junto al oído, corte púrpura monolítico y 0% olor a vinagre.' },
-        { step: 'FASE 02', title: 'Dosis 5–7 Granos', detail: 'Masticación de 8–10 g con vella intacta: textura crujiente y perfil floral-frutal.' },
+        { step: 'FASE 02', title: 'Dosis de 5 Granos', detail: 'Masticación de exactamente 5 granos (~6–7 g) con vella intacta: textura crujiente y perfil floral-frutal.' },
         { step: 'FASE 03', title: 'Respuesta NO (10–15 min)', detail: 'Vasodilatación tangible (calor en cuello y manos) y claridad mental sin taquicardia.' },
       ],
-      ctaLabel: 'Solicitar Kit B2B / Cata para Chefs y Retiros',
+      ctaLabel: 'Kit 5 Beans & Precios B2B',
       whatsappMessage:
-        'Hola Eugenio / ORO PÚRPURA, me interesa información B2B (precios por kg / Kit 5–7 Bean Challenge) para mi restaurante o centro de retiro en: ',
+        'Hola Eugenio / ORO PÚRPURA, me interesa información B2B (precios por kg / Kit 5 Bean Challenge) para mi restaurante o centro de retiro en: ',
     },
     trust: {
-      eyebrow: '08 // LOGÍSTICA Y PAGOS EN ECUADOR',
-      title: 'COMPRA SIN FRICCIÓN NI FORMULARIOS LARGOS',
+      eyebrow: '06 // ENVÍOS Y PAGOS EN ECUADOR',
+      title: 'COMPRA FÁCIL EN CHAT, SIN FORMULARIOS',
       shippingTitle: 'Envío Nacional Servientrega',
-      shippingDesc: 'Entrega a domicilio en 24–48 horas a las 24 provincias del Ecuador. Gratis en todos los Sets.',
-      paymentsTitle: 'Métodos de Pago en Chat WhatsApp',
+      shippingDesc: 'Entrega a domicilio en 24–48 horas en las 24 provincias. Gratis en todos los Sets.',
+      paymentsTitle: 'Pagos seguros al coordinar en WhatsApp',
       paymentsList: [
-        { method: 'Deuna! (QR 0% comisión)', detail: 'Pago instantáneo desde tu app bancaria' },
+        { method: 'Deuna! (QR 0% comisión)', detail: 'Pago inmediato desde tu app bancaria' },
         { method: 'Transferencia Bancaria', detail: 'Banco Pichincha • Banco Guayaquil • Produbanco' },
       ],
     },
     footer: {
       address: 'Taller de Estabilización & Molienda: Zamora, Zamora-Chinchipe, Ecuador.',
       ecosystem:
-        'oropurpura.incatrailfoods.com — Proyecto de consumo directo impulsado por The Inca Trail Foods / Cacao Zamora.',
+        'oropurpura.incatrailfoods.com — Iniciativa directa de The Inca Trail Foods / Cacao Zamora.',
+      b2bLink: 'Chefs / 5 Bean Challenge (B2B)',
       rights: '© 2026 ORO PÚRPURA. Cacao vivo sin fermentar ni tostar.',
     },
   },
   en: {
     common: {
-      copyText: 'Copy order',
+      copyText: 'Copy text',
       copied: 'Copied ✓',
       freeShippingBadge: 'FREE SHIPPING ECUADOR',
       orderViaWa: 'Order via WhatsApp',
       parentPrefix: 'by',
+      backToStorefront: '← Back to D2C Storefront',
+      closeModal: 'Close',
     },
     ticker: {
-      text: 'LIVING CACAO NACIONAL • ZAMORA-CHINCHIPE HARVEST • 0% FERMENTATION • FREE SERVIENTREGA SHIPPING ACROSS ECUADOR',
+      text: 'LIVING CACAO NACIONAL • ZAMORA-CHINCHIPE HARVEST • 0% FERMENTATION • FREE ECUADOR SHIPPING',
       availabilityLabel: 'AVAILABLE:',
       availabilityValue: 'IN VITRINE',
     },
     nav: {
-      why: 'Why',
-      calibrator: 'Calibrator',
       shop: 'Sets & Blocks',
-      science: 'DP1–7 Science',
-      origin: 'Zamora Origin',
-      b2b: 'B2B / Chefs',
+      calibrator: 'Find Yours',
+      why: 'Why Living?',
+      origin: 'Origin',
+      b2b: 'Chefs · 5 Bean Challenge',
       cta: 'WhatsApp',
     },
     hero: {
-      eyebrow: 'ZAMORA-CHINCHIPE, ECUADOR • WORLD CRADLE OF CACAO (5,300 YEARS)',
-      h1Prefix: 'ORIGIN ',
-      h1Number: '5300',
-      h1Rest: ": IT'S NOT CHOCOLATE. IT'S LIVING CACAO.",
-      hookLead: 'Direct neuro & vascular fuel from Zamora to your door in 24–48 h:',
-      hookPillars: [
-        { code: '01', text: 'Modular living cacao blocks (250 g–1 kg) to eat or whisk in hot water' },
-        { code: '02', text: 'Up to 10× more (-)-epicatechin than roasted craft chocolate' },
-        { code: '03', text: 'Curated Sets from $45 with free Ecuador shipping via WhatsApp' },
-      ],
+      eyebrow: 'ZAMORA-CHINCHIPE, ECUADOR • WORLD CRADLE OF CACAO',
+      originBadge: '5,300-YEAR ORIGIN',
+      h1Main: "IT'S NOT CHOCOLATE. IT'S LIVING CACAO.",
       subtitle:
-        'Synergistic functional pastes and Guayusa Elixir crafted from unfermented, unroasted ancestral purple cacao. Zero refined sugar or fillers.',
-      ctaPrimary: 'Explore Sets with Free Shipping',
-      ctaSecondary: 'Calibrate my dose (30 sec)',
-      telemetry: [
-        { value: '0 DAYS', label: 'Fermentation (0% acetic acid)' },
-        { value: '≤ 75–80 °C', label: 'Vacuum stabilization (7–10 h)' },
-        { value: '17.0–19.5 mg/g', label: 'Native (-)-Epicatechin (DP1)' },
-        { value: '24 PROVINCES', label: 'Free Servientrega delivery' },
+        'Unfermented, unroasted ancestral purple cacao in pre-scored blocks or cold-pressed elixir. Eat a square straight or whisk in hot water in 30 seconds: steady mental clarity, zero refined sugar, free shipping across Ecuador.',
+      ctaPrimary: 'Browse Sets with Free Shipping',
+      ctaSecondary: 'Which one fits me? (30 sec)',
+      proofs: [
+        { value: '0% FERMENTATION', label: 'Vacuum dried (< 10 h)' },
+        { value: 'EAT OR BREW', label: 'Pre-scored cells, no scale needed' },
+        { value: 'FREE SHIPPING', label: 'All 24 provinces via courier' },
       ],
+      visualTab1: '01 · Living Purple Bean',
+      visualTab2: '02 · Hot Elixir (75 °C)',
       diptychLeftTag: 'CUT-TEST: NATIVE PURPLE',
-      diptychLeftCaption: 'Glassy fracture vs. conventional brown fermented bean',
+      diptychLeftCaption: 'Unfermented living bean (left) vs. roasted brown bean (center)',
       diptychRightTag: 'BREW: 72–75 °C',
-      diptychRightCaption: 'Ruby-lavender suspension with zero oily film',
+      diptychRightCaption: 'Ruby-lavender foam suspension with zero oily surface film',
+    },
+    why: {
+      eyebrow: '01 // THE DIFFERENCE IN 10 SECONDS',
+      title: 'WHY IT FEELS NOTHING LIKE ORDINARY CHOCOLATE',
+      subtitle:
+        'Craft chocolate is a delicious confection, yet roasting at 140 °C destroys up to 80% of living flavanols. ORO PÚRPURA preserves the living fruit matrix straight from Zamora.',
+      cards: [
+        {
+          num: '01',
+          badge: '0% ROASTING • ≤ 75–80 °C',
+          title: 'True purple, never burnt',
+          detail:
+            'We halt oxidation within 10 hours of harvest. The interior remains solid slate-purple with bright fruity notes and 0% vinegar harshness.',
+        },
+        {
+          num: '02',
+          badge: 'UP TO 10× MORE ACTIVES',
+          title: 'Clean focus, zero jitters',
+          detail:
+            'Retains 17–19.5 mg/g of (-)-epicatechin and 2.4% native theobromine for hours of calm drive and blood flow without a coffee crash.',
+        },
+        {
+          num: '03',
+          badge: 'READY IN 30 SECONDS',
+          title: 'Eat a square or whisk it',
+          detail:
+            'Pre-scored modular blocks dissolve smoothly in your mouth as a functional snack or whisk effortlessly into 180 ml hot water.',
+        },
+      ],
+      openLabTableLabel: 'Open full biochemical comparison table (6 parameters) →',
     },
     conflict: {
-      eyebrow: '02 // CATEGORY CONFLICT',
+      eyebrow: 'LAB COMPARISON // DOSSIER',
       title: 'THERMAL DEATH VS. LIVING MATRIX',
       thesis:
-        'Fermentation and roasting (120–145 °C) are the art of crafting an aromatic confection. Yet heat oxidizes up to 80% of living flavanols and turns the seed brown. At ORO PÚRPURA we halt oxidation within 10 hours of Shuar harvest to preserve the living fruit matrix.',
+        'Fermentation and roasting (120–145 °C) are the art of crafting an aromatic confection. Yet heat oxidizes up to 80% of living flavanols and turns the seed brown. At ORO PÚRPURA we halt oxidation within 10 hours of Shuar harvest.',
       colParam: 'Biochemical Parameter',
       colConventional: 'Conventional / Craft Chocolate',
       colOro: 'ORO PÚRPURA (Living Cacao FMAD)',
-      filterLabel: 'Key delta',
       rows: [
         {
           param: 'Thermal processing',
@@ -791,132 +950,45 @@ export const CONTENT: Record<Lang, LocaleContent> = {
         },
       ],
     },
-    calibrator: {
-      eyebrow: '03 // STATE & DOSE CALIBRATOR',
-      title: 'CALIBRATE YOUR PROTOCOL IN 30 SECONDS',
-      subtitle:
-        'Select your physiological goal. The calibrator outputs the exact formula, cell dosage, water temperature, and optimal Set with free shipping.',
-      step1Label: 'STEP 01 // CHOOSE YOUR SCENARIO',
-      step2Label: 'STEP 02 // CALIBRATED PROTOCOL',
-      costLabel: 'Calculated cost per cup',
-      vsCafeLabel: 'vs. $3.50–$4.50 specialty café in Quito / Cuenca',
-      recommendedLabel: 'Recommended Set',
-      ctaLabel: 'Order this protocol via WhatsApp',
-      goals: [
-        {
-          id: 'focus',
-          tag: 'NEURO-SYNERGY • 0% ADDED CAFFEINE',
-          title: 'Deep caffeine-free focus',
-          subtitle: 'For engineering, deep work, and executive clarity with zero jitters or crash.',
-          formulaName: 'SKU 01: INCA Ancestral Silk',
-          skuBadge: '68.5% LIVING CACAO • 4 CIRCUITS',
-          accentColor: '#3B0764',
-          protocolPrimaryLabel: 'BREW (Functional drink)',
-          protocolPrimary: '1 cell (20.8 g) whisked with a frother in 180 ml hot water at 72–75 °C.',
-          protocolSecondaryLabel: 'EAT (Direct microdose)',
-          protocolSecondary: '1/2 cell (10.4 g) melted slowly before a deep work session.',
-          biochemistry: [
-            '~245 mg (-)-epicatechin DP1 per cell',
-            '2.4% theobromine + guayusa L-theanine (Alpha waves 8–12 Hz)',
-            'Maca macamides (FAAH inhibition) + Copaiba (CB2)',
-            'Piperine + Moringa (UGT1A9 / COMT blockade)',
-          ],
-          cupCost: '$1.88 – $2.04 / cup',
-          cafeComparison: '>45% savings vs. specialty coffee',
-          recommendedSet: 'Set 01 «Origen 5300»',
-          recommendedPrice: '$45.00 USD',
-          whatsappMessage:
-            'Hi ORO PÚRPURA, I used the Calibrator for [Deep caffeine-free focus] and want to order [Set 01 «Origen 5300»] ($45.00 with free Servientrega shipping). My city is: ',
-        },
-        {
-          id: 'energy',
-          tag: 'VASCULAR NO • COLD-PRESSED ZERO-WASTE',
-          title: 'Morning energy & vascular tone',
-          subtitle: 'Nitric oxide (NO), blood flow, clean pre-workout, and prebiotic vella fiber.',
-          formulaName: 'SKU 03: Purple Guayusa Elixir',
-          skuBadge: '68% COLD-PRESSED CAKE + 12% GUAYUSA',
-          accentColor: '#881337',
-          protocolPrimaryLabel: 'BREW (Ruby-lavender elixir)',
-          protocolPrimary: '2 teaspoons (10 g) whisked in 180–200 ml hot water at 75–80 °C (zero sediment).',
-          protocolSecondaryLabel: 'BOOST (Daily booster)',
-          protocolSecondary: '5–7 g (1 tsp) in your morning smoothie, protein shake, or filter coffee.',
-          biochemistry: [
-            '26–30 mg/g (-)-epicatechin in cold-pressed cacao cake',
-            '33 kcal • 0.79 g fat • 2.88 g prebiotic fiber per 10 g',
-            '~30 mg gentle guayusa caffeine + L-theanine (4–6 h steady)',
-            'Hibiscus pH 3.8–4.2 (phytate chelation) + SGLT1',
-          ],
-          cupCost: '$0.79 – $0.96 / cup',
-          cafeComparison: '4× more affordable than a latte or pre-workout',
-          recommendedSet: 'Set 02 «Alquimia 360°»',
-          recommendedPrice: '$65.00 USD',
-          whatsappMessage:
-            'Hi ORO PÚRPURA, I used the Calibrator for [Morning energy & vascular tone] and want to order [Set 02 «Alquimia 360°»] ($65.00 with free Servientrega shipping). My city is: ',
-        },
-        {
-          id: 'ritual',
-          tag: 'PURE TERROIR • EAT / BREW / CEREMONY',
-          title: 'Daily ritual, family or ceremony',
-          subtitle: 'Pure wild-cherry and floral Zamora terroir with sea salt and real vanilla.',
-          formulaName: 'SKU 02: Andean Gold Craft',
-          skuBadge: '70% LIVING CACAO • SALT & VANILLA',
-          accentColor: '#9A6B16',
-          protocolPrimaryLabel: 'EAT / BREW (Daily ritual)',
-          protocolPrimary: '1/2 to 1 cell (10.4–20.8 g) as a crisp snack or evening drink in 72–75 °C water.',
-          protocolSecondaryLabel: 'CEREMONY (Ceremonial dose)',
-          protocolSecondary: '2 cells of 250 g block (41.7 g) or 1 cell of 500 g block (41.7 g).',
-          biochemistry: [
-            '~550 mg epicatechin + ~580 mg theobromine per ceremonial dose (41.7 g)',
-            'Sea salt suppresses TAS2R14/39 bitterness receptors',
-            'Organic panela + Na+ trigger SGLT1 symport',
-            'Form V Silk temper: crisp snap and instant melt at 36.6 °C',
-          ],
-          cupCost: '$1.20 – $1.83 / cup',
-          cafeComparison: 'Exact ceremonial standard without a scale',
-          recommendedSet: 'Set 03 «Ritual Mensual / Dúo»',
-          recommendedPrice: '$118.00 USD',
-          whatsappMessage:
-            'Hi ORO PÚRPURA, I used the Calibrator for [Daily ritual, family or ceremony] and want to order [Set 03 «Ritual Mensual / Dúo»] ($118.00 with free Servientrega shipping). My city is: ',
-        },
-      ],
-    },
     shop: {
-      eyebrow: '04 // DIRECT STOREFRONT (D2C)',
-      title: 'CURATED SETS WITH FREE SHIPPING',
+      eyebrow: '02 // DIRECT STOREFRONT (D2C)',
+      title: 'CHOOSE YOUR SET WITH FREE SHIPPING',
       subtitle:
-        'Every Set stays under the 2 kg Servientrega tier so we include honest free courier shipping to all 24 provinces in Ecuador. Pay safely in chat (Deuna! or local bank transfer).',
-      setsTabTitle: '3 RITUAL SETS (FREE SERVIENTREGA DELIVERY)',
-      blocksTitle: 'INDIVIDUAL BLOCKS & WEIGHT CONFIGURATOR',
+        'Every order is confirmed directly in WhatsApp in under a minute (no checkout forms). Door-to-door delivery in 24–48 h via Servientrega nationwide.',
+      setsTabTitle: '3 CURATED SETS (FREE SERVIENTREGA ACROSS ECUADOR)',
+      blocksTitle: 'INDIVIDUAL BLOCKS & ELIXIR',
       blocksSubtitle:
-        'Modular blocks calibrated for scale-free dosing. Toggle weight to inspect pricing and technical sheets.',
+        'Prefer a single formula? Pick your weight below to view pricing, and open the technical sheet or batch passport whenever you want details.',
       weightLabels: {
-        '250g': { cells: '12 CELLS × 20.8 g', weightNote: 'Starter / Daily' },
-        '500g': { cells: '12 CELLS × 41.7 g', weightNote: 'Course / Ceremonial' },
-        '1000g': { cells: '15 CELLS × 66.7 g', weightNote: 'Family / Facilitator / Pro' },
+        '250g': { cells: '12 CELLS × 20.8 g', weightNote: 'Daily ritual • 12–24 days' },
+        '500g': { cells: '12 CELLS × 41.7 g', weightNote: 'Duo / Ceremony • 24–48 days' },
+        '1000g': { cells: '15 CELLS × 66.7 g', weightNote: 'Family / Pro • Best value' },
       },
-      openSpecLabel: 'Technical & Nutrition Sheet +',
-      closeSpecLabel: 'Hide Sheet −',
+      openSpecLabel: 'Ingredients & Nutrition',
+      openPassportLabel: 'Batch Passport / QR',
       ingredientsTitle: 'Formula & Biochemical Function',
       nutritionTitle: 'Estimated Nutrition Facts',
       col100g: 'Per 100 g',
       colServing: 'Per serving',
-      orderBlockCta: 'Order block via WhatsApp',
+      orderBlockCta: 'Order on WhatsApp',
       sets: [
         {
           id: 'set-01',
           code: 'SET 01',
           name: '«ORIGEN 5300»',
           price: '$45.00',
+          cupPriceHighlight: '$1.88 / cup',
           savings: 'Save $7.00 incl. shipping',
-          badge: 'STARTER • TWO POLES OF LIVING CACAO',
+          badge: 'STARTER • TWO BLOCK FORMULAS',
+          image: '/images/set-origen-bundle.jpg',
           items: [
-            'INCA Ancestral Silk — 250 g block (12 cells × 20.8 g)',
-            'Andean Gold Craft — 250 g block (12 cells × 20.8 g)',
+            'INCA Ancestral Silk — 250 g block (12 cells)',
+            'Andean Gold Craft — 250 g block (12 cells)',
           ],
-          gift: 'Unboxing Gift: 30 g whole Glassy Crunch beans (5–7 Bean Challenge)',
+          gift: 'Included Gift: 30 g whole Glassy Crunch beans (5 Bean Challenge)',
           netWeight: '530 g net',
-          yieldSummary: '24 cups ($1.88/cup) or 48 snack doses ($0.94/dose)',
-          ctaLabel: 'Order Set 01 ($45) on WhatsApp',
+          yieldSummary: '24 functional cups or 48 snack microdoses',
+          ctaLabel: 'Order Set 01 · $45',
           whatsappMessage:
             'Hi ORO PÚRPURA, I want to order Set 01 «Origen 5300» ($45.00 with free Servientrega shipping). My city is: ',
         },
@@ -925,18 +997,20 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           code: 'SET 02',
           name: '«ALQUIMIA 360°»',
           price: '$65.00',
+          cupPriceHighlight: '$1.33 / cup',
           savings: 'Save $11.00 incl. shipping',
-          badge: 'MOST CHOSEN • MORNING / DAY / NIGHT CYCLE',
+          badge: '★ MOST CHOSEN • FULL DAILY CYCLE',
+          image: '/images/set-alquimia-bundle.jpg',
           featured: true,
           items: [
-            'INCA Ancestral Silk — 250 g block (12 cells × 20.8 g)',
-            'Andean Gold Craft — 250 g block (12 cells × 20.8 g)',
-            'Purple Guayusa Elixir — 250 g pouch (25–50 drinks)',
+            'INCA Ancestral Silk — 250 g block (Deep Focus)',
+            'Andean Gold Craft — 250 g block (Pure Terroir)',
+            'Purple Guayusa Elixir — 250 g pouch (Morning Energy)',
           ],
-          gift: 'Unboxing Gift: 30 g whole Glassy Crunch beans',
+          gift: 'Included Gift: 30 g whole Glassy Crunch beans (5 Bean Challenge)',
           netWeight: '780 g net',
-          yieldSummary: '49 functional drinks ($1.33/cup average)',
-          ctaLabel: 'Order Set 02 ($65) on WhatsApp',
+          yieldSummary: '49 drinks or up to 70 combined servings',
+          ctaLabel: 'Order Set 02 · $65',
           whatsappMessage:
             'Hi ORO PÚRPURA, I want to order Set 02 «Alquimia 360°» ($65.00 with free Servientrega shipping). My city is: ',
         },
@@ -945,17 +1019,19 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           code: 'SET 03',
           name: '«RITUAL MENSUAL / DÚO»',
           price: '$118.00',
+          cupPriceHighlight: '$1.20 / cup',
           savings: 'Save $16.00 incl. shipping',
-          badge: 'MAX YIELD • COUPLES OR DAILY PRACTICE',
+          badge: 'MAX VALUE • COUPLES & DAILY USE',
+          image: '/images/set-ritual-bundle.jpg',
           items: [
-            'INCA Ancestral Silk — 500 g block (12 cells × 41.7 g)',
-            'Andean Gold Craft — 500 g block (12 cells × 41.7 g)',
+            'INCA Ancestral Silk — 500 g block (12 × 41.7 g)',
+            'Andean Gold Craft — 500 g block (12 × 41.7 g)',
             'Purple Guayusa Elixir — 500 g pouch (50–100 drinks)',
           ],
-          gift: 'Unboxing Gift: 30 g whole Glassy Crunch beans',
+          gift: 'Included Gift: 30 g whole Glassy Crunch beans (5 Bean Challenge)',
           netWeight: '1,530 g net',
-          yieldSummary: '98 standard cups ($1.20/cup) or 48 ceremonies of 41.7 g',
-          ctaLabel: 'Order Set 03 ($118) on WhatsApp',
+          yieldSummary: '98 standard cups or 48 ceremonial servings',
+          ctaLabel: 'Order Set 03 · $118',
           whatsappMessage:
             'Hi ORO PÚRPURA, I want to order Set 03 «Ritual Mensual / Dúo» ($118.00 with free Servientrega shipping). My city is: ',
         },
@@ -963,11 +1039,14 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       skus: [
         {
           id: 'inca',
-          code: 'SKU 01 // FLAGSHIP',
+          code: 'SKU 01 // DEEP FOCUS',
           name: 'INCA Ancestral Silk',
-          tagline: '4-circuit neuro-activator with velvety Form V Silk rheology.',
+          shortBenefit:
+            'Caffeine-free cognitive clarity. Silky living purple cacao enhanced with maca, guayusa, and Amazonian botanicals for peak absorption.',
+          tasteNote: 'Taste: Warm gentle spices, velvety melt, lightly sweetened with panela.',
           accentToken: 'purple',
-          cacaoPercent: '68.50% Living Cacao (63% 18 µm paste + 5.5% cold-pressed butter)',
+          cacaoPercent: '68.5% Living Cacao',
+          image: '/images/sku-inca-silk.jpg',
           prices: { '250g': '$24.50', '500g': '$44.50', '1000g': '$80.00' },
           unitCost: {
             '250g': '$2.04 / cup (20.8 g)',
@@ -975,6 +1054,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
             '1000g': '$1.78 / cup (22.2 g)',
           },
           servingLabel: '1 cell (20.8 g)',
+          prepHint: 'Melt 1/2 cell directly or whisk 1 cell into 180 ml hot water (72–75 °C).',
           ingredients: [
             { name: 'Living purple Cacao Zamora paste (18 µm w/ vella)', share: '63.00%', functionDesc: 'DP1–DP7 flavanols, 2.4% theobromine, prebiotic fiber.' },
             { name: 'Cold-pressed native golden cacao butter', share: '5.50%', functionDesc: 'Gentle lipophilic extraction for fast absorption and silky melt.' },
@@ -994,11 +1074,14 @@ export const CONTENT: Record<Lang, LocaleContent> = {
         },
         {
           id: 'andean',
-          code: 'SKU 02 // GASTRONOMIC BASE',
-          name: 'Andean Gold Craft (Salted & Vanilla)',
-          tagline: 'Pure Zamora terroir benchmark with wild cherry and molasses notes.',
+          code: 'SKU 02 // PURE TERROIR',
+          name: 'Andean Gold Craft',
+          shortBenefit:
+            'Pure Zamora harvest profile finished with crystalline sea salt and real vanilla bean, zero hot spices. Perfect for daily enjoyment or ceremony.',
+          tasteNote: 'Taste: Wild cherry, bright floral cacao, crisp salted balance.',
           accentToken: 'ochre',
-          cacaoPercent: '70.00% Living Cacao (65% 18 µm paste + 5.0% cold-pressed butter)',
+          cacaoPercent: '70.0% Living Cacao',
+          image: '/images/sku-andean-gold.jpg',
           prices: { '250g': '$22.00', '500g': '$39.00', '1000g': '$72.00' },
           unitCost: {
             '250g': '$1.83 / cup (20.8 g)',
@@ -1006,6 +1089,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
             '1000g': '$1.60 / cup (22.2 g)',
           },
           servingLabel: '1 cell (20.8 g)',
+          prepHint: 'Eat 1/2 cell as a crisp snack or whisk 1–2 cells in hot water.',
           ingredients: [
             { name: 'Living purple Cacao Zamora paste (18 µm w/ vella)', share: '65.00%', functionDesc: 'Intact DP1–DP7 polyphenol and theobromine matrix.' },
             { name: 'Cold-pressed native golden cacao butter', share: '5.00%', functionDesc: 'Mirror gloss and crisp Form V Silk snap.' },
@@ -1025,11 +1109,14 @@ export const CONTENT: Record<Lang, LocaleContent> = {
         },
         {
           id: 'guayusa',
-          code: 'SKU 03 // ZERO-WASTE ELIXIR',
+          code: 'SKU 03 // LIGHT ELIXIR',
           name: 'Purple Guayusa Elixir',
-          tagline: 'Micronized (<80 µm) cold-pressed purple cake + Amazonian guayusa.',
+          shortBenefit:
+            'Micronized cold-pressed cacao cake blended with Amazonian guayusa leaf and hibiscus. Just 33 kcal per cup with zero oily film.',
+          tasteNote: 'Taste: Bright ruby-lavender brew with crisp berry tartness.',
           accentToken: 'ruby',
-          cacaoPercent: '68.00% Cold-Pressed Purple Cake (1.58× Epicatechin)',
+          cacaoPercent: '68.0% Cold-Pressed Cake + 12% Guayusa',
+          image: '/images/ruby-lavender-elixir.jpg',
           prices: { '250g': '$24.00', '500g': '$44.00', '1000g': '$79.00' },
           unitCost: {
             '250g': '$0.96 / drink (10 g)',
@@ -1037,6 +1124,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
             '1000g': '$0.79 / drink (10 g)',
           },
           servingLabel: '2 tsp (10 g)',
+          prepHint: 'Whisk 2 tsp (10 g) into 180–200 ml hot water at 75–80 °C.',
           ingredients: [
             { name: 'Cold-pressed purple Cacao Zamora cake (<80 µm)', share: '68.00%', functionDesc: 'Super-concentrated: 26–30 mg/g DP1 & 3.5% theobromine.' },
             { name: 'Amazonian Guayusa leaf (Ilex guayusa)', share: '12.00%', functionDesc: 'L-theanine + ~30 mg gentle caffeine for 4–6 h clarity.' },
@@ -1056,11 +1144,146 @@ export const CONTENT: Record<Lang, LocaleContent> = {
         },
       ],
     },
+    calibrator: {
+      eyebrow: '03 // 30-SECOND MATCHER',
+      title: 'NOT SURE WHICH ONE TO PICK? MATCH YOUR GOAL',
+      subtitle: 'Tap your scenario to see the right formula, how to prepare it, and the best-value Set.',
+      step1Label: '1. PICK YOUR GOAL',
+      step2Label: '2. RECOMMENDED FORMULA & PREP',
+      costLabel: 'Calculated cost per cup',
+      vsCafeLabel: 'vs. $3.50–$4.50 specialty café in Quito / Cuenca',
+      recommendedLabel: 'Best Set for this goal',
+      biochemToggleOpen: 'Show formula biochemistry details +',
+      biochemToggleClose: 'Hide biochemistry details −',
+      ctaLabel: 'Order this Set on WhatsApp',
+      goals: [
+        {
+          id: 'focus',
+          tag: 'CAFFEINE-FREE • DEEP WORK',
+          title: 'Deep mental focus without jitters',
+          subtitle: 'Built for engineering, studying, creative flow, and long work blocks with zero crash.',
+          formulaName: 'INCA Ancestral Silk',
+          skuId: 'inca',
+          skuBadge: '68.5% LIVING CACAO • ZERO ADDED CAFFEINE',
+          accentColor: '#3B0764',
+          prepPrimaryLabel: 'In a cup (Brew)',
+          prepPrimary: 'Whisk 1 cell (20.8 g) in 180 ml hot water (72–75 °C) with a frother.',
+          prepSecondaryLabel: 'Direct (Eat)',
+          prepSecondary: 'Slowly melt 1/2 cell before starting your deep work session.',
+          plainBenefits: [
+            '3–5 hours of calm alertness without caffeine spikes',
+            'Supports cerebral blood flow and warm physical focus',
+            'Zero refined sugar and naturally rich in prebiotic fiber',
+          ],
+          biochemistry: [
+            '~245 mg (-)-epicatechin DP1 per cell',
+            '2.4% theobromine + guayusa L-theanine (Alpha waves 8–12 Hz)',
+            'Maca macamides (FAAH inhibition) + Copaiba (CB2)',
+            'Piperine + Moringa (UGT1A9 / COMT blockade)',
+          ],
+          cupCost: '$1.88 – $2.04 / cup',
+          cafeComparison: '>45% savings vs. specialty coffee',
+          recommendedSet: 'Set 01 «Origen 5300»',
+          recommendedPrice: '$45.00 USD',
+          whatsappMessage:
+            'Hi ORO PÚRPURA, I used the Matcher for [Deep mental focus] and want to order [Set 01 «Origen 5300»] ($45.00 with free Servientrega shipping). My city is: ',
+        },
+        {
+          id: 'energy',
+          tag: 'MORNING & WORKOUT • 33 KCAL',
+          title: 'Morning energy & circulation',
+          subtitle: 'Light pre-workout or morning boost with clean blood flow and prebiotic cacao fiber.',
+          formulaName: 'Purple Guayusa Elixir',
+          skuId: 'guayusa',
+          skuBadge: '68% COLD-PRESSED CAKE + GUAYUSA',
+          accentColor: '#881337',
+          prepPrimaryLabel: 'Ruby-lavender brew',
+          prepPrimary: 'Whisk 2 tsp (10 g) into 180–200 ml hot water (75–80 °C).',
+          prepSecondaryLabel: 'Daily boost',
+          prepSecondary: 'Add 1 tsp (5 g) into your smoothie, protein shake, or morning coffee.',
+          plainBenefits: [
+            'Clean nitric oxide vascular lift ideal before training',
+            '4–6 hours of smooth guayusa stamina (~30 mg gentle caffeine)',
+            'Ultra light: just 33 kcal, 0.79 g fat, zero gritty sediment',
+          ],
+          biochemistry: [
+            '26–30 mg/g (-)-epicatechin in cold-pressed cacao cake',
+            '33 kcal • 0.79 g fat • 2.88 g prebiotic fiber per 10 g',
+            '~30 mg gentle guayusa caffeine + L-theanine (4–6 h steady)',
+            'Hibiscus pH 3.8–4.2 (phytate chelation) + SGLT1',
+          ],
+          cupCost: '$0.79 – $0.96 / drink',
+          cafeComparison: '4× more affordable than a latte or pre-workout',
+          recommendedSet: 'Set 02 «Alquimia 360°»',
+          recommendedPrice: '$65.00 USD',
+          whatsappMessage:
+            'Hi ORO PÚRPURA, I used the Matcher for [Morning energy & circulation] and want to order [Set 02 «Alquimia 360°»] ($65.00 with free Servientrega shipping). My city is: ',
+        },
+        {
+          id: 'ritual',
+          tag: 'PURE TERROIR • DAILY OR CEREMONY',
+          title: 'Daily pleasure or ceremony',
+          subtitle: 'Bright wild-cherry Zamora profile with sea salt and real vanilla, great to share or meditate.',
+          formulaName: 'Andean Gold Craft',
+          skuId: 'andean',
+          skuBadge: '70% LIVING CACAO • SEA SALT & VANILLA',
+          accentColor: '#9A6B16',
+          prepPrimaryLabel: 'Daily (Eat / Brew)',
+          prepPrimary: '1/2 to 1 cell (10.4–20.8 g) as a crisp snack or comforting evening drink.',
+          prepSecondaryLabel: 'Ceremonial dose',
+          prepSecondary: '2 cells of 250 g block (41.7 g) or 1 cell of 500 g block.',
+          plainBenefits: [
+            'Authentic berry-floral notes without roasted bitterness',
+            'Velvety melt on the tongue or frothy cup in seconds',
+            'Scale-free modular portions ready for home or group circles',
+          ],
+          biochemistry: [
+            '~550 mg epicatechin + ~580 mg theobromine per ceremonial dose (41.7 g)',
+            'Sea salt suppresses TAS2R14/39 bitterness receptors',
+            'Organic panela + Na+ trigger SGLT1 symport',
+            'Form V Silk temper: crisp snap and instant melt at 36.6 °C',
+          ],
+          cupCost: '$1.20 – $1.83 / cup',
+          cafeComparison: 'Scale-free calibrated ceremonial dose',
+          recommendedSet: 'Set 03 «Ritual Mensual / Dúo»',
+          recommendedPrice: '$118.00 USD',
+          whatsappMessage:
+            'Hi ORO PÚRPURA, I used the Matcher for [Daily pleasure or ceremony] and want to order [Set 03 «Ritual Mensual / Dúo»] ($118.00 with free Servientrega shipping). My city is: ',
+        },
+      ],
+    },
     science: {
-      eyebrow: '05 // SCIENCE & PHARMACOKINETICS',
-      title: 'DP1–DP7 PHENOLIC CASCADE & 4 SYNERGY CIRCUITS',
+      eyebrow: '04 // SCIENCE MADE CLEAR',
+      title: 'WHAT HAPPENS IN YOUR BODY HOUR BY HOUR',
       subtitle:
-        'Unformulated 100% raw paste is astringent and poorly absorbed. Our matrix solves bioavailability across four physiological pathways.',
+        'Plain unformulated raw paste is hard to absorb. Our synergy pairs living cacao with native botanicals so every milligram works.',
+      timeline: [
+        {
+          time: '60 MIN',
+          title: 'Circulation & natural warmth',
+          summary: 'Intact flavanols stimulate nitric oxide release for clean peripheral blood flow.',
+        },
+        {
+          time: '2–4 H',
+          title: 'Steady mental clarity',
+          summary: 'Theobromine and L-theanine support coherent focus without adrenaline jitters.',
+        },
+        {
+          time: '4–8 H',
+          title: 'Balanced metabolic energy',
+          summary: 'Longer polyphenol chains protect blood vessels and smooth energy release.',
+        },
+        {
+          time: '12–24 H',
+          title: 'Real prebiotic nourishment',
+          summary: 'Intact inner cacao skin (vella) feeds beneficial gut microbiota naturally.',
+        },
+      ],
+      openDossierLabel: 'Open full scientific dossier (DP1–DP7, 4 Circuits & Lab Table) →',
+      modalTitle: 'ORO PÚRPURA Scientific & Pharmacokinetic Dossier',
+      tabCascade: 'DP1–DP7 Cascade',
+      tabCircuits: '4 INCA Circuits',
+      tabTable: '6×3 Comparison',
       cascadeTitle: 'INTACT POLYPHENOL CASCADE (DP1–DP7)',
       cascadeCards: [
         {
@@ -1118,59 +1341,73 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       ],
     },
     origin: {
-      eyebrow: '06 // TRACEABILITY & TRANSPARENCY',
-      title: 'ZAMORA ORIGIN, TRACEABILITY & FOUNDER',
-      terroirTitle: '5,300-YEAR CRADLE & SHUAR DIRECT TRADE',
+      eyebrow: '05 // TRACEABILITY & TRUST',
+      title: 'CRAFTED IN ZAMORA WITH SHUAR FAMILIES',
+      terroirTitle: '5,300-YEAR CRADLE & BASE L2 TRACEABILITY',
       terroirPoints: [
         { label: 'Harvest elevation', value: '900 – 1,362 m a.s.l. (Salto del Inca, San Francisco del Vergel, Playas de Cuje)' },
-        { label: 'Direct Trade alliance', value: 'Shuar farming families (Napurak community / Los Bayanes association)' },
-        { label: 'Forest stewardship', value: 'Relict Cacao Nacional under native canopy — zero CCN-51 deforestation' },
-        { label: '7–10 hour rule', value: 'Pod opening to vacuum stabilization & sealing in Zamora under 10 hours' },
+        { label: 'Shuar Direct Trade', value: 'Direct alliance with Napurak community families / Los Bayanes association' },
+        { label: '7–10 hour rule', value: 'Pod opening to vacuum stabilization and sealing in Zamora under 10 hours' },
+        { label: 'Native canopy', value: 'Relict Cacao Nacional under old-growth shade — zero CCN-51 deforestation' },
       ],
       tznkBadge: 'DIGITAL BATCH PASSPORT • BASE L2 / EAS',
       tznkDesc:
-        'Every 10×10 cm label carries a dynamic QR linked to the Inca Trail Foods traceability dossier with coordinates, elevation, and exact stabilization timestamp.',
+        'Every 10×10 cm label carries a verified QR linked to the Inca Trail Foods dossier with coordinates, elevation, and exact stabilization timestamp.',
       tznkLinkLabel: 'Verify lots at incatrailfoods.com ↗',
-      packagingTag: 'APOTHECARY GRID SYSTEM • 10 × 10 CM',
+      packagingTag: 'APOTHECARY PACKAGING • 10 × 10 CM',
       terroirTag: 'SHUAR CHAKRAS • ZAMORA-CHINCHIPE',
       founderRole: 'FOUNDER & FOOD PROCESS ENGINEER',
       founderName: 'Eugenio Ayachui',
       founderBio:
-        '11+ years in Ecuador developing cold stabilization technology (FMAD / VMC) alongside Amazonian communities. Creator of The Inca Trail Foods / Cacao Zamora, aligned with the National Assembly patrimonial declaration of Palanda as the world cradle of cacao.',
-      verifiedLabel: 'Verified profiles to confirm authenticity before ordering:',
+        '11+ years in Ecuador advancing cold stabilization with Amazonian communities. Creator of The Inca Trail Foods / Cacao Zamora.',
+      verifiedLabel: 'Verified profiles to confirm authenticity:',
+    },
+    b2bTeaser: {
+      eyebrow: 'PROFESSIONALS • FINE DINING • RETREATS',
+      title: 'Are you a chef, restaurant owner, or retreat facilitator?',
+      desc: 'We moved our wholesale B2B pricing and «The 5 Bean Challenge» tasting kit into a dedicated workspace.',
+      cta: 'Open Chefs, B2B & The 5 Bean Challenge →',
     },
     b2b: {
-      eyebrow: '07 // B2B • HAUTE CUISINE • RETREAT CENTERS',
-      title: '«THE 5–7 BEAN CHALLENGE» FOR CHEFS & FACILITATORS',
+      eyebrow: 'B2B • HAUTE CUISINE • RETREAT CENTERS',
+      title: 'THE 5 BEAN CHALLENGE & WHOLESALE',
       subtitle:
         'Direct supply from Zamora to fine-dining kitchens in Quito, Cuenca, and Guayaquil, and yoga/retreat centers in Vilcabamba and Mindo.',
+      heroTag: 'SENSORY KIT • EXACTLY 5 BEANS',
+      heroCaption: '5 whole Glassy Crunch purple beans + 1 control fermented brown bean for side-by-side testing',
       wholesaleTitle: 'B2B WHOLESALE TERMS',
       wholesalePoints: [
-        'Pro formats: 500 g (12 × 41.7 g) and 1,000 g (15 × 66.7 g) modular blocks',
+        'Pro modular blocks: 500 g (12 × 41.7 g) and 1,000 g (15 × 66.7 g)',
         'Wholesale pricing from $44.00 – $48.00 / kg based on formula and monthly volume',
         'Pure slate-purple pigment, zero burnt notes or acetic vinegar off-flavors',
-        'Same-day dispatch via Zamora → Loja → Cuenca bus cooperatives or Servientrega',
+        'Same-day dispatch via Zamora → Loja → Cuenca cooperatives or Servientrega',
       ],
-      challengeTitle: '15-MINUTE SENSORY TASTING KIT',
+      challengeTitle: '15-MINUTE SOMATOSENSORY PROTOCOL',
       challengeDesc:
-        'Request our B2B tasting kit (20 whole Glassy Crunch beans + control fermented brown bean + INCA, Andean Gold samples & Purple Guayusa Elixir vial) for the live somatosensory test:',
+        'A direct live tasting test using exactly 5 whole beans so kitchens and facilitators can verify living cacao in 15 minutes:',
+      kitContentsTitle: "WHAT'S INSIDE THE B2B TASTING KIT:",
+      kitContents: [
+        '20 whole Glassy Crunch beans (enough for 4 complete 5-bean tests)',
+        'Control fermented brown beans to compare cut, snap, and aroma',
+        'Tasting samples of INCA Ancestral Silk, Andean Gold Craft & Purple Guayusa Elixir vial',
+      ],
       phases: [
         { step: 'PHASE 01', title: 'Snap Test', detail: 'Crisp glass-like crack next to the ear, solid purple interior, 0% vinegar aroma.' },
-        { step: 'PHASE 02', title: '5–7 Bean Dose', detail: 'Chew 8–10 g with intact vella: crunchy texture and bright berry-floral notes.' },
+        { step: 'PHASE 02', title: '5-Bean Dose', detail: 'Chew exactly 5 whole beans (~6–7 g) with intact vella: crunchy texture and bright berry-floral notes.' },
         { step: 'PHASE 03', title: 'NO Response (10–15 min)', detail: 'Tangible vasodilation (warmth in neck and hands) and clear focus without jitters.' },
       ],
-      ctaLabel: 'Request B2B Kit / Tasting for Chefs & Retreats',
+      ctaLabel: '5 Bean Kit & B2B Pricing',
       whatsappMessage:
-        'Hi Eugenio / ORO PÚRPURA, I am interested in B2B wholesale pricing / the 5–7 Bean Challenge Kit for my restaurant or retreat center in: ',
+        'Hi Eugenio / ORO PÚRPURA, I am interested in B2B wholesale pricing / the 5 Bean Challenge Kit for my restaurant or retreat center in: ',
     },
     trust: {
-      eyebrow: '08 // ECUADOR LOGISTICS & PAYMENTS',
-      title: 'FRICTIONLESS ORDERING WITHOUT LONG CHECKOUTS',
+      eyebrow: '06 // ECUADOR SHIPPING & PAYMENTS',
+      title: 'EFFORTLESS ORDERING IN CHAT, ZERO CHECKOUT FRICTION',
       shippingTitle: 'Nationwide Servientrega Courier',
-      shippingDesc: 'Door-to-door delivery in 24–48 hours across all 24 Ecuadorian provinces. Free on all Sets.',
-      paymentsTitle: 'Payment Methods in WhatsApp Chat',
+      shippingDesc: 'Door-to-door delivery in 24–48 hours across all 24 provinces. Free on all Sets.',
+      paymentsTitle: 'Secure Payment Methods via WhatsApp',
       paymentsList: [
-        { method: 'Deuna! (QR 0% fee)', detail: 'Instant payment from your Ecuadorian banking app' },
+        { method: 'Deuna! (0% fee QR)', detail: 'Instant payment from your Ecuadorian banking app' },
         { method: 'Local Bank Transfer', detail: 'Banco Pichincha • Banco Guayaquil • Produbanco' },
       ],
     },
@@ -1178,6 +1415,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       address: 'Stabilization & Grinding Workshop: Zamora, Zamora-Chinchipe, Ecuador.',
       ecosystem:
         'oropurpura.incatrailfoods.com — Direct-to-consumer initiative powered by The Inca Trail Foods / Cacao Zamora.',
+      b2bLink: 'Chefs / 5 Bean Challenge (B2B)',
       rights: '© 2026 ORO PÚRPURA. Unfermented, unroasted living cacao.',
     },
   },
