@@ -371,9 +371,9 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       blocksSubtitle:
         '¿Prefieres una sola fórmula? Selecciona el peso para ver el precio y abre la ficha técnica o el pasaporte de lote solo si lo necesitas.',
       weightLabels: {
-        '250g': { cells: '12 CELDAS × 20.8 g', weightNote: 'Uso diario • 12 a 24 días' },
-        '500g': { cells: '12 CELDAS × 41.7 g', weightNote: 'Dúo / Ceremonia • 24 a 48 días' },
-        '1000g': { cells: '15 CELDAS × 66.7 g', weightNote: 'Familia / Pro • Máximo ahorro' },
+        '250g': { cells: '1 BLOQUE × 250 g (12 × 20.8 g)', weightNote: 'Uso diario • 12 a 24 días' },
+        '500g': { cells: '2 BLOQUES × 250 g (24 × 20.8 g)', weightNote: 'Dúo / Ceremonia • 24 a 48 días' },
+        '1000g': { cells: '4 BLOQUES × 250 g (48 × 20.8 g)', weightNote: 'Familia / Pro • Máximo ahorro' },
       },
       openSpecLabel: 'Ficha técnica y nutrientes',
       openPassportLabel: 'Pasaporte de lote / QR',
@@ -435,8 +435,8 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           badge: 'MÁXIMO RENDIMIENTO • PAREJAS',
           image: '/images/set-ritual-bundle.jpg',
           items: [
-            'INCA Ancestral Silk — Bloque 500 g (12 × 41.7 g)',
-            'Andean Gold Craft — Bloque 500 g (12 × 41.7 g)',
+            'INCA Ancestral Silk — 2 bloques × 250 g (24 × 20.8 g)',
+            'Andean Gold Craft — 2 bloques × 250 g (24 × 20.8 g)',
             'Purple Guayusa Elixir — Doypack 500 g (50–100 bebidas)',
           ],
           gift: 'Regalo incluido: 30 g granos enteros Glassy Crunch (Test 5 Bean Challenge)',
@@ -462,7 +462,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           unitCost: {
             '250g': '$2.04 / taza (20.8 g)',
             '500g': '$1.85 / taza (20.8 g)',
-            '1000g': '$1.78 / taza (22.2 g)',
+            '1000g': '$1.67 / taza (20.8 g)',
           },
           servingLabel: '1 celda (20.8 g)',
           prepHint: 'Derrite 1/2 celda en boca o bate 1 celda en 180 ml de agua a 72–75 °C.',
@@ -497,7 +497,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           unitCost: {
             '250g': '$1.83 / taza (20.8 g)',
             '500g': '$1.63 / taza (20.8 g)',
-            '1000g': '$1.60 / taza (22.2 g)',
+            '1000g': '$1.50 / taza (20.8 g)',
           },
           servingLabel: '1 celda (20.8 g)',
           prepHint: 'Snack crujiente de 1/2 celda o bebida ceremonial con 1–2 celdas en agua caliente.',
@@ -642,7 +642,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           prepPrimaryLabel: 'Uso diario (Eat / Brew)',
           prepPrimary: '1/2 a 1 celda (10.4–20.8 g) como snack cristalino o bebida suave vespertina.',
           prepSecondaryLabel: 'Dosis ceremonial',
-          prepSecondary: '2 celdas de bloque 250 g (41.7 g) o 1 celda grande de bloque 500 g.',
+          prepSecondary: '2 celdas de bloque de 250 g (41.7 g) disueltas lentamente.',
           plainBenefits: [
             'Notas auténticas de cereza silvestre y cacao vivo sin amargor agresivo',
             'Textura sedosa que se funde limpia en boca o en agua caliente',
@@ -788,7 +788,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       heroCaption: '5 granos enteros Glassy Crunch + 1 grano fermentado testigo para prueba comparativa',
       wholesaleTitle: 'CONDICIONES MAYORISTAS B2B',
       wholesalePoints: [
-        'Bloques profesionales: 500 g (12 × 41.7 g) y 1,000 g (15 × 66.7 g)',
+        'Formato modular estandarizado: bloques de 250 g (12 × 20.8 g); pedidos de 500 g (2 × 250 g) y 1 kg (4 × 250 g)',
         'Tarifa B2B desde $44.00 – $48.00 / kg según fórmula y volumen mensual',
         'Pigmento púrpura pizarra nativo, 0% notas de quemado o vinagre acético',
         'Despacho el mismo día vía cooperativa Zamora → Loja → Cuenca o Servientrega',
@@ -960,9 +960,9 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       blocksSubtitle:
         'Prefer a single formula? Pick your weight below to view pricing, and open the technical sheet or batch passport whenever you want details.',
       weightLabels: {
-        '250g': { cells: '12 CELLS × 20.8 g', weightNote: 'Daily ritual • 12–24 days' },
-        '500g': { cells: '12 CELLS × 41.7 g', weightNote: 'Duo / Ceremony • 24–48 days' },
-        '1000g': { cells: '15 CELLS × 66.7 g', weightNote: 'Family / Pro • Best value' },
+        '250g': { cells: '1 BLOCK × 250 g (12 × 20.8 g)', weightNote: 'Daily ritual • 12–24 days' },
+        '500g': { cells: '2 BLOCKS × 250 g (24 × 20.8 g)', weightNote: 'Duo / Ceremony • 24–48 days' },
+        '1000g': { cells: '4 BLOCKS × 250 g (48 × 20.8 g)', weightNote: 'Family / Pro • Best value' },
       },
       openSpecLabel: 'Ingredients & Nutrition',
       openPassportLabel: 'Batch Passport / QR',
@@ -1024,8 +1024,8 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           badge: 'MAX VALUE • COUPLES & DAILY USE',
           image: '/images/set-ritual-bundle.jpg',
           items: [
-            'INCA Ancestral Silk — 500 g block (12 × 41.7 g)',
-            'Andean Gold Craft — 500 g block (12 × 41.7 g)',
+            'INCA Ancestral Silk — 2 blocks × 250 g (24 × 20.8 g)',
+            'Andean Gold Craft — 2 blocks × 250 g (24 × 20.8 g)',
             'Purple Guayusa Elixir — 500 g pouch (50–100 drinks)',
           ],
           gift: 'Included Gift: 30 g whole Glassy Crunch beans (5 Bean Challenge)',
@@ -1051,7 +1051,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           unitCost: {
             '250g': '$2.04 / cup (20.8 g)',
             '500g': '$1.85 / cup (20.8 g)',
-            '1000g': '$1.78 / cup (22.2 g)',
+            '1000g': '$1.67 / cup (20.8 g)',
           },
           servingLabel: '1 cell (20.8 g)',
           prepHint: 'Melt 1/2 cell directly or whisk 1 cell into 180 ml hot water (72–75 °C).',
@@ -1086,7 +1086,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           unitCost: {
             '250g': '$1.83 / cup (20.8 g)',
             '500g': '$1.63 / cup (20.8 g)',
-            '1000g': '$1.60 / cup (22.2 g)',
+            '1000g': '$1.50 / cup (20.8 g)',
           },
           servingLabel: '1 cell (20.8 g)',
           prepHint: 'Eat 1/2 cell as a crisp snack or whisk 1–2 cells in hot water.',
@@ -1231,7 +1231,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
           prepPrimaryLabel: 'Daily (Eat / Brew)',
           prepPrimary: '1/2 to 1 cell (10.4–20.8 g) as a crisp snack or comforting evening drink.',
           prepSecondaryLabel: 'Ceremonial dose',
-          prepSecondary: '2 cells of 250 g block (41.7 g) or 1 cell of 500 g block.',
+          prepSecondary: '2 cells of a 250 g block (41.7 g) melted slowly.',
           plainBenefits: [
             'Authentic berry-floral notes without roasted bitterness',
             'Velvety melt on the tongue or frothy cup in seconds',
@@ -1377,7 +1377,7 @@ export const CONTENT: Record<Lang, LocaleContent> = {
       heroCaption: '5 whole Glassy Crunch purple beans + 1 control fermented brown bean for side-by-side testing',
       wholesaleTitle: 'B2B WHOLESALE TERMS',
       wholesalePoints: [
-        'Pro modular blocks: 500 g (12 × 41.7 g) and 1,000 g (15 × 66.7 g)',
+        'Standardized modular format: 250 g blocks (12 × 20.8 g); 500 g (2 × 250 g) and 1 kg (4 × 250 g) orders',
         'Wholesale pricing from $44.00 – $48.00 / kg based on formula and monthly volume',
         'Pure slate-purple pigment, zero burnt notes or acetic vinegar off-flavors',
         'Same-day dispatch via Zamora → Loja → Cuenca cooperatives or Servientrega',

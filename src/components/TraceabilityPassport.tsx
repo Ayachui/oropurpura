@@ -86,7 +86,7 @@ export function TraceabilityPassport({ lang, availability, initialBatchCode }: P
           <strong>{labels.pendingTitle}:</strong> {labels.pendingBody}
         </p>
         <a
-          href="https://incatrailfoods.com/products"
+          href="https://www.incatrailfoods.com/products"
           target="_blank"
           rel="noopener noreferrer"
           className="tznk-link"

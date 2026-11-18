@@ -892,10 +892,7 @@ export function App() {
                         </div>
                         <p style={{ margin: '8px 0 0', fontSize: '0.92rem' }}>{t.origin.tznkDesc}</p>
                         <a
-                          href={
-                            liveInventory?.skus?.inca?.primaryBatch?.consumedLots?.[0]?.traceUrl ||
-                            'https://incatrailfoods.com/products'
-                          }
+                          href="https://www.incatrailfoods.com/products"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="tznk-link"
@@ -1070,7 +1067,7 @@ export function App() {
               <a href="https://incatrailfoods.com" target="_blank" rel="noopener noreferrer">
                 The Inca Trail Foods
               </a>
-              <a href="https://incatrailfoods.com/products" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.incatrailfoods.com/products" target="_blank" rel="noopener noreferrer">
                 Cacao Reserve B2B
               </a>
               <button

@@ -110,7 +110,7 @@ export function OroAdminModal({
 
   const openBaseSso = () => {
     const ret = encodeURIComponent(`${window.location.origin}/admin`);
-    window.location.href = `https://www.tzunki.com/base/ops?returnTo=${ret}`;
+    window.location.href = `https://www.tzunki.com/ops?returnTo=${ret}`;
   };
 
   const handleSignIn = async () => {
@@ -204,7 +204,7 @@ export function OroAdminModal({
           </div>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
             <a
-              href="https://www.tzunki.com/base/ops"
+              href="https://www.tzunki.com/ops"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-spec-toggle"
