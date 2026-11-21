@@ -205,7 +205,7 @@ h3 {
   flex-shrink: 0;
 }
 
-.brand-monolith {
+.brand-crest {
   display: block;
   flex-shrink: 0;
 }
@@ -216,20 +216,41 @@ h3 {
 }
 
 .brand-wordmark {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.04rem;
-  letter-spacing: 0.04em;
-  line-height: 1.05;
+  font-family: 'Montserrat', var(--font-sans);
+  font-weight: 600;
+  font-size: 1.02rem;
+  letter-spacing: 0.14em;
+  line-height: 1.08;
+  color: #320A63;
   white-space: nowrap;
 }
 
 .brand-descriptor {
   font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.06em;
-  color: var(--ink-muted);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: #320A63;
+  opacity: 0.82;
+  margin-top: 2px;
   white-space: nowrap;
+}
+
+.brand-lockup--inverted .brand-wordmark {
+  color: var(--ink-on-dark);
+}
+
+.brand-lockup--inverted .brand-descriptor {
+  color: #D8B4FE;
+  opacity: 1;
+}
+
+.brand-lockup--inverted .brand-parent-link {
+  color: var(--chrome-silver);
+  border-left-color: rgba(244, 242, 247, 0.22);
+}
+
+.brand-lockup--inverted .brand-parent-link:hover {
+  color: #E9D5FF;
 }
 
 .brand-parent-link {
