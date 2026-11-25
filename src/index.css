@@ -724,7 +724,7 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  flex-shrink: 0;
+  max-width: 100%;
 }
 
 .lot-tab-btn {
@@ -1916,3 +1916,246 @@ h3 {
     padding: 8px 12px;
   }
 }
+
+/* =========================================================
+   Dedicated Storefront Page, Inline Buy CTAs & Floating Buy
+   ========================================================= */
+.header-nav a.nav-shop-link {
+  color: var(--purple-cta);
+  font-weight: 700;
+}
+
+.header-nav a.nav-shop-link.active {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 2px;
+}
+
+.mobile-drawer a.mobile-shop-link {
+  background: var(--purple-cta);
+  color: #FFFFFF;
+  padding: 0 14px;
+  border-radius: var(--radius-sharp);
+  border-bottom: none;
+  margin-bottom: 6px;
+}
+
+.storefront-page {
+  padding-top: 32px;
+}
+
+.storefront-page-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.btn-back-home {
+  min-height: 40px;
+  padding: 6px 13px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-alabaster);
+  color: var(--ink-primary);
+  border-radius: var(--radius-sharp);
+  font-size: 0.78rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-back-home:hover {
+  background: var(--bg-obsidian);
+  color: var(--ink-on-dark);
+}
+
+.storefront-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  border: 1px solid var(--guayusa-emerald);
+  background: rgba(6, 95, 70, 0.08);
+  color: var(--guayusa-emerald);
+  border-radius: var(--radius-sharp);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.storefront-h1 {
+  font-size: clamp(1.65rem, 3.4vw, 2.55rem);
+  line-height: 1.06;
+}
+
+.storefront-controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.availability-filter {
+  display: inline-flex;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sharp);
+  overflow: hidden;
+  background: var(--bg-alabaster);
+}
+
+.avail-filter-btn {
+  min-height: 42px;
+  padding: 0 13px;
+  border: none;
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: 0.74rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.avail-filter-btn:hover {
+  color: var(--ink-primary);
+}
+
+.avail-filter-btn.active {
+  background: var(--purple-raw);
+  color: #FFFFFF;
+}
+
+.storefront-logistics-block {
+  margin-top: 44px;
+  padding-top: 34px;
+  border-top: 1px solid var(--border-strong);
+}
+
+/* Inline Home-Page Buy Banners */
+.inline-buy-banner {
+  margin-top: 30px;
+  padding: 22px 24px;
+  background: var(--bg-alabaster);
+  border: 1px solid var(--border-strong);
+  border-left: 4px solid var(--purple-cta);
+  border-radius: var(--radius-sharp);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.inline-buy-eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--purple-raw);
+  margin-bottom: 6px;
+}
+
+.inline-buy-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.15rem, 2vw, 1.42rem);
+  color: var(--ink-primary);
+}
+
+.inline-buy-sub {
+  margin: 6px 0 0;
+  font-size: 0.92rem;
+  color: var(--ink-muted);
+  max-width: 600px;
+}
+
+.inline-buy-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+@media (min-width: 820px) {
+  .inline-buy-banner {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Floating Buy Button (Home page only — Andeo-Amazonian Biobrutalism) */
+.floating-buy-cta {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 18px;
+  background: var(--purple-cta);
+  color: #FFFFFF;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sharp);
+  box-shadow: 4px 4px 0 var(--bg-obsidian);
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, background-color 0.14s ease;
+}
+
+.floating-buy-cta:hover {
+  background: var(--purple-cta-hover);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--bg-obsidian);
+}
+
+.floating-buy-cta:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--bg-obsidian);
+}
+
+.floating-buy-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34D399;
+  flex-shrink: 0;
+}
+
+.floating-buy-text {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.94rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.floating-buy-count {
+  padding: 3px 8px;
+  background: rgba(18, 16, 22, 0.36);
+  border: 1px solid rgba(244, 242, 247, 0.25);
+  border-radius: var(--radius-sharp);
+  font-size: 0.72rem;
+  color: #F4F2F7;
+  white-space: nowrap;
+}
+
+.floating-buy-arrow {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.has-floating-cta .site-footer {
+  padding-bottom: 92px;
+}
+
+@media (min-width: 768px) {
+  .floating-buy-cta {
+    right: 26px;
+    bottom: 26px;
+    min-height: 56px;
+    padding: 0 22px;
+  }
+
+  .has-floating-cta .site-footer {
+    padding-bottom: 44px;
+  }
+}
+

@@ -9,6 +9,7 @@ interface LiveLotShowcaseProps {
   t: SiteContent;
   config: InventoryConfig;
   lots: InventoryLot[];
+  onBackToHome: () => void;
 }
 
 function resolveHarvestDate(date: InventoryLot['harvestDate'], lang: Lang): string {
@@ -16,11 +17,18 @@ function resolveHarvestDate(date: InventoryLot['harvestDate'], lang: Lang): stri
   return date[lang];
 }
 
-export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps) {
+export function LiveLotShowcase({
+  lang,
+  t,
+  config,
+  lots,
+  onBackToHome,
+}: LiveLotShowcaseProps) {
   const activeLots = lots.filter((lot) => lot.active);
   const [selectedLotId, setSelectedLotId] = useState<string>(
     () => activeLots[0]?.lotId ?? 'ALL',
   );
+  const [onlyAvailable, setOnlyAvailable] = useState(false);
 
   const visibleLots =
     selectedLotId === 'ALL'
@@ -33,16 +41,34 @@ export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps)
   );
 
   return (
-    <section id="bloques" className="section">
+    <section id="bloques" className="section storefront-page">
       <div className="container">
+        <div className="storefront-page-bar">
+          <button
+            type="button"
+            className="btn-back-home mono"
+            onClick={onBackToHome}
+          >
+            {t.common.backToHome}
+          </button>
+          <span className="storefront-live-pill mono">
+            <span className="status-dot-emerald" aria-hidden="true" />
+            {t.ticker.availablePrefix} {totalAvailable}{' '}
+            {totalAvailable === 1 ? t.ticker.blockSingular : t.ticker.blockPlural}
+          </span>
+        </div>
+
         <div className="showcase-top">
           <div className="section-header" style={{ marginBottom: 0 }}>
             <p className="eyebrow">{t.showcase.eyebrow}</p>
-            <h2>{t.showcase.title}</h2>
+            <h1 className="storefront-h1">{t.showcase.title}</h1>
             <p className="section-subtitle">{t.showcase.subtitle}</p>
           </div>
+        </div>
 
-          {activeLots.length > 1 && (
+        {/* Dynamic Filter Controls: Lot Switcher + Availability Toggle */}
+        {activeLots.length > 0 && (
+          <div className="storefront-controls-bar">
             <div className="lot-tabs" role="tablist" aria-label="Micro-lotes activos">
               {activeLots.map((lot) => {
                 const availCount = lot.blocks.filter((b) => b.status === 'disponible').length;
@@ -63,19 +89,42 @@ export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps)
                   </button>
                 );
               })}
+              {activeLots.length > 1 && (
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={selectedLotId === 'ALL'}
+                  className={`lot-tab-btn ${selectedLotId === 'ALL' ? 'active' : ''}`}
+                  onClick={() => setSelectedLotId('ALL')}
+                >
+                  <span>{t.common.allLotsLabel}</span>
+                  <span className="lot-tab-count mono">
+                    {t.showcase.availableShort(totalAvailable)}
+                  </span>
+                </button>
+              )}
+            </div>
+
+            <div className="availability-filter" role="group" aria-label="Filtro de disponibilidad">
               <button
                 type="button"
-                role="tab"
-                aria-selected={selectedLotId === 'ALL'}
-                className={`lot-tab-btn ${selectedLotId === 'ALL' ? 'active' : ''}`}
-                onClick={() => setSelectedLotId('ALL')}
+                className={`avail-filter-btn mono ${onlyAvailable ? 'active' : ''}`}
+                aria-pressed={onlyAvailable}
+                onClick={() => setOnlyAvailable(true)}
               >
-                <span>{t.common.allLotsLabel}</span>
-                <span className="lot-tab-count mono">{t.showcase.availableShort(totalAvailable)}</span>
+                {t.showcase.filterAvailableOnly}
+              </button>
+              <button
+                type="button"
+                className={`avail-filter-btn mono ${!onlyAvailable ? 'active' : ''}`}
+                aria-pressed={!onlyAvailable}
+                onClick={() => setOnlyAvailable(false)}
+              >
+                {t.showcase.filterIncludeSold}
               </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Simple 3-step onboarding strip for first-time visitors */}
         <ol className="order-steps-bar" aria-label="Cómo reservar">
@@ -98,7 +147,9 @@ export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps)
                 .filter((b) => b.status === 'disponible')
                 .sort((a, b) => a.weight_g - b.weight_g);
               const soldBlocks = lot.blocks.filter((b) => b.status === 'vendido');
-              const orderedBlocks = [...availableBlocks, ...soldBlocks];
+              const orderedBlocks = onlyAvailable
+                ? availableBlocks
+                : [...availableBlocks, ...soldBlocks];
               const starterBlockId = availableBlocks[0]?.blockId ?? null;
 
               return (
@@ -127,7 +178,7 @@ export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps)
                     </div>
 
                     <div className="lot-passport-title-row">
-                      <h3 className="lot-title">{lotTitle}</h3>
+                      <h2 className="lot-title">{lotTitle}</h2>
                       <span className="lot-avail-summary mono">
                         {availableBlocks.length} / {lot.blocks.length}{' '}
                         {availableBlocks.length === 1
@@ -264,6 +315,30 @@ export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps)
             })}
           </div>
         )}
+
+        {/* Shipping & Local Payments Reference directly on the Storefront Page */}
+        <div className="storefront-logistics-block">
+          <div className="logistics-grid">
+            <article className="logistics-card">
+              <div className="logistics-tag mono">SERVIENTREGA • 24 PROVINCIAS</div>
+              <h3>{t.logistics.shippingTitle}</h3>
+              <p className="logistics-body">{t.logistics.shippingBody}</p>
+            </article>
+
+            <article className="logistics-card">
+              <div className="logistics-tag mono">ECUADOR • PAGOS DIRECTOS</div>
+              <h3>{t.logistics.paymentsTitle}</h3>
+              <div className="payment-rows">
+                {t.logistics.payments.map((payment) => (
+                  <div key={payment.method} className="payment-row">
+                    <div className="payment-method mono">{payment.method}</div>
+                    <div className="payment-detail">{payment.detail}</div>
+                  </div>
+                ))}
+              </div>
+            </article>
+          </div>
+        </div>
       </div>
     </section>
   );

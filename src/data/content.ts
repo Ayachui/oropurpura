@@ -9,6 +9,19 @@ export interface SiteContent {
     copyText: string;
     copied: string;
     allLotsLabel: string;
+    backToHome: string;
+    floatingBuyLabel: string;
+    floatingBlocksCount: (count: number) => string;
+  };
+  homeCtas: {
+    afterRitualEyebrow: string;
+    afterRitualTitle: string;
+    afterRitualSub: string;
+    afterRitualBtn: string;
+    afterOriginEyebrow: string;
+    afterOriginTitle: string;
+    afterOriginSub: string;
+    afterOriginBtn: string;
   };
   ticker: {
     text: string;
@@ -46,6 +59,8 @@ export interface SiteContent {
     subtitle: string;
     steps: string[];
     starterBadge: string;
+    filterAvailableOnly: string;
+    filterIncludeSold: string;
     lotStatusBadge: string;
     harvestLabel: string;
     originLabel: string;
@@ -158,6 +173,22 @@ export const CONTENT: Record<Lang, SiteContent> = {
       copyText: 'Copiar texto',
       copied: 'Copiado ✓',
       allLotsLabel: 'Todos los lotes',
+      backToHome: '← Volver al inicio',
+      floatingBuyLabel: 'Comprar',
+      floatingBlocksCount: (count) =>
+        count === 1 ? '1 bloque disp.' : `${count} bloques disp.`,
+    },
+    homeCtas: {
+      afterRitualEyebrow: 'MICRO-LOTES ACTIVOS • DESDE $26.50 SEGÚN PESO REAL',
+      afterRitualTitle: '¿Listo para probar tu primer monolito vivo?',
+      afterRitualSub:
+        'Explora los bloques disponibles de la cosecha actual, compara pesos y reserva el tuyo en 1 clic por WhatsApp.',
+      afterRitualBtn: 'Comprar bloques disponibles →',
+      afterOriginEyebrow: 'DIRECTO DESDE ZAMORA • ENVÍOS SERVIENTREGA 24–48 H',
+      afterOriginTitle: 'Elige tu bloque único del lote actual',
+      afterOriginSub:
+        'Cada monolito es irrepetible y se cobra a tarifa transparente de $100 / kg ($0.10 / g).',
+      afterOriginBtn: 'Ir a la vitrina de bloques →',
     },
     ticker: {
       text: 'MICRO-LOTES VIVOS DE ZAMORA-CHINCHIPE • 0% FERMENTACIÓN • BLOQUES ÚNICOS POR PESO REAL ($100/KG) • ENVÍOS SERVIENTREGA A TODO EL ECUADOR',
@@ -167,7 +198,7 @@ export const CONTENT: Record<Lang, SiteContent> = {
       soldOutLabel: 'LOTE AGOTADO',
     },
     nav: {
-      blocks: 'Bloques Vivos',
+      blocks: 'Comprar',
       howToUse: 'Cómo Usar',
       science: 'Ciencia DP1–7',
       origin: 'Origen TZNK',
@@ -179,7 +210,7 @@ export const CONTENT: Record<Lang, SiteContent> = {
       h1: 'ORIGEN 5300: NO ES CHOCOLATE. ES CACAO VIVO.',
       subtitle:
         'Pasta viva de cacao púrpura ancestral sin fermentar ni tostar, elaborada exclusivamente con grano pelado de Zamora-Chinchipe. Moldeada artesanalmente en monolitos únicos de peso real para enfoque mental, vitalidad y ceremonias.',
-      ctaPrimary: 'Ver bloques disponibles del lote',
+      ctaPrimary: 'Comprar bloques disponibles →',
       ctaSecondary: '¿Cómo se prepara? (20 g)',
       telemetryTitle: '¿POR QUÉ CACAO PÚRPURA VIVO? — 4 DIFERENCIAS CLAVE',
       telemetry: [
@@ -220,6 +251,8 @@ export const CONTENT: Record<Lang, SiteContent> = {
         '3. Confirmas envío Servientrega y pagas por Deuna! o transferencia',
       ],
       starterBadge: 'IDEAL PARA EMPEZAR',
+      filterAvailableOnly: 'Solo disponibles',
+      filterIncludeSold: 'Mostrar vendidos',
       lotStatusBadge: 'MICRO-LOTE ARTESANAL',
       harvestLabel: 'COSECHA',
       originLabel: 'Origen / Finca',
@@ -417,6 +450,22 @@ export const CONTENT: Record<Lang, SiteContent> = {
       copyText: 'Copy text',
       copied: 'Copied ✓',
       allLotsLabel: 'All active lots',
+      backToHome: '← Back to home',
+      floatingBuyLabel: 'Buy',
+      floatingBlocksCount: (count) =>
+        count === 1 ? '1 block avail.' : `${count} blocks avail.`,
+    },
+    homeCtas: {
+      afterRitualEyebrow: 'ACTIVE MICRO-LOTS • FROM $26.50 BY EXACT WEIGHT',
+      afterRitualTitle: 'Ready to try your first living monolith?',
+      afterRitualSub:
+        'Browse available blocks from the current harvest, compare exact weights, and reserve yours in 1 click on WhatsApp.',
+      afterRitualBtn: 'Buy available blocks →',
+      afterOriginEyebrow: 'DIRECT FROM ZAMORA • SERVIENTREGA SHIPPING 24–48 H',
+      afterOriginTitle: 'Pick your unique block from the current lot',
+      afterOriginSub:
+        'Every monolith is one-of-a-kind and priced at a transparent $100 / kg ($0.10 / g).',
+      afterOriginBtn: 'Open block storefront →',
     },
     ticker: {
       text: 'LIVING MICRO-LOTS FROM ZAMORA-CHINCHIPE • 0% FERMENTATION • UNIQUE ACTUAL-WEIGHT BLOCKS ($100/KG) • SERVIENTREGA SHIPPING ACROSS ECUADOR',
@@ -426,7 +475,7 @@ export const CONTENT: Record<Lang, SiteContent> = {
       soldOutLabel: 'LOT SOLD OUT',
     },
     nav: {
-      blocks: 'Live Blocks',
+      blocks: 'Buy',
       howToUse: 'How to Use',
       science: 'Science DP1–7',
       origin: 'Origin TZNK',
@@ -438,7 +487,7 @@ export const CONTENT: Record<Lang, SiteContent> = {
       h1: "ORIGIN 5300: IT'S NOT CHOCOLATE. IT'S LIVING CACAO.",
       subtitle:
         'Living ancestral purple cacao paste, unfermented and unroasted, crafted exclusively from peeled Zamora-Chinchipe nibs. Artisan-cast into unique actual-weight monoliths for mental focus, vitality, and ceremonies.',
-      ctaPrimary: 'View available lot blocks',
+      ctaPrimary: 'Buy available blocks →',
       ctaSecondary: 'How to prepare? (20 g)',
       telemetryTitle: 'WHY LIVING PURPLE CACAO? — 4 KEY DIFFERENCES',
       telemetry: [
@@ -479,6 +528,8 @@ export const CONTENT: Record<Lang, SiteContent> = {
         '3. Confirm Servientrega shipping & pay via Deuna! or transfer',
       ],
       starterBadge: 'GREAT FIRST BLOCK',
+      filterAvailableOnly: 'Available only',
+      filterIncludeSold: 'Show sold',
       lotStatusBadge: 'ARTISAN MICRO-LOT',
       harvestLabel: 'HARVEST',
       originLabel: 'Origin / Farm',
