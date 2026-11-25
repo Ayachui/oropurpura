@@ -1713,23 +1713,34 @@ h3 {
    Responsive Breakpoints
    ========================================================= */
 @media (max-width: 720px) {
-  .comparison-table thead {
+  .comparison-table,
+  .comparison-table thead,
+  .comparison-table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .comparison-table thead tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .comparison-table thead th:first-child {
     display: none;
   }
 
-  .comparison-table,
-  .comparison-table tbody,
-  .comparison-table tr,
-  .comparison-table td,
-  .comparison-table td.col-metric,
-  .comparison-table td.col-conv,
-  .comparison-table td.col-oro {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
+  .comparison-table thead th {
+    padding: 11px 12px;
+    font-size: 0.68rem;
+    line-height: 1.3;
   }
 
-  .comparison-table tr {
+  .comparison-table tbody tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
     border-bottom: 2px solid var(--border-strong);
   }
 
@@ -1738,41 +1749,35 @@ h3 {
   }
 
   .comparison-table td {
-    padding: 13px 16px;
-    border-bottom: 1px solid var(--border-subtle);
-    border-left: none;
+    padding: 12px;
+    font-size: 0.84rem;
+    line-height: 1.42;
+    border-bottom: none;
+    overflow-wrap: break-word;
+    word-break: normal;
   }
 
   .comparison-table td.col-metric {
+    grid-column: 1 / -1;
+    width: 100%;
     background: var(--bg-obsidian);
     color: var(--ink-on-dark);
     font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    padding: 10px 16px;
+    padding: 9px 12px;
+  }
+
+  .comparison-table td.col-conv {
+    width: 100%;
+    border-right: 1px solid var(--border-subtle);
   }
 
   .comparison-table td.col-oro {
-    border-left: 4px solid var(--purple-raw);
-    border-bottom: none;
+    width: 100%;
+    border-left: 3px solid var(--purple-raw);
     background: rgba(59, 7, 100, 0.045);
-  }
-
-  .comparison-table td[data-label]::before {
-    content: attr(data-label);
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--ink-muted);
-    margin-bottom: 5px;
-  }
-
-  .comparison-table td.col-oro[data-label]::before {
-    color: var(--purple-raw);
   }
 }
 
