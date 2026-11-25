@@ -143,7 +143,7 @@ export function BrandLogo({
         </svg>
         <div className="brand-text">
           <span className="brand-wordmark">ORO PÚRPURA</span>
-          <span className="brand-descriptor">CACAO FUNCIONAL · ZAMORA</span>
+          <span className="brand-descriptor">ORIGEN 5300 • ZAMORA</span>
         </div>
       </a>
       {showParentLink && (

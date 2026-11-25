@@ -2,15 +2,17 @@ import { useState } from 'react';
 import { buildWhatsAppUrl, copyOrderText } from '../utils/whatsapp';
 
 interface WhatsAppActionProps {
+  phone: string;
   label: string;
   message: string;
   copyLabel: string;
   copiedLabel: string;
-  variant?: 'primary' | 'secondary' | 'dark' | 'compact';
+  variant?: 'primary' | 'secondary' | 'dark';
   fullWidth?: boolean;
 }
 
 export function WhatsAppAction({
+  phone,
   label,
   message,
   copyLabel,
@@ -31,7 +33,7 @@ export function WhatsAppAction({
   return (
     <div className={`wa-action-group ${fullWidth ? 'wa-full' : ''}`}>
       <a
-        href={buildWhatsAppUrl(message)}
+        href={buildWhatsAppUrl(phone, message)}
         target="_blank"
         rel="noopener noreferrer"
         className={`btn btn-${variant}`}

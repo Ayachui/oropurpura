@@ -1,0 +1,81 @@
+{
+  "config": {
+    "whatsappPhone": "593982873007",
+    "pricePerGramUsd": 0.10,
+    "b2bPricePerKgUsd": 60,
+    "b2bMinKgPerMonth": 3,
+    "googleSheetsCsvUrl": ""
+  },
+  "lots": [
+    {
+      "lotId": "LOTE #01",
+      "active": true,
+      "title": {
+        "es": "Cosecha Napurak — Sinergia Ancestral INCA",
+        "en": "Napurak Harvest — INCA Ancestral Synergy"
+      },
+      "origin": {
+        "es": "Comunidad Shuar Napurak, Zamora-Chinchipe",
+        "en": "Shuar Community Napurak, Zamora-Chinchipe"
+      },
+      "altitude": "1,150 m s.n.m.",
+      "harvestDate": {
+        "es": "Noviembre 2026",
+        "en": "November 2026"
+      },
+      "tastingNotes": {
+        "es": "Mora silvestre, flor de Jamaica, especias amazónicas (ishpingo), final aterciopelado sin acidez acética",
+        "en": "Wild blackberry, hibiscus flower, Amazonian spices (ishpingo), velvety finish with zero acetic acidity"
+      },
+      "formula": {
+        "es": "70% cacao púrpura vivo pelado (sin cascarilla), panela orgánica, sal marina, hibisco, maca, guayusa, moringa, ishpingo, pimienta negra y copaiba",
+        "en": "70% peeled living purple cacao nibs (hull-free), organic panela, sea salt, hibiscus, maca, guayusa, moringa, ishpingo, black pepper & copaiba"
+      },
+      "tznk": {
+        "badge": "TZNK VERIFIED • EAS ATTESTATION",
+        "url": "https://tzunki.com"
+      },
+      "blocks": [
+        { "blockId": "#01-01", "weight_g": 178, "status": "vendido" },
+        { "blockId": "#01-02", "weight_g": 340, "status": "disponible" },
+        { "blockId": "#01-03", "weight_g": 570, "status": "disponible" },
+        { "blockId": "#01-04", "weight_g": 673, "status": "disponible" },
+        { "blockId": "#01-05", "weight_g": 890, "status": "vendido" }
+      ]
+    },
+    {
+      "lotId": "LOTE #02",
+      "active": true,
+      "title": {
+        "es": "Cosecha Los Bayanes — Terruño Puro & Vainilla",
+        "en": "Los Bayanes Harvest — Pure Terroir & Vanilla"
+      },
+      "origin": {
+        "es": "Asociación Shuar Los Bayanes, Zamora-Chinchipe",
+        "en": "Shuar Association Los Bayanes, Zamora-Chinchipe"
+      },
+      "altitude": "1,280 m s.n.m.",
+      "harvestDate": {
+        "es": "Noviembre 2026",
+        "en": "November 2026"
+      },
+      "tastingNotes": {
+        "es": "Frutos rojos frescos, flores blancas de montaña, vainilla amazónica y cristal de sal marina",
+        "en": "Fresh red berries, white mountain blossoms, Amazonian vanilla & sea salt crystal"
+      },
+      "formula": {
+        "es": "70% cacao púrpura vivo pelado (sin cascarilla), panela orgánica, sal marina y vainilla natural",
+        "en": "70% peeled living purple cacao nibs (hull-free), organic panela, sea salt & natural vanilla"
+      },
+      "tznk": {
+        "badge": "TZNK VERIFIED • EAS ATTESTATION",
+        "url": "https://tzunki.com"
+      },
+      "blocks": [
+        { "blockId": "#02-01", "weight_g": 265, "status": "disponible" },
+        { "blockId": "#02-02", "weight_g": 490, "status": "disponible" },
+        { "blockId": "#02-03", "weight_g": 740, "status": "disponible" }
+      ]
+    }
+  ]
+}
