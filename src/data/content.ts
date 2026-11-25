@@ -31,6 +31,7 @@ export interface SiteContent {
     subtitle: string;
     ctaPrimary: string;
     ctaSecondary: string;
+    telemetryTitle: string;
     telemetry: Array<{ value: string; label: string }>;
     diptychLeftTag: string;
     diptychLeftMeta: string;
@@ -180,11 +181,24 @@ export const CONTENT: Record<Lang, SiteContent> = {
         'Pasta viva de cacao púrpura ancestral sin fermentar ni tostar, elaborada exclusivamente con grano pelado de Zamora-Chinchipe. Moldeada artesanalmente en monolitos únicos de peso real para enfoque mental, vitalidad y ceremonias.',
       ctaPrimary: 'Ver bloques disponibles del lote',
       ctaSecondary: '¿Cómo se prepara? (20 g)',
+      telemetryTitle: '¿POR QUÉ CACAO PÚRPURA VIVO? — 4 DIFERENCIAS CLAVE',
       telemetry: [
-        { value: '0 DÍAS', label: 'Fermentación (0% ácido acético)' },
-        { value: '≤ 75–80 °C', label: 'Estabilización al vacío (7–10 h)' },
-        { value: '17.0–19.5 mg/g', label: '(-)-Epicatequina nativa (DP1)' },
-        { value: '$100 / KG', label: 'Precio transparente por peso exacto' },
+        {
+          value: 'COLOR PÚRPURA REAL',
+          label: 'Sin fermentar ni tostar: conserva su pigmento natural vivo, no marrón quemado',
+        },
+        {
+          value: '4–10× MÁS ANTIOXIDANTES',
+          label: 'Polifenoles vivos intactos que el tueste del chocolate comercial destruye',
+        },
+        {
+          value: 'ENFOQUE SIN NERVIOSISMO',
+          label: 'Energía limpia y sostenida por teobromina natural, sin temblor ni bajón del café',
+        },
+        {
+          value: 'LISTO EN 30 SEGUNDOS',
+          label: 'Córtalo a cuchillo en virutas: cómelo directo o bátelo en agua caliente (72–75 °C)',
+        },
       ],
       diptychLeftTag: 'CUT-TEST: PÚRPURA NATIVO',
       diptychLeftMeta: 'GLASSY CRUNCH • 0% FERMENTACIÓN',
@@ -426,11 +440,24 @@ export const CONTENT: Record<Lang, SiteContent> = {
         'Living ancestral purple cacao paste, unfermented and unroasted, crafted exclusively from peeled Zamora-Chinchipe nibs. Artisan-cast into unique actual-weight monoliths for mental focus, vitality, and ceremonies.',
       ctaPrimary: 'View available lot blocks',
       ctaSecondary: 'How to prepare? (20 g)',
+      telemetryTitle: 'WHY LIVING PURPLE CACAO? — 4 KEY DIFFERENCES',
       telemetry: [
-        { value: '0 DAYS', label: 'Fermentation (0% acetic acid)' },
-        { value: '≤ 75–80 °C', label: 'Vacuum stabilization (7–10 h)' },
-        { value: '17.0–19.5 mg/g', label: 'Native (-)-Epicatechin (DP1)' },
-        { value: '$100 / KG', label: 'Transparent exact-weight pricing' },
+        {
+          value: 'TRUE NATURAL PURPLE',
+          label: 'Unfermented & unroasted: keeps its living violet pigment instead of burnt brown',
+        },
+        {
+          value: '4–10× MORE ANTIOXIDANTS',
+          label: 'Intact living polyphenols that commercial chocolate roasting destroys',
+        },
+        {
+          value: 'CALM, CLEAN FOCUS',
+          label: 'Steady natural theobromine energy without coffee jitters or afternoon crash',
+        },
+        {
+          value: 'READY IN 30 SECONDS',
+          label: 'Shave curls with a knife: eat directly or whisk into hot water (72–75 °C)',
+        },
       ],
       diptychLeftTag: 'CUT-TEST: NATIVE PURPLE',
       diptychLeftMeta: 'GLASSY CRUNCH • 0% FERMENTATION',

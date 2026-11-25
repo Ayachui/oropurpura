@@ -620,16 +620,30 @@ h3 {
   margin-bottom: 30px;
 }
 
-.telemetry-strip {
-  display: grid;
-  grid-template-columns: 1fr;
+.telemetry-box {
   border: 1px solid var(--border-strong);
   background: var(--bg-alabaster);
   border-radius: var(--radius-sharp);
+  overflow: hidden;
+}
+
+.telemetry-header {
+  padding: 9px 16px;
+  background: var(--bg-obsidian);
+  color: var(--ink-on-dark);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.telemetry-strip {
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
 .telemetry-cell {
-  padding: 14px 16px;
+  padding: 13px 16px;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -638,16 +652,17 @@ h3 {
 }
 
 .telemetry-value {
-  font-size: 0.94rem;
+  font-size: 0.86rem;
   font-weight: 700;
   color: var(--purple-raw);
   letter-spacing: 0.02em;
 }
 
 .telemetry-label {
-  font-size: 0.83rem;
+  font-size: 0.84rem;
   color: var(--ink-muted);
-  margin-top: 3px;
+  margin-top: 4px;
+  line-height: 1.42;
 }
 
 .hero-diptych {
@@ -666,13 +681,14 @@ h3 {
 
 .lab-frame-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 4px 12px;
   padding: 8px 13px;
   border-bottom: 1px solid var(--border-subtle);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.69rem;
   color: var(--ink-primary);
   background: var(--bg-porcelain);
 }
@@ -1704,25 +1720,43 @@ h3 {
   .comparison-table,
   .comparison-table tbody,
   .comparison-table tr,
-  .comparison-table td {
+  .comparison-table td,
+  .comparison-table td.col-metric,
+  .comparison-table td.col-conv,
+  .comparison-table td.col-oro {
     display: block;
     width: 100%;
+    box-sizing: border-box;
   }
 
   .comparison-table tr {
-    border-bottom: 1px solid var(--border-strong);
+    border-bottom: 2px solid var(--border-strong);
+  }
+
+  .comparison-table tbody tr:last-child {
+    border-bottom: none;
   }
 
   .comparison-table td {
+    padding: 13px 16px;
     border-bottom: 1px solid var(--border-subtle);
-    border-left: none !important;
+    border-left: none;
   }
 
   .comparison-table td.col-metric {
-    background: var(--bg-porcelain);
+    background: var(--bg-obsidian);
+    color: var(--ink-on-dark);
     font-family: var(--font-mono);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
+    padding: 10px 16px;
+  }
+
+  .comparison-table td.col-oro {
+    border-left: 4px solid var(--purple-raw);
+    border-bottom: none;
+    background: rgba(59, 7, 100, 0.045);
   }
 
   .comparison-table td[data-label]::before {
@@ -1730,10 +1764,15 @@ h3 {
     display: block;
     font-family: var(--font-mono);
     font-size: 0.68rem;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--ink-muted);
-    margin-bottom: 4px;
+    margin-bottom: 5px;
+  }
+
+  .comparison-table td.col-oro[data-label]::before {
+    color: var(--purple-raw);
   }
 }
 

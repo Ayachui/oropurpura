@@ -176,13 +176,16 @@ export function App() {
                 </a>
               </div>
 
-              <div className="telemetry-strip">
-                {t.hero.telemetry.map((item) => (
-                  <div className="telemetry-cell" key={item.value}>
-                    <div className="telemetry-value mono">{item.value}</div>
-                    <div className="telemetry-label">{item.label}</div>
-                  </div>
-                ))}
+              <div className="telemetry-box">
+                <div className="telemetry-header mono">{t.hero.telemetryTitle}</div>
+                <div className="telemetry-strip">
+                  {t.hero.telemetry.map((item) => (
+                    <div className="telemetry-cell" key={item.value}>
+                      <div className="telemetry-value mono">{item.value}</div>
+                      <div className="telemetry-label">{item.label}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
