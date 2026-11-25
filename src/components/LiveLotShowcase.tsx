@@ -18,7 +18,9 @@ function resolveHarvestDate(date: InventoryLot['harvestDate'], lang: Lang): stri
 
 export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps) {
   const activeLots = lots.filter((lot) => lot.active);
-  const [selectedLotId, setSelectedLotId] = useState<string>('ALL');
+  const [selectedLotId, setSelectedLotId] = useState<string>(
+    () => activeLots[0]?.lotId ?? 'ALL',
+  );
 
   const visibleLots =
     selectedLotId === 'ALL'
@@ -42,16 +44,6 @@ export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps)
 
           {activeLots.length > 1 && (
             <div className="lot-tabs" role="tablist" aria-label="Micro-lotes activos">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={selectedLotId === 'ALL'}
-                className={`lot-tab-btn ${selectedLotId === 'ALL' ? 'active' : ''}`}
-                onClick={() => setSelectedLotId('ALL')}
-              >
-                <span>{t.common.allLotsLabel}</span>
-                <span className="lot-tab-count mono">{t.showcase.availableShort(totalAvailable)}</span>
-              </button>
               {activeLots.map((lot) => {
                 const availCount = lot.blocks.filter((b) => b.status === 'disponible').length;
                 const isSelected = selectedLotId === lot.lotId;
@@ -71,9 +63,28 @@ export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps)
                   </button>
                 );
               })}
+              <button
+                type="button"
+                role="tab"
+                aria-selected={selectedLotId === 'ALL'}
+                className={`lot-tab-btn ${selectedLotId === 'ALL' ? 'active' : ''}`}
+                onClick={() => setSelectedLotId('ALL')}
+              >
+                <span>{t.common.allLotsLabel}</span>
+                <span className="lot-tab-count mono">{t.showcase.availableShort(totalAvailable)}</span>
+              </button>
             </div>
           )}
         </div>
+
+        {/* Simple 3-step onboarding strip for first-time visitors */}
+        <ol className="order-steps-bar" aria-label="Cómo reservar">
+          {t.showcase.steps.map((step) => (
+            <li key={step} className="order-step-item mono">
+              {step}
+            </li>
+          ))}
+        </ol>
 
         {activeLots.length === 0 ? (
           <div className="empty-lot-card">
@@ -83,11 +94,16 @@ export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps)
           <div className="lots-stack">
             {visibleLots.map((lot) => {
               const lotTitle = lot.title[lang];
-              const lotAvailableCount = lot.blocks.filter((b) => b.status === 'disponible').length;
+              const availableBlocks = lot.blocks
+                .filter((b) => b.status === 'disponible')
+                .sort((a, b) => a.weight_g - b.weight_g);
+              const soldBlocks = lot.blocks.filter((b) => b.status === 'vendido');
+              const orderedBlocks = [...availableBlocks, ...soldBlocks];
+              const starterBlockId = availableBlocks[0]?.blockId ?? null;
 
               return (
                 <div key={lot.lotId} className="lot-group">
-                  {/* Lot Passport Header */}
+                  {/* Compact Lot Passport Header */}
                   <header className="lot-passport">
                     <div className="lot-passport-top">
                       <div className="lot-passport-badges">
@@ -113,8 +129,10 @@ export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps)
                     <div className="lot-passport-title-row">
                       <h3 className="lot-title">{lotTitle}</h3>
                       <span className="lot-avail-summary mono">
-                        {lotAvailableCount} / {lot.blocks.length}{' '}
-                        {lotAvailableCount === 1 ? t.ticker.blockSingular : t.ticker.blockPlural}
+                        {availableBlocks.length} / {lot.blocks.length}{' '}
+                        {availableBlocks.length === 1
+                          ? t.ticker.blockSingular
+                          : t.ticker.blockPlural}
                       </span>
                     </div>
 
@@ -146,10 +164,11 @@ export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps)
                     </div>
                   </header>
 
-                  {/* Actual-Weight Blocks Grid */}
+                  {/* Actual-Weight Blocks Grid (Available first, Sold last) */}
                   <div className="blocks-grid">
-                    {lot.blocks.map((block) => {
+                    {orderedBlocks.map((block) => {
                       const isAvailable = block.status === 'disponible';
+                      const isStarter = isAvailable && block.blockId === starterBlockId;
                       const priceFormatted = formatBlockPrice(
                         block.weight_g,
                         config.pricePerGramUsd,
@@ -168,22 +187,29 @@ export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps)
                       return (
                         <article
                           key={`${lot.lotId}-${block.blockId}`}
-                          className={`block-card ${isAvailable ? 'block-available' : 'block-sold'}`}
+                          className={`block-card ${isAvailable ? 'block-available' : 'block-sold'} ${
+                            isStarter ? 'block-starter' : ''
+                          }`}
                         >
                           <div className="block-card-top">
                             <span className="block-id mono">
                               {t.showcase.blockPrefix} {block.blockId}
                             </span>
-                            {isAvailable ? (
-                              <span className="block-status-badge status-available mono">
-                                <span className="status-dot-emerald" aria-hidden="true" />
-                                {t.showcase.statusAvailable}
-                              </span>
-                            ) : (
-                              <span className="block-status-badge status-sold mono">
-                                {t.showcase.statusSold}
-                              </span>
-                            )}
+                            <div className="block-top-badges">
+                              {isStarter && (
+                                <span className="starter-pill mono">{t.showcase.starterBadge}</span>
+                              )}
+                              {isAvailable ? (
+                                <span className="block-status-badge status-available mono">
+                                  <span className="status-dot-emerald" aria-hidden="true" />
+                                  {t.showcase.statusAvailable}
+                                </span>
+                              ) : (
+                                <span className="block-status-badge status-sold mono">
+                                  {t.showcase.statusSold}
+                                </span>
+                              )}
+                            </div>
                           </div>
 
                           <div className="block-weight-center">
@@ -217,6 +243,7 @@ export function LiveLotShowcase({ lang, t, config, lots }: LiveLotShowcaseProps)
                                 copiedLabel={t.common.copied}
                                 variant="primary"
                                 fullWidth
+                                compactCopy
                               />
                             ) : (
                               <button

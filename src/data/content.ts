@@ -43,6 +43,8 @@ export interface SiteContent {
     eyebrow: string;
     title: string;
     subtitle: string;
+    steps: string[];
+    starterBadge: string;
     lotStatusBadge: string;
     harvestLabel: string;
     originLabel: string;
@@ -197,7 +199,13 @@ export const CONTENT: Record<Lang, SiteContent> = {
       eyebrow: 'VITRINA VIVA • MICRO-LOTES ACTUALES',
       title: 'Bloques Únicos del Lote Actual',
       subtitle:
-        'Cada monolito se moldea artesanalmente en Zamora y conserva su peso real único. El precio se calcula automáticamente a razón de $100 / kg ($0.10 / g).',
+        'Cada monolito se moldea artesanalmente en Zamora con su peso real único. Tarifa única de $100 / kg ($0.10 / g).',
+      steps: [
+        '1. Elige un bloque disponible',
+        '2. Toca WhatsApp e indica tu ciudad',
+        '3. Confirmas envío Servientrega y pagas por Deuna! o transferencia',
+      ],
+      starterBadge: 'IDEAL PARA EMPEZAR',
       lotStatusBadge: 'MICRO-LOTE ARTESANAL',
       harvestLabel: 'COSECHA',
       originLabel: 'Origen / Finca',
@@ -210,7 +218,7 @@ export const CONTENT: Record<Lang, SiteContent> = {
       statusAvailable: 'DISPONIBLE',
       statusSold: 'VENDIDO',
       plusShipping: '+ envío Servientrega',
-      reserveCta: 'Reservar este bloque por WhatsApp →',
+      reserveCta: 'Reservar por WhatsApp →',
       soldButtonLabel: 'Bloque reservado / Vendido',
       servingsFormat: (cups, ceremonies) =>
         `≈ ${cups} tazas de 20 g o ${ceremonies} ceremonias`,
@@ -224,24 +232,24 @@ export const CONTENT: Record<Lang, SiteContent> = {
         'No necesitas moldes ni medidas complicadas. Toma un cuchillo de cocina y corta virutas finas directamente del monolito.',
       doses: [
         {
-          amount: '~20 g',
-          measure: '2 cucharadas de virutas',
+          amount: '20 g',
+          measure: '≈ 2 cucharadas de virutas',
           title: 'Taza Diaria / Enfoque',
           tempBadge: '180 ml • 72–75 °C',
           description:
             'Bate con molinillo, batidor de mano o mini-espumador en 180 ml de agua caliente a 72–75 °C (sin hervir). Brinda enfoque cognitivo limpio sin temblor ni bajón de cafeína.',
         },
         {
-          amount: '~40 g',
-          measure: '4 cucharadas de virutas',
+          amount: '40 g',
+          measure: '≈ 4 cucharadas de virutas',
           title: 'Dosis Ceremonial',
           tempBadge: '200–220 ml • 72–75 °C',
           description:
             'Bate en 200–220 ml de agua a 72–75 °C para práctica meditativa profunda, sesiones creativas extendidas o trabajo de respiración consciente.',
         },
         {
-          amount: '~10 g',
-          measure: 'Láminas finas',
+          amount: '10 g',
+          measure: 'Láminas finas a cuchillo',
           title: 'Consumo Directo (Eat)',
           tempBadge: 'SUBLINGUAL • SIN AGUA',
           description:
@@ -437,7 +445,13 @@ export const CONTENT: Record<Lang, SiteContent> = {
       eyebrow: 'LIVE SHOWCASE • CURRENT MICRO-LOTS',
       title: 'Unique Blocks from the Current Lot',
       subtitle:
-        'Every monolith is hand-cast in Zamora with its own exact actual weight. Pricing is calculated automatically at a flat $100 / kg ($0.10 / g).',
+        'Every monolith is hand-cast in Zamora with its own exact actual weight. Flat rate of $100 / kg ($0.10 / g).',
+      steps: [
+        '1. Pick an available block',
+        '2. Tap WhatsApp & enter your city',
+        '3. Confirm Servientrega shipping & pay via Deuna! or transfer',
+      ],
+      starterBadge: 'GREAT FIRST BLOCK',
       lotStatusBadge: 'ARTISAN MICRO-LOT',
       harvestLabel: 'HARVEST',
       originLabel: 'Origin / Farm',
@@ -450,7 +464,7 @@ export const CONTENT: Record<Lang, SiteContent> = {
       statusAvailable: 'AVAILABLE',
       statusSold: 'SOLD',
       plusShipping: '+ Servientrega shipping',
-      reserveCta: 'Reserve this block via WhatsApp →',
+      reserveCta: 'Reserve via WhatsApp →',
       soldButtonLabel: 'Block reserved / Sold',
       servingsFormat: (cups, ceremonies) =>
         `≈ ${cups} cups (20 g) or ${ceremonies} ceremonies`,
@@ -464,24 +478,24 @@ export const CONTENT: Record<Lang, SiteContent> = {
         'No molds or complicated measurements needed. Take a kitchen knife and shave fine curls directly from the monolith.',
       doses: [
         {
-          amount: '~20 g',
-          measure: '2 tbsp of shavings',
+          amount: '20 g',
+          measure: '≈ 2 tbsp of shavings',
           title: 'Daily Cup / Focus',
           tempBadge: '180 ml • 72–75 °C',
           description:
             'Whisk or froth in 180 ml of hot water at 72–75 °C (do not boil). Delivers clean cognitive focus without jitters or a caffeine crash.',
         },
         {
-          amount: '~40 g',
-          measure: '4 tbsp of shavings',
+          amount: '40 g',
+          measure: '≈ 4 tbsp of shavings',
           title: 'Ceremonial Dose',
           tempBadge: '200–220 ml • 72–75 °C',
           description:
             'Whisk into 200–220 ml of water at 72–75 °C for deep meditation, creative deep-work sessions, or conscious breathwork.',
         },
         {
-          amount: '~10 g',
-          measure: 'Thin slices',
+          amount: '10 g',
+          measure: 'Thin knife slices',
           title: 'Direct Consumption (Eat)',
           tempBadge: 'SUBLINGUAL • NO WATER',
           description:
