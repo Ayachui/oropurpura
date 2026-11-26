@@ -106,8 +106,8 @@ h2 {
 
 h1 {
   font-weight: 800;
-  font-size: clamp(1.7rem, 4.4vw, 3.45rem);
-  line-height: 1.04;
+  font-size: clamp(1.7rem, 3.5vw, 2.85rem);
+  line-height: 1.05;
   letter-spacing: 0.01em;
 }
 
@@ -592,83 +592,85 @@ h3 {
 }
 
 /* =========================================================
-   SECTION 1: Hero & Lab Diptych
+   SECTION 1: Asymmetric Hero (45% copy / 55% macro photo)
    ========================================================= */
 .hero-section {
-  padding: 44px 0 60px;
+  padding: 36px 0 48px;
   border-bottom: 1px solid var(--border-strong);
 }
 
 .hero-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 36px;
-  align-items: start;
+  gap: 28px;
+  align-items: center;
+}
+
+.hero-copy-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .hero-subtitle {
-  margin: 18px 0 26px;
-  font-size: 1.06rem;
+  margin: 16px 0 20px;
+  font-size: 1.08rem;
+  line-height: 1.52;
   color: var(--ink-muted);
-  max-width: 610px;
+  max-width: 540px;
+}
+
+.hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 11px;
+  background: var(--bg-alabaster);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sharp);
+  font-size: 0.74rem;
+  color: var(--ink-primary);
 }
 
 .hero-cta-row {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 30px;
 }
 
-.telemetry-box {
+.hero-visual-frame {
+  position: relative;
+  margin: 0;
   border: 1px solid var(--border-strong);
   background: var(--bg-alabaster);
   border-radius: var(--radius-sharp);
   overflow: hidden;
 }
 
-.telemetry-header {
-  padding: 9px 16px;
-  background: var(--bg-obsidian);
+.hero-visual-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-visual-badge {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 6px 11px;
+  background: rgba(18, 16, 22, 0.88);
   color: var(--ink-on-dark);
-  font-size: 0.72rem;
+  border: 1px solid rgba(244, 242, 247, 0.25);
+  border-radius: var(--radius-sharp);
+  font-size: 0.68rem;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--border-strong);
-}
-
-.telemetry-strip {
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
-.telemetry-cell {
-  padding: 13px 16px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.telemetry-cell:last-child {
-  border-bottom: none;
-}
-
-.telemetry-value {
-  font-size: 0.86rem;
-  font-weight: 700;
-  color: var(--purple-raw);
-  letter-spacing: 0.02em;
-}
-
-.telemetry-label {
-  font-size: 0.84rem;
-  color: var(--ink-muted);
-  margin-top: 4px;
-  line-height: 1.42;
-}
-
-.hero-diptych {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
 }
 
 .lab-frame {
@@ -1816,7 +1818,11 @@ h3 {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .ritual-visual-grid {
+  .benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trust-two-col {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -1842,14 +1848,20 @@ h3 {
     display: none;
   }
 
-  .hero-grid {
-    grid-template-columns: 1.08fr 0.92fr;
-    gap: 42px;
+  .hero-section {
+    min-height: 82vh;
+    display: flex;
     align-items: center;
   }
 
-  .hero-diptych {
-    grid-template-columns: 1fr;
+  .hero-section > .container {
+    width: 100%;
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
+    gap: 44px;
+    align-items: center;
   }
 
   .showcase-top {
@@ -1875,17 +1887,12 @@ h3 {
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .benefits-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
   .doses-grid {
     grid-template-columns: repeat(3, 1fr);
-  }
-
-  .vectors-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .origin-grid {
-    grid-template-columns: 1.08fr 0.92fr;
-    gap: 32px;
   }
 
   .b2b-grid {
@@ -2163,4 +2170,139 @@ h3 {
     padding-bottom: 44px;
   }
 }
+
+/* =========================================================
+   v2.1 Contrast Swatches, 6 Benefits Grid & Compact Ritual
+   ========================================================= */
+.col-conv-head {
+  background: #4A2C18 !important;
+  color: #F4F2F7 !important;
+}
+
+.col-swatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+
+.swatch-brown {
+  background: #D9A074;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.swatch-purple {
+  background: #C084FC;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.benefit-card {
+  background: var(--bg-alabaster);
+  border: 1px solid var(--border-strong);
+  border-top: 3px solid var(--purple-raw);
+  border-radius: var(--radius-sharp);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.benefit-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.benefit-num {
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+
+.benefit-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  background: rgba(59, 7, 100, 0.08);
+  border: 1px solid rgba(59, 7, 100, 0.28);
+  color: var(--purple-raw);
+  border-radius: var(--radius-sharp);
+}
+
+.benefit-title {
+  margin: 0 0 8px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--ink-primary);
+}
+
+.benefit-desc {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+.benefits-disclaimer {
+  margin: 18px 0 0;
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+}
+
+.ritual-strip-block {
+  margin-top: 40px;
+  padding-top: 34px;
+  border-top: 1px solid var(--border-strong);
+  scroll-margin-top: 76px;
+}
+
+.ritual-strip-head {
+  margin-bottom: 20px;
+}
+
+.ritual-strip-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 2.2vw, 1.65rem);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.ritual-strip-sub {
+  margin: 8px 0 0;
+  font-size: 0.96rem;
+  color: var(--ink-muted);
+}
+
+.trust-two-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+@media (min-width: 640px) {
+  .benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trust-two-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 960px) {
+  .benefits-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+
 

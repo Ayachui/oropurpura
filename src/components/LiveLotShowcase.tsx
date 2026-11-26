@@ -225,7 +225,6 @@ export function LiveLotShowcase({
                         config.pricePerGramUsd,
                       );
                       const cupsEstimate = Math.max(1, Math.round(block.weight_g / 20));
-                      const ceremoniesEstimate = Math.max(1, Math.floor(block.weight_g / 40));
                       const waMessage = buildBlockWhatsAppMessage({
                         lang,
                         lotId: lot.lotId,
@@ -269,7 +268,7 @@ export function LiveLotShowcase({
                               <span className="block-weight-unit">g</span>
                             </div>
                             <div className="block-servings">
-                              {t.showcase.servingsFormat(cupsEstimate, ceremoniesEstimate)}
+                              {t.showcase.servingsFormat(cupsEstimate)}
                             </div>
                           </div>
 
@@ -328,14 +327,7 @@ export function LiveLotShowcase({
             <article className="logistics-card">
               <div className="logistics-tag mono">ECUADOR • PAGOS DIRECTOS</div>
               <h3>{t.logistics.paymentsTitle}</h3>
-              <div className="payment-rows">
-                {t.logistics.payments.map((payment) => (
-                  <div key={payment.method} className="payment-row">
-                    <div className="payment-method mono">{payment.method}</div>
-                    <div className="payment-detail">{payment.detail}</div>
-                  </div>
-                ))}
-              </div>
+              <p className="logistics-body">{t.logistics.paymentsSummary}</p>
             </article>
           </div>
         </div>

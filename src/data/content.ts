@@ -13,6 +13,68 @@ export interface SiteContent {
     floatingBuyLabel: string;
     floatingBlocksCount: (count: number) => string;
   };
+  ticker: {
+    stream: (count: number) => string;
+    availablePrefix: string;
+    blockSingular: string;
+    blockPlural: string;
+    soldOutLabel: string;
+  };
+  nav: {
+    blocks: string;
+    difference: string;
+    benefits: string;
+    howToUse: string;
+    b2b: string;
+    whatsappDirect: string;
+  };
+  hero: {
+    eyebrow: string;
+    h1: string;
+    subtitle: string;
+    chips: string[];
+    ctaPrimary: string;
+    ctaSecondary: string;
+    visualBadge: string;
+    visualAlt: string;
+  };
+  difference: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    colMetric: string;
+    colConventional: string;
+    colOro: string;
+    rows: Array<{
+      metric: string;
+      conventional: string;
+      oro: string;
+      highlight?: string;
+    }>;
+  };
+  benefits: {
+    eyebrow: string;
+    title: string;
+    cards: Array<{
+      num: string;
+      tag: string;
+      title: string;
+      description: string;
+    }>;
+    disclaimer: string;
+  };
+  howToUse: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    doses: Array<{
+      amount: string;
+      measure: string;
+      title: string;
+      tempBadge: string;
+      description: string;
+    }>;
+  };
   homeCtas: {
     afterRitualEyebrow: string;
     afterRitualTitle: string;
@@ -22,36 +84,6 @@ export interface SiteContent {
     afterOriginTitle: string;
     afterOriginSub: string;
     afterOriginBtn: string;
-  };
-  ticker: {
-    text: string;
-    availablePrefix: string;
-    blockSingular: string;
-    blockPlural: string;
-    soldOutLabel: string;
-  };
-  nav: {
-    blocks: string;
-    howToUse: string;
-    science: string;
-    origin: string;
-    b2b: string;
-    whatsappDirect: string;
-  };
-  hero: {
-    eyebrow: string;
-    h1: string;
-    subtitle: string;
-    ctaPrimary: string;
-    ctaSecondary: string;
-    telemetryTitle: string;
-    telemetry: Array<{ value: string; label: string }>;
-    diptychLeftTag: string;
-    diptychLeftMeta: string;
-    diptychLeftCaption: string;
-    diptychRightTag: string;
-    diptychRightMeta: string;
-    diptychRightCaption: string;
   };
   showcase: {
     eyebrow: string;
@@ -74,63 +106,20 @@ export interface SiteContent {
     plusShipping: string;
     reserveCta: string;
     soldButtonLabel: string;
-    servingsFormat: (cups: number, ceremonies: number) => string;
+    servingsFormat: (cups: number) => string;
     availableShort: (count: number) => string;
     noLotsFallback: string;
-  };
-  howToUse: {
-    eyebrow: string;
-    title: string;
-    subtitle: string;
-    doses: Array<{
-      amount: string;
-      measure: string;
-      title: string;
-      tempBadge: string;
-      description: string;
-    }>;
-    visualLeftTag: string;
-    visualLeftMeta: string;
-    visualLeftCaption: string;
-    visualRightTag: string;
-    visualRightMeta: string;
-    visualRightCaption: string;
-  };
-  science: {
-    eyebrow: string;
-    title: string;
-    subtitle: string;
-    tableColMetric: string;
-    tableColConventional: string;
-    tableColOro: string;
-    tableRows: Array<{
-      metric: string;
-      conventional: string;
-      oro: string;
-      highlight?: string;
-    }>;
-    cascadeEyebrow: string;
-    cascadeTitle: string;
-    vectors: Array<{
-      laja: string;
-      dpRange: string;
-      title: string;
-      mechanism: string;
-    }>;
   };
   origin: {
     eyebrow: string;
     title: string;
-    directTradeTitle: string;
-    directTradeBody: string;
-    terroirPoints: Array<{ label: string; value: string }>;
+    zamoraTitle: string;
+    zamoraBody: string;
     tznkBadge: string;
-    tznkDesc: string;
     tznkLinkLabel: string;
     founderRole: string;
     founderName: string;
     founderBio: string;
-    verifiedChannelsLabel: string;
     packagingTag: string;
     packagingMeta: string;
     packagingCaption: string;
@@ -149,12 +138,10 @@ export interface SiteContent {
     ctaLabel: string;
   };
   logistics: {
-    eyebrow: string;
-    title: string;
     shippingTitle: string;
     shippingBody: string;
     paymentsTitle: string;
-    payments: Array<{ method: string; detail: string }>;
+    paymentsSummary: string;
   };
   footer: {
     address: string;
@@ -166,7 +153,7 @@ export interface SiteContent {
 export const CONTENT: Record<Lang, SiteContent> = {
   es: {
     meta: {
-      title: 'ORO PÚRPURA — Origen 5300: No es chocolate. Es cacao vivo.',
+      title: 'ORO PÚRPURA — No es chocolate. Es cacao púrpura vivo.',
     },
     common: {
       parentPrefix: 'by',
@@ -178,73 +165,177 @@ export const CONTENT: Record<Lang, SiteContent> = {
       floatingBlocksCount: (count) =>
         count === 1 ? '1 bloque disp.' : `${count} bloques disp.`,
     },
-    homeCtas: {
-      afterRitualEyebrow: 'MICRO-LOTES ACTIVOS • DESDE $26.50 SEGÚN PESO REAL',
-      afterRitualTitle: '¿Listo para probar tu primer monolito vivo?',
-      afterRitualSub:
-        'Explora los bloques disponibles de la cosecha actual, compara pesos y reserva el tuyo en 1 clic por WhatsApp.',
-      afterRitualBtn: 'Comprar bloques disponibles →',
-      afterOriginEyebrow: 'DIRECTO DESDE ZAMORA • ENVÍOS SERVIENTREGA 24–48 H',
-      afterOriginTitle: 'Elige tu bloque único del lote actual',
-      afterOriginSub:
-        'Cada monolito es irrepetible y se cobra a tarifa transparente de $100 / kg ($0.10 / g).',
-      afterOriginBtn: 'Ir a la vitrina de bloques →',
-    },
     ticker: {
-      text: 'MICRO-LOTES VIVOS DE ZAMORA-CHINCHIPE • 0% FERMENTACIÓN • BLOQUES ÚNICOS POR PESO REAL ($100/KG) • ENVÍOS SERVIENTREGA A TODO EL ECUADOR',
-      availablePrefix: 'DISPONIBLES AHORA:',
+      stream: (count) =>
+        `MICRO-LOTES VIVOS DE ZAMORA-CHINCHIPE • 0% FERMENTACIÓN • BLOQUES ÚNICOS ($100/KG) • DISPONIBLES: ${count} ${
+          count === 1 ? 'BLOQUE' : 'BLOQUES'
+        }`,
+      availablePrefix: 'DISPONIBLES:',
       blockSingular: 'BLOQUE',
       blockPlural: 'BLOQUES',
       soldOutLabel: 'LOTE AGOTADO',
     },
     nav: {
-      blocks: 'Comprar',
+      blocks: 'Bloques',
+      difference: 'Diferencia',
+      benefits: 'Beneficios',
       howToUse: 'Cómo Usar',
-      science: 'Ciencia DP1–7',
-      origin: 'Origen TZNK',
-      b2b: 'B2B ($60/kg)',
-      whatsappDirect: 'WhatsApp Directo',
+      b2b: 'B2B',
+      whatsappDirect: 'WhatsApp',
     },
     hero: {
-      eyebrow: 'ZAMORA-CHINCHIPE, ECUADOR • CUNA MUNDIAL DEL CACAO (5,300 AÑOS)',
-      h1: 'ORIGEN 5300: NO ES CHOCOLATE. ES CACAO VIVO.',
+      eyebrow: 'ZAMORA-CHINCHIPE • ORIGEN 5300 AÑOS',
+      h1: 'NO ES CHOCOLATE. ES CACAO PÚRPURA VIVO.',
       subtitle:
-        'Pasta viva de cacao púrpura ancestral sin fermentar ni tostar, elaborada exclusivamente con grano pelado de Zamora-Chinchipe. Moldeada artesanalmente en monolitos únicos de peso real para enfoque mental, vitalidad y ceremonias.',
-      ctaPrimary: 'Comprar bloques disponibles →',
-      ctaSecondary: '¿Cómo se prepara? (20 g)',
-      telemetryTitle: '¿POR QUÉ CACAO PÚRPURA VIVO? — 4 DIFERENCIAS CLAVE',
-      telemetry: [
+        'Pasta pura de cacao ancestral sin fermentar ni tostar. Corta virutas con cuchillo y prepárala en 30 segundos para enfoque mental, circulación y vitalidad.',
+      chips: [
+        '🟣 100% Púrpura Nativo',
+        '⚡ Hasta 10× más antioxidantes',
+        '🔪 Bloques únicos de peso real',
+      ],
+      ctaPrimary: 'Elegir mi bloque disponible →',
+      ctaSecondary: '¿Por qué es diferente?',
+      visualBadge: 'CORTE REAL • SIN FERMENTAR • ZAMORA, ECUADOR',
+      visualAlt:
+        'Monolito artesanal de cacao púrpura vivo sin fermentar con fractura vítrea, virutas cortadas a cuchillo sobre báscula y bebida rubí-púrpura.',
+    },
+    difference: {
+      eyebrow: 'EL GRAN CONTRASTE • 5 DIFERENCIAS CLARAS',
+      title: '¿Por qué nuestro cacao es púrpura y el resto es marrón?',
+      subtitle:
+        'El cacao en el árbol es púrpura brillante. La industria lo fermenta durante días y lo tuesta a 140 °C para hacer dulces: ese calor lo vuelve marrón y destruye hasta el 90% de sus propiedades medicinales.',
+      colMetric: 'Criterio',
+      colConventional: 'Cacao Convencional (Marrón • Procesado)',
+      colOro: 'ORO PÚRPURA (Púrpura Vivo • Origen 5300)',
+      rows: [
         {
-          value: 'COLOR PÚRPURA REAL',
-          label: 'Sin fermentar ni tostar: conserva su pigmento natural vivo, no marrón quemado',
+          metric: '1. Color del grano',
+          conventional: 'Marrón — resultado de oxidación y calor excesivo.',
+          oro: 'Púrpura intenso — pigmentos naturales vivos (antocianinas).',
         },
         {
-          value: '4–10× MÁS ANTIOXIDANTES',
-          label: 'Polifenoles vivos intactos que el tueste del chocolate comercial destruye',
+          metric: '2. Procesamiento',
+          conventional: '5–7 días de fermentación + tueste agresivo a 120–145 °C.',
+          oro: '0 días de fermentación. 0% tostado. Secado suave al vacío ≤ 75 °C en menos de 10 h.',
+          highlight: '0% FERMENTACIÓN',
         },
         {
-          value: 'ENFOQUE SIN NERVIOSISMO',
-          label: 'Energía limpia y sostenida por teobromina natural, sin temblor ni bajón del café',
+          metric: '3. Antioxidantes',
+          conventional: 'Se pierde hasta el 80–90% (1.0–4.8 mg/g de epicatequina).',
+          oro: '4–10× más polifenoles activos (17.0–19.5 mg/g) para tu cuerpo.',
+          highlight: '4–10× MÁS POTENCIA',
         },
         {
-          value: 'LISTO EN 30 SEGUNDOS',
-          label: 'Córtalo a cuchillo en virutas: cómelo directo o bátelo en agua caliente (72–75 °C)',
+          metric: '4. Sabor y pureza',
+          conventional: 'Acidez acética de fermentación, amargor quemado o exceso de azúcar.',
+          oro: '0% ácido acético. Sabor limpio a mora silvestre y flores, sin cascarilla.',
+          highlight: '0% ÁCIDO ACÉTICO',
+        },
+        {
+          metric: '5. Efecto en ti',
+          conventional: 'Postre industrial con pico rápido de azúcar.',
+          oro: 'Nutracéutico vivo para circulación, foco limpio y energía estable por 4–6 h.',
         },
       ],
-      diptychLeftTag: 'CUT-TEST: PÚRPURA NATIVO',
-      diptychLeftMeta: 'GLASSY CRUNCH • 0% FERMENTACIÓN',
-      diptychLeftCaption:
-        'Fractura vítrea púrpura del grano pelado frente al grano fermentado marrón oxidado.',
-      diptychRightTag: 'CORTE EN VIRUTAS • EAT / BREW',
-      diptychRightMeta: '20.0 g • DOSIS DIARIA',
-      diptychRightCaption:
-        'Monolito artesanal cortado a cuchillo en virutas finas sobre báscula de precisión.',
+    },
+    benefits: {
+      eyebrow: 'PROPIEDADES MEDICINALES Y BENEFICIOS',
+      title: '¿Qué hace el cacao púrpura vivo en tu cuerpo?',
+      cards: [
+        {
+          num: '01',
+          tag: 'Óxido Nítrico',
+          title: 'Corazón y Circulación',
+          description:
+            'Dilata los vasos sanguíneos, mejora la oxigenación y apoya una presión arterial saludable. Sentirás un calor vital limpio en 15–45 minutos.',
+        },
+        {
+          num: '02',
+          tag: 'Teobromina Nativa',
+          title: 'Enfoque Mental sin Nerviosismo',
+          description:
+            'Aumenta el flujo sanguíneo al cerebro y mejora la concentración durante 4–6 horas, sin taquicardia ni el bajón del café.',
+        },
+        {
+          num: '03',
+          tag: 'Anandamida + Magnesio',
+          title: 'Ánimo y Calma Emocional',
+          description:
+            'Activa las moléculas naturales del bienestar y reduce el estrés diario. Genera claridad mental y serenidad sostenida.',
+        },
+        {
+          num: '04',
+          tag: 'Polifenoles DP4–DP5',
+          title: 'Control del Azúcar y Metabolismo',
+          description:
+            'Ayuda a suavizar los picos de glucosa después de las comidas. Protege las arterias frente a la oxidación del colesterol.',
+        },
+        {
+          num: '05',
+          tag: 'Prebióticos DP6–DP7',
+          title: 'Microbiota Intestinal y Defensas',
+          description:
+            'Sus polifenoles complejos llegan intactos al intestino para nutrir tus bacterias benéficas. Fortalece tu inmunidad natural.',
+        },
+        {
+          num: '06',
+          tag: '80–95 mg GAE/g',
+          title: 'Potencia Antioxidante Celular',
+          description:
+            'Combate la inflamación silenciosa y el envejecimiento celular. Densidad antioxidante hasta 10× mayor que el chocolate oscuro común.',
+        },
+      ],
+      disclaimer:
+        'Alimento funcional 100% natural de grano entero pelado (sin cascarilla). No es un medicamento ni sustituye tratamiento médico.',
+    },
+    howToUse: {
+      eyebrow: 'CÓMO PREPARARLO EN 30 SEGUNDOS',
+      title: 'Toma un cuchillo y corta virutas finas de tu bloque',
+      subtitle: 'Sin moldes ni cálculos complicados: elige tu dosis según el momento del día.',
+      doses: [
+        {
+          amount: '20 g',
+          measure: '2 cdas. de virutas',
+          title: 'Taza Diaria',
+          tempBadge: '180 ml • 72–75 °C',
+          description:
+            'Bate 20 seg en 180 ml de agua caliente a 72–75 °C (sin hervir) para enfoque limpio.',
+        },
+        {
+          amount: '40 g',
+          measure: '4 cdas. de virutas',
+          title: 'Dosis Ceremonial',
+          tempBadge: '200 ml • 72–75 °C',
+          description:
+            'Bate en 200 ml de agua a 72–75 °C para meditación o trabajo creativo profundo.',
+        },
+        {
+          amount: '10 g',
+          measure: 'Láminas finas',
+          title: 'Directo (Eat)',
+          tempBadge: 'SIN AGUA',
+          description:
+            'Deja fundir láminas delgadas en la boca antes de entrenar o trabajar.',
+        },
+      ],
+    },
+    homeCtas: {
+      afterRitualEyebrow: 'MICRO-LOTES ACTIVOS • DESDE $26.50 SEGÚN PESO REAL',
+      afterRitualTitle: '¿Listo para probar tu primer monolito vivo?',
+      afterRitualSub:
+        'Explora los bloques disponibles del lote actual y reserva el tuyo en 1 clic por WhatsApp.',
+      afterRitualBtn: 'Elegir mi bloque disponible →',
+      afterOriginEyebrow: 'ENVÍOS SERVIENTREGA (24–48 H) A LAS 24 PROVINCIAS',
+      afterOriginTitle: 'Reserva tu bloque único del lote actual',
+      afterOriginSub:
+        'Precio exacto por peso real ($100 / kg). El envío se calcula aparte al confirmar tu ciudad.',
+      afterOriginBtn: 'Ir a la vitrina de bloques →',
     },
     showcase: {
-      eyebrow: 'VITRINA VIVA • MICRO-LOTES ACTUALES',
+      eyebrow: 'VITRINA VIVA • BLOQUES ÚNICOS DEL LOTE ACTUAL',
       title: 'Bloques Únicos del Lote Actual',
       subtitle:
-        'Cada monolito se moldea artesanalmente en Zamora con su peso real único. Tarifa única de $100 / kg ($0.10 / g).',
+        'Cada monolito se moldea artesanalmente en Zamora con su peso real único. Tarifa transparente de $100 / kg ($0.10 / g).',
       steps: [
         '1. Elige un bloque disponible',
         '2. Toca WhatsApp e indica tu ciudad',
@@ -255,195 +346,70 @@ export const CONTENT: Record<Lang, SiteContent> = {
       filterIncludeSold: 'Mostrar vendidos',
       lotStatusBadge: 'MICRO-LOTE ARTESANAL',
       harvestLabel: 'COSECHA',
-      originLabel: 'Origen / Finca',
+      originLabel: 'Origen / Comunidad',
       altitudeLabel: 'Altitud',
-      tastingLabel: 'Perfil Sensorial',
-      formulaLabel: 'Composición / Sinergia del lote',
+      tastingLabel: 'Notas',
+      formulaLabel: 'Composición',
       logisticsNotice:
-        'Tarifa transparente: $100 / kg ($0.10 / g). Cada bloque tiene un peso real único. El envío por Servientrega a todo el Ecuador se calcula y paga por separado al confirmar tu reserva en WhatsApp.',
+        'Precio exacto por peso real: $100 / kg ($0.10 / g). El envío por Servientrega a todo el Ecuador se calcula aparte al confirmar en WhatsApp.',
       blockPrefix: 'BLOQUE',
       statusAvailable: 'DISPONIBLE',
       statusSold: 'VENDIDO',
       plusShipping: '+ envío Servientrega',
-      reserveCta: 'Reservar por WhatsApp →',
-      soldButtonLabel: 'Bloque reservado / Vendido',
-      servingsFormat: (cups, ceremonies) =>
-        `≈ ${cups} tazas de 20 g o ${ceremonies} ceremonias`,
+      reserveCta: 'Reservar en WhatsApp →',
+      soldButtonLabel: 'Bloque reservado',
+      servingsFormat: (cups) => `≈ ${cups} tazas de 20 g`,
       availableShort: (count) => `${count} disp.`,
-      noLotsFallback: 'Próxima cosecha en preparación. Escríbenos por WhatsApp para reservar turno.',
-    },
-    howToUse: {
-      eyebrow: 'CÓMO DISFRUTARLO • SIN MOLDES NI CÁLCULOS',
-      title: 'Ritual de Corte en Virutas',
-      subtitle:
-        'No necesitas moldes ni medidas complicadas. Toma un cuchillo de cocina y corta virutas finas directamente del monolito.',
-      doses: [
-        {
-          amount: '20 g',
-          measure: '≈ 2 cucharadas de virutas',
-          title: 'Taza Diaria / Enfoque',
-          tempBadge: '180 ml • 72–75 °C',
-          description:
-            'Bate con molinillo, batidor de mano o mini-espumador en 180 ml de agua caliente a 72–75 °C (sin hervir). Brinda enfoque cognitivo limpio sin temblor ni bajón de cafeína.',
-        },
-        {
-          amount: '40 g',
-          measure: '≈ 4 cucharadas de virutas',
-          title: 'Dosis Ceremonial',
-          tempBadge: '200–220 ml • 72–75 °C',
-          description:
-            'Bate en 200–220 ml de agua a 72–75 °C para práctica meditativa profunda, sesiones creativas extendidas o trabajo de respiración consciente.',
-        },
-        {
-          amount: '10 g',
-          measure: 'Láminas finas a cuchillo',
-          title: 'Consumo Directo (Eat)',
-          tempBadge: 'SUBLINGUAL • SIN AGUA',
-          description:
-            'Corta láminas delgadas con cuchillo y déjalas fundirse lentamente en boca antes de trabajar o entrenar para una absorción sublingual rápida.',
-        },
-      ],
-      visualLeftTag: 'CORTE EN VIRUTAS • CUCHILLO DE COCINA',
-      visualLeftMeta: '20.0 g = 2 CUCHARADAS',
-      visualLeftCaption:
-        'Las virutas finas se disuelven en 30 segundos en agua caliente sin formar película pesada.',
-      visualRightTag: 'SUSPENSIÓN RUBÍ-PÚRPURA',
-      visualRightMeta: '72–75 °C • NO HERVIR',
-      visualRightCaption:
-        'Emulsión rubí-púrpura viva en vaso de borosilicato: antocianinas y flavanoles intactos.',
-    },
-    science: {
-      eyebrow: 'BIOQUÍMICA DEL CACAO SIN FERMENTAR',
-      title: 'Matriz Viva vs. Muerte Térmica',
-      subtitle:
-        'La fermentación prolongada y el tueste a 120–145 °C destruyen hasta el 80% de los polifenoles nativos. Nuestra estabilización al vacío preserva la matriz púrpura intacta a partir de grano pelado puro.',
-      tableColMetric: 'Parámetro Analítico',
-      tableColConventional: 'Fermentación y Tueste (120–145 °C)',
-      tableColOro: 'ORO PÚRPURA (Vacío ≤ 75–80 °C • 7–10 h)',
-      tableRows: [
-        {
-          metric: 'Corte transversal (Cut-Test)',
-          conventional: 'Marrón oxidado, estructura porosa y taninos condensados',
-          oro: 'Púrpura pizarra vítreo monolítico sin oxidación fermentativa',
-          highlight: '0% FERMENTACIÓN',
-        },
-        {
-          metric: '(-)-Epicatequina nativa (DP1)',
-          conventional: '1.0–4.8 mg/g (pérdida térmica y enzimática)',
-          oro: '17.0–19.5 mg/g de flavanol monomérico biodisponible',
-          highlight: '4–10× SUPERIOR',
-        },
-        {
-          metric: 'Teobromina nativa',
-          conventional: 'Parcialmente lixiviada durante 5–7 días de fermentación',
-          oro: '2.15–2.40% conservada íntegra en la matriz celular',
-          highlight: 'ENERGÍA SERENA',
-        },
-        {
-          metric: 'Acidez acética y pureza del grano',
-          conventional: 'Alta acidez acética por fermentación; a menudo con restos de cáscara',
-          oro: '0% ácido acético • 100% grano pelado limpio (sin cascarilla)',
-          highlight: '0% ÁCIDO ACÉTICO',
-        },
-      ],
-      cascadeEyebrow: 'LAS 3 LAJAS • CASCADA FENÓLICA DP1–DP7',
-      cascadeTitle: 'Tres vectores fisiológicos del cacao púrpura vivo',
-      vectors: [
-        {
-          laja: 'VECTOR 01',
-          dpRange: 'DP1–DP2',
-          title: 'Corazón & Circulación',
-          mechanism:
-            'Activación de la enzima eNOS y síntesis de óxido nítrico (NO): vasodilatación suave, mejor irrigación periférica y calidez física perceptible en 45–60 min.',
-        },
-        {
-          laja: 'VECTOR 02',
-          dpRange: 'DP3 + TEOBROMINA',
-          title: 'Mente & Enfoque',
-          mechanism:
-            'Soporte a la microcirculación del hipocampo y neurovasculatura para concentración sostenida y lucidez tranquila sin taquicardia.',
-        },
-        {
-          laja: 'VECTOR 03',
-          dpRange: 'DP4–DP7',
-          title: 'Equilibrio Metabólico',
-          mechanism:
-            'Protección del endotelio vascular frente al estrés oxidativo y modulación prebiótica suave de la microbiota intestinal.',
-        },
-      ],
+      noLotsFallback: 'Próxima cosecha en preparación. Escríbenos por WhatsApp para reservar.',
     },
     origin: {
-      eyebrow: 'ZAMORA-CHINCHIPE • PROYECTO TZNK & FUNDADOR',
-      title: 'Origen Directo en la Cuna del Cacao',
-      directTradeTitle: 'Recolección directa con familias Shuar (Direct Trade)',
-      directTradeBody:
-        'Trabajamos directamente con chakras forestales de altura de Cacao Nacional relicto (900–1,362 m s.n.m.) en las comunidades Shuar Napurak y Los Bayanes, Zamora-Chinchipe. Cada bloque se empaca al vacío en bolsa metalizada y lleva etiqueta variable de 10 × 10 cm con su peso exacto y QR-pasaporte de lote del Proyecto TZNK.',
-      terroirPoints: [
-        { label: 'COMUNIDADES', value: 'Napurak & Los Bayanes (Zamora-Chinchipe)' },
-        { label: 'ALTITUD', value: '900–1,362 m s.n.m. • Bosque montano amazónico' },
-        { label: 'EMPAQUE', value: 'Vacío + bolsa metalizada + etiqueta variable 10 × 10 cm' },
-      ],
-      tznkBadge: 'TZNK VERIFIED • TRAZABILIDAD DE LOTE',
-      tznkDesc:
-        'Cada micro-lote cuenta con registro verificable de cosecha, origen Shuar y atestación digital en el ecosistema Proyecto TZNK.',
-      tznkLinkLabel: 'Verificar ecosistema Proyecto TZNK (tzunki.com) ↗',
-      founderRole: 'FUNDADOR & INGENIERO DE PROCESOS ALIMENTARIOS',
+      eyebrow: 'ORIGEN ZAMORA-CHINCHIPE • PROYECTO TZNK & FUNDADOR',
+      title: 'Trazabilidad directa desde la cuna del cacao',
+      zamoraTitle: 'Origen Zamora & Proyecto TZNK',
+      zamoraBody:
+        'Recolección directa en bosques montanos de Zamora-Chinchipe (900–1,362 m) junto a familias Shuar (Napurak y Los Bayanes). Cada bloque viaja al vacío en bolsa metalizada con QR-pasaporte TZNK.',
+      tznkBadge: 'TZNK VERIFIED • PASAPORTE DE LOTE',
+      tznkLinkLabel: 'Verificar en tzunki.com ↗',
+      founderRole: 'FUNDADOR • THE INCA TRAIL FOODS / CACAO ZAMORA',
       founderName: 'Eugenio Ayachui',
       founderBio:
-        'Ingeniero tecnólogo en innovación alimentaria radicado en Zamora, Ecuador. Creador de la plataforma tecnológica The Inca Trail Foods / Cacao Zamora, dedicada a preservar la bioactividad viva del cacao amazónico ecuatoriano.',
-      verifiedChannelsLabel: 'Canales verificados del fundador:',
-      packagingTag: 'ETIQUETA APOTECARIA VARIABLE • 10 × 10 CM',
-      packagingMeta: 'PESO REAL + QR TZNK',
-      packagingCaption:
-        'Bolsa metalizada al vacío con etiqueta mineral impresa con el peso exacto de cada monolito.',
-      terroirTag: 'CHAKRA FORESTAL • ZAMORA-CHINCHIPE',
-      terroirMeta: '900–1,362 m s.n.m.',
-      terroirCaption:
-        'Cacao Nacional relicto cultivado bajo dosel amazónico junto a familias Shuar.',
+        'Ingeniero de procesos alimentarios en Zamora, Ecuador. Creador de la plataforma tecnológica que preserva el cacao púrpura vivo sin fermentar.',
+      packagingTag: 'EMPAQUE AL VACÍO + QR TZNK',
+      packagingMeta: 'PESO REAL',
+      packagingCaption: 'Bolsa metalizada al vacío con etiqueta variable del peso exacto.',
+      terroirTag: 'CHAKRA SHUAR • ZAMORA',
+      terroirMeta: '900–1,362 m',
+      terroirCaption: 'Cacao Nacional relicto bajo dosel amazónico en Zamora-Chinchipe.',
     },
     b2b: {
       eyebrow: 'ALIADOS B2B • CAFETERÍAS, CENTROS DE RETIRO, FACILITADORES Y TIENDAS',
       title: 'Abastecimiento profesional de cacao púrpura vivo',
       priceValue: '$60 / kg',
-      priceLabel: 'Tarifa especial B2B (40% de ahorro frente a D2C)',
+      priceLabel: 'Tarifa B2B — 40% de ahorro frente a D2C',
       minValue: 'Desde 3 kg / mes',
-      minLabel: 'Pedido mínimo mensual recurrente',
+      minLabel: 'Pedido mínimo mensual',
       description:
-        'Suministro directo de bloques vivos para barras de café de especialidad, estudios de yoga, facilitadores de ceremonias de cacao y centros de retiro en Quito, Guayaquil, Cuenca y Vilcabamba. El envío por Servientrega se paga por separado según tarifa del transportista.',
+        'Suministro directo de bloques vivos en Quito, Guayaquil, Cuenca y Vilcabamba. Envío Servientrega aparte según tarifa.',
       ctaLabel: 'Solicitar condiciones B2B por WhatsApp →',
     },
     logistics: {
-      eyebrow: 'ENVÍOS Y PAGOS EN ECUADOR',
-      title: 'Logística transparente desde Zamora',
-      shippingTitle: 'Envíos Nacionales — Servientrega (24–48 h)',
+      shippingTitle: 'Envíos Servientrega (24–48 h)',
       shippingBody:
-        'Despachos desde Zamora a las 24 provincias del Ecuador vía Servientrega (24–48 h). El costo de envío se calcula según tu ciudad y se paga por separado al confirmar tu reserva en WhatsApp.',
-      paymentsTitle: 'Medios de Pago en Ecuador',
-      payments: [
-        {
-          method: 'Deuna! (QR 0% comisión)',
-          detail: 'Pago inmediato desde tu app bancaria sin recargos adicionales.',
-        },
-        {
-          method: 'Transferencia Bancaria',
-          detail: 'Banco Pichincha • Banco Guayaquil • Produbanco.',
-        },
-        {
-          method: 'Tarjetas vía link PayPhone',
-          detail: 'Visa, Mastercard y American Express mediante enlace seguro.',
-        },
-      ],
+        'A las 24 provincias del Ecuador — costo calculado según tu ciudad y pagado por separado.',
+      paymentsTitle: 'Pagos en Ecuador',
+      paymentsSummary:
+        'Deuna! (QR) • Transferencia Pichincha / Guayaquil / Produbanco • Tarjetas vía PayPhone.',
     },
     footer: {
       address: 'Zamora, Zamora-Chinchipe, Ecuador',
       ecosystem:
-        'oropurpura.incatrailfoods.com — Un proyecto de The Inca Trail Foods / Cacao Zamora & Proyecto TZNK',
+        'oropurpura.incatrailfoods.com • ORO PÚRPURA — Un proyecto de The Inca Trail Foods / Cacao Zamora',
       rights: '© 2026 ORO PÚRPURA • ORIGEN 5300',
     },
   },
   en: {
     meta: {
-      title: "ORO PÚRPURA — Origin 5300: It's not chocolate. It's living cacao.",
+      title: "ORO PÚRPURA — It's not chocolate. It's living purple cacao.",
     },
     common: {
       parentPrefix: 'by',
@@ -455,73 +421,176 @@ export const CONTENT: Record<Lang, SiteContent> = {
       floatingBlocksCount: (count) =>
         count === 1 ? '1 block avail.' : `${count} blocks avail.`,
     },
-    homeCtas: {
-      afterRitualEyebrow: 'ACTIVE MICRO-LOTS • FROM $26.50 BY EXACT WEIGHT',
-      afterRitualTitle: 'Ready to try your first living monolith?',
-      afterRitualSub:
-        'Browse available blocks from the current harvest, compare exact weights, and reserve yours in 1 click on WhatsApp.',
-      afterRitualBtn: 'Buy available blocks →',
-      afterOriginEyebrow: 'DIRECT FROM ZAMORA • SERVIENTREGA SHIPPING 24–48 H',
-      afterOriginTitle: 'Pick your unique block from the current lot',
-      afterOriginSub:
-        'Every monolith is one-of-a-kind and priced at a transparent $100 / kg ($0.10 / g).',
-      afterOriginBtn: 'Open block storefront →',
-    },
     ticker: {
-      text: 'LIVING MICRO-LOTS FROM ZAMORA-CHINCHIPE • 0% FERMENTATION • UNIQUE ACTUAL-WEIGHT BLOCKS ($100/KG) • SERVIENTREGA SHIPPING ACROSS ECUADOR',
-      availablePrefix: 'AVAILABLE NOW:',
+      stream: (count) =>
+        `LIVING MICRO-LOTS FROM ZAMORA-CHINCHIPE • 0% FERMENTATION • UNIQUE BLOCKS ($100/KG) • AVAILABLE: ${count} ${
+          count === 1 ? 'BLOCK' : 'BLOCKS'
+        }`,
+      availablePrefix: 'AVAILABLE:',
       blockSingular: 'BLOCK',
       blockPlural: 'BLOCKS',
       soldOutLabel: 'LOT SOLD OUT',
     },
     nav: {
-      blocks: 'Buy',
+      blocks: 'Blocks',
+      difference: 'Difference',
+      benefits: 'Benefits',
       howToUse: 'How to Use',
-      science: 'Science DP1–7',
-      origin: 'Origin TZNK',
-      b2b: 'B2B ($60/kg)',
-      whatsappDirect: 'Direct WhatsApp',
+      b2b: 'B2B',
+      whatsappDirect: 'WhatsApp',
     },
     hero: {
-      eyebrow: 'ZAMORA-CHINCHIPE, ECUADOR • WORLD CRADLE OF CACAO (5,300 YEARS)',
-      h1: "ORIGIN 5300: IT'S NOT CHOCOLATE. IT'S LIVING CACAO.",
+      eyebrow: 'ZAMORA-CHINCHIPE • 5,300-YEAR ORIGIN',
+      h1: "IT'S NOT CHOCOLATE. IT'S LIVING PURPLE CACAO.",
       subtitle:
-        'Living ancestral purple cacao paste, unfermented and unroasted, crafted exclusively from peeled Zamora-Chinchipe nibs. Artisan-cast into unique actual-weight monoliths for mental focus, vitality, and ceremonies.',
-      ctaPrimary: 'Buy available blocks →',
-      ctaSecondary: 'How to prepare? (20 g)',
-      telemetryTitle: 'WHY LIVING PURPLE CACAO? — 4 KEY DIFFERENCES',
-      telemetry: [
+        'Pure unfermented, unroasted ancestral cacao paste. Shave with a knife and brew in 30 seconds for mental focus, circulation, and vitality.',
+      chips: [
+        '🟣 100% Native Purple',
+        '⚡ Up to 10× more antioxidants',
+        '🔪 Unique actual-weight blocks',
+      ],
+      ctaPrimary: 'Pick my available block →',
+      ctaSecondary: 'Why is it different?',
+      visualBadge: 'REAL CUT • UNFERMENTED • ZAMORA, ECUADOR',
+      visualAlt:
+        'Artisan unfermented deep-purple cacao monolith with glassy fracture, knife shavings on precision scale, and ruby-purple cacao brew.',
+    },
+    difference: {
+      eyebrow: 'THE CORE CONTRAST • 5 CLEAR DIFFERENCES',
+      title: 'Why is our cacao purple while everything else is brown?',
+      subtitle:
+        'Cacao on the tree is vibrant purple. The industry ferments it for days and roasts it at 140 °C to make candy—turning it brown and destroying up to 90% of its medicinal compounds.',
+      colMetric: 'Parameter',
+      colConventional: 'Conventional Cacao (Brown • Processed)',
+      colOro: 'ORO PÚRPURA (Living Purple • Origin 5300)',
+      rows: [
         {
-          value: 'TRUE NATURAL PURPLE',
-          label: 'Unfermented & unroasted: keeps its living violet pigment instead of burnt brown',
+          metric: '1. Bean color',
+          conventional: 'Brown — caused by oxidation and high-heat roasting.',
+          oro: 'Vibrant purple — living natural pigments (anthocyanins).',
         },
         {
-          value: '4–10× MORE ANTIOXIDANTS',
-          label: 'Intact living polyphenols that commercial chocolate roasting destroys',
+          metric: '2. Processing',
+          conventional: '5–7 days fermentation + aggressive roasting at 120–145 °C.',
+          oro: '0 days fermentation. 0% roasting. Gentle vacuum drying ≤ 75 °C in under 10 h.',
+          highlight: '0% FERMENTATION',
         },
         {
-          value: 'CALM, CLEAN FOCUS',
-          label: 'Steady natural theobromine energy without coffee jitters or afternoon crash',
+          metric: '3. Antioxidants',
+          conventional: 'Up to 80–90% destroyed (1.0–4.8 mg/g epicatechin).',
+          oro: '4–10× more active polyphenols (17.0–19.5 mg/g) intact.',
+          highlight: '4–10× HIGHER',
         },
         {
-          value: 'READY IN 30 SECONDS',
-          label: 'Shave curls with a knife: eat directly or whisk into hot water (72–75 °C)',
+          metric: '4. Taste & purity',
+          conventional: 'Vinegary acetic acidity, burnt bitterness, or heavy sugar.',
+          oro: '0% acetic acid. Clean wild blackberry & floral notes, hull-free.',
+          highlight: '0% ACETIC ACID',
+        },
+        {
+          metric: '5. Effect on you',
+          conventional: 'Confectionery dessert with a quick sugar spike.',
+          oro: 'Living nutraceutical for circulation, clean focus, and steady 4–6 h energy.',
         },
       ],
-      diptychLeftTag: 'CUT-TEST: NATIVE PURPLE',
-      diptychLeftMeta: 'GLASSY CRUNCH • 0% FERMENTATION',
-      diptychLeftCaption:
-        'Glassy violet fracture of peeled unfermented bean vs. oxidized brown fermented bean.',
-      diptychRightTag: 'KNIFE SHAVINGS • EAT / BREW',
-      diptychRightMeta: '20.0 g • DAILY DOSE',
-      diptychRightCaption:
-        'Artisan monolith shaved with a kitchen knife onto a precision scale (20 g).',
+    },
+    benefits: {
+      eyebrow: 'MEDICINAL PROPERTIES & HEALTH BENEFITS',
+      title: 'What does living purple cacao do for your body?',
+      cards: [
+        {
+          num: '01',
+          tag: 'Nitric Oxide',
+          title: 'Heart & Circulation',
+          description:
+            'Dilates blood vessels, boosts oxygenation, and supports healthy blood pressure. Feel a clean wave of physical warmth in 15–45 minutes.',
+        },
+        {
+          num: '02',
+          tag: 'Native Theobromine',
+          title: 'Calm Focus Without Jitters',
+          description:
+            'Increases cerebral blood flow, sharpening memory and focus for 4–6 hours—without tachycardia or a coffee crash.',
+        },
+        {
+          num: '03',
+          tag: 'Anandamide + Magnesium',
+          title: 'Mood & Emotional Calm',
+          description:
+            'Activates natural bliss molecules and eases daily stress. Creates sustained mental clarity and emotional calm.',
+        },
+        {
+          num: '04',
+          tag: 'DP4–DP5 Polyphenols',
+          title: 'Blood Sugar & Metabolism',
+          description:
+            'Helps smooth post-meal glucose spikes and protects arterial walls against cholesterol oxidation.',
+        },
+        {
+          num: '05',
+          tag: 'DP6–DP7 Prebiotics',
+          title: 'Gut Microbiome & Immunity',
+          description:
+            'Complex polyphenols reach the colon intact to nourish beneficial gut bacteria and strengthen natural immunity.',
+        },
+        {
+          num: '06',
+          tag: '80–95 mg GAE/g',
+          title: 'Cellular Antioxidant Shield',
+          description:
+            'Fights silent inflammation and cellular aging with up to 10× the antioxidant density of regular dark chocolate.',
+        },
+      ],
+      disclaimer:
+        '100% natural functional food made from whole peeled cacao nibs (hull-free). Not a medicine and does not replace medical care.',
+    },
+    howToUse: {
+      eyebrow: 'HOW TO PREPARE IN 30 SECONDS',
+      title: 'Take a kitchen knife and shave fine curls from your block',
+      subtitle: 'No molds or complicated math—pick your dose for the moment.',
+      doses: [
+        {
+          amount: '20 g',
+          measure: '2 tbsp shavings',
+          title: 'Daily Cup',
+          tempBadge: '180 ml • 72–75 °C',
+          description:
+            'Whisk 20 sec in 180 ml hot water at 72–75 °C (do not boil) for clean focus.',
+        },
+        {
+          amount: '40 g',
+          measure: '4 tbsp shavings',
+          title: 'Ceremonial Dose',
+          tempBadge: '200 ml • 72–75 °C',
+          description:
+            'Whisk in 200 ml water at 72–75 °C for meditation or deep creative sessions.',
+        },
+        {
+          amount: '10 g',
+          measure: 'Thin slices',
+          title: 'Direct (Eat)',
+          tempBadge: 'NO WATER',
+          description: 'Let thin slices melt slowly on your palate before training or deep work.',
+        },
+      ],
+    },
+    homeCtas: {
+      afterRitualEyebrow: 'ACTIVE MICRO-LOTS • FROM $26.50 BY EXACT WEIGHT',
+      afterRitualTitle: 'Ready to try your first living monolith?',
+      afterRitualSub:
+        'Browse available blocks from the current lot and reserve yours in 1 click on WhatsApp.',
+      afterRitualBtn: 'Pick my available block →',
+      afterOriginEyebrow: 'SERVIENTREGA SHIPPING (24–48 H) ACROSS ALL 24 PROVINCES',
+      afterOriginTitle: 'Reserve your unique block from the current lot',
+      afterOriginSub:
+        'Exact actual-weight pricing ($100 / kg). Shipping is calculated separately for your city.',
+      afterOriginBtn: 'Open block storefront →',
     },
     showcase: {
       eyebrow: 'LIVE SHOWCASE • CURRENT MICRO-LOTS',
       title: 'Unique Blocks from the Current Lot',
       subtitle:
-        'Every monolith is hand-cast in Zamora with its own exact actual weight. Flat rate of $100 / kg ($0.10 / g).',
+        'Every monolith is hand-cast in Zamora with its own exact actual weight. Flat $100 / kg ($0.10 / g).',
       steps: [
         '1. Pick an available block',
         '2. Tap WhatsApp & enter your city',
@@ -532,189 +601,64 @@ export const CONTENT: Record<Lang, SiteContent> = {
       filterIncludeSold: 'Show sold',
       lotStatusBadge: 'ARTISAN MICRO-LOT',
       harvestLabel: 'HARVEST',
-      originLabel: 'Origin / Farm',
+      originLabel: 'Origin / Community',
       altitudeLabel: 'Altitude',
-      tastingLabel: 'Tasting Notes',
-      formulaLabel: 'Lot Composition / Botanical Synergy',
+      tastingLabel: 'Notes',
+      formulaLabel: 'Composition',
       logisticsNotice:
-        'Transparent rate: $100 / kg ($0.10 / g). Each block has a unique actual weight. Servientrega shipping across Ecuador is calculated and paid separately upon WhatsApp confirmation.',
+        'Exact actual-weight pricing: $100 / kg ($0.10 / g). Servientrega shipping across Ecuador is calculated separately upon WhatsApp confirmation.',
       blockPrefix: 'BLOCK',
       statusAvailable: 'AVAILABLE',
       statusSold: 'SOLD',
       plusShipping: '+ Servientrega shipping',
-      reserveCta: 'Reserve via WhatsApp →',
-      soldButtonLabel: 'Block reserved / Sold',
-      servingsFormat: (cups, ceremonies) =>
-        `≈ ${cups} cups (20 g) or ${ceremonies} ceremonies`,
+      reserveCta: 'Reserve on WhatsApp →',
+      soldButtonLabel: 'Block reserved',
+      servingsFormat: (cups) => `≈ ${cups} cups (20 g)`,
       availableShort: (count) => `${count} avail.`,
-      noLotsFallback: 'Next harvest is currently being cast. Message us on WhatsApp to reserve early.',
-    },
-    howToUse: {
-      eyebrow: 'HOW TO ENJOY • NO MOLDS OR CALCULATORS',
-      title: 'Knife-Shaving Ritual (Virutas)',
-      subtitle:
-        'No molds or complicated measurements needed. Take a kitchen knife and shave fine curls directly from the monolith.',
-      doses: [
-        {
-          amount: '20 g',
-          measure: '≈ 2 tbsp of shavings',
-          title: 'Daily Cup / Focus',
-          tempBadge: '180 ml • 72–75 °C',
-          description:
-            'Whisk or froth in 180 ml of hot water at 72–75 °C (do not boil). Delivers clean cognitive focus without jitters or a caffeine crash.',
-        },
-        {
-          amount: '40 g',
-          measure: '≈ 4 tbsp of shavings',
-          title: 'Ceremonial Dose',
-          tempBadge: '200–220 ml • 72–75 °C',
-          description:
-            'Whisk into 200–220 ml of water at 72–75 °C for deep meditation, creative deep-work sessions, or conscious breathwork.',
-        },
-        {
-          amount: '10 g',
-          measure: 'Thin knife slices',
-          title: 'Direct Consumption (Eat)',
-          tempBadge: 'SUBLINGUAL • NO WATER',
-          description:
-            'Slice thin wafers with a knife and let them dissolve slowly on your palate before work or training for fast sublingual absorption.',
-        },
-      ],
-      visualLeftTag: 'KNIFE SHAVINGS • KITCHEN BLADE',
-      visualLeftMeta: '20.0 g = 2 TABLESPOONS',
-      visualLeftCaption:
-        'Fine purple curls emulsify in 30 seconds in hot water with a velvety texture.',
-      visualRightTag: 'RUBY-PURPLE SUSPENSION',
-      visualRightMeta: '72–75 °C • DO NOT BOIL',
-      visualRightCaption:
-        'Living ruby-purple brew in borosilicate glass: intact anthocyanins and flavanols.',
-    },
-    science: {
-      eyebrow: 'UNFERMENTED CACAO BIOCHEMISTRY',
-      title: 'Living Matrix vs. Thermal Death',
-      subtitle:
-        'Conventional fermentation and 120–145 °C roasting destroy up to 80% of native polyphenols. Our vacuum stabilization preserves the intact purple matrix from pure peeled nibs.',
-      tableColMetric: 'Analytical Parameter',
-      tableColConventional: 'Fermentation & Roasting (120–145 °C)',
-      tableColOro: 'ORO PÚRPURA (Vacuum ≤ 75–80 °C • 7–10 h)',
-      tableRows: [
-        {
-          metric: 'Cut-Test Cross Section',
-          conventional: 'Oxidized brown interior, porous structure & condensed tannins',
-          oro: 'Monolithic glassy slate-purple cut with zero fermentative oxidation',
-          highlight: '0% FERMENTATION',
-        },
-        {
-          metric: 'Native (-)-Epicatechin (DP1)',
-          conventional: '1.0–4.8 mg/g (thermal & enzymatic degradation)',
-          oro: '17.0–19.5 mg/g bioavailable monomeric flavanol',
-          highlight: '4–10× HIGHER',
-        },
-        {
-          metric: 'Native Theobromine',
-          conventional: 'Partially leached during 5–7 days of fermentation',
-          oro: '2.15–2.40% preserved intact in the cellular matrix',
-          highlight: 'STEADY ENERGY',
-        },
-        {
-          metric: 'Acetic Acidity & Nib Purity',
-          conventional: 'High acetic acidity from fermentation; often contains shell fragments',
-          oro: '0% acetic acid • 100% clean peeled nibs (hull-free)',
-          highlight: '0% ACETIC ACID',
-        },
-      ],
-      cascadeEyebrow: 'LAS 3 LAJAS • DP1–DP7 PHENOLIC CASCADE',
-      cascadeTitle: 'Three physiological vectors of living purple cacao',
-      vectors: [
-        {
-          laja: 'VECTOR 01',
-          dpRange: 'DP1–DP2',
-          title: 'Heart & Circulation',
-          mechanism:
-            'Activates eNOS and nitric oxide (NO) synthesis for gentle vasodilation, microcirculation, and noticeable physical warmth within 45–60 min.',
-        },
-        {
-          laja: 'VECTOR 02',
-          dpRange: 'DP3 + THEOBROMINE',
-          title: 'Mind & Focus',
-          mechanism:
-            'Supports hippocampal microcirculation for sustained mental clarity and calm alertness without tachycardia.',
-        },
-        {
-          laja: 'VECTOR 03',
-          dpRange: 'DP4–DP7',
-          title: 'Metabolic Balance',
-          mechanism:
-            'Endothelial protection against oxidative stress paired with gentle prebiotic support for the gut microbiome.',
-        },
-      ],
+      noLotsFallback: 'Next harvest in preparation. Message us on WhatsApp to reserve.',
     },
     origin: {
-      eyebrow: 'ZAMORA-CHINCHIPE • PROYECTO TZNK & FOUNDER',
-      title: 'Direct Origin in the Cradle of Cacao',
-      directTradeTitle: 'Direct Trade with Shuar families',
-      directTradeBody:
-        'Sourced directly from high-altitude heirloom Cacao Nacional forest chakras (900–1,362 m) in the Shuar communities of Napurak and Los Bayanes, Zamora-Chinchipe. Every monolith is vacuum-sealed inside a metallized pouch with an individual 10 × 10 cm variable label bearing its exact weight and Proyecto TZNK QR lot passport.',
-      terroirPoints: [
-        { label: 'COMMUNITIES', value: 'Napurak & Los Bayanes (Zamora-Chinchipe)' },
-        { label: 'ALTITUDE', value: '900–1,362 m • Upper Amazon montane forest' },
-        { label: 'PACKAGING', value: 'Vacuum + metallized pouch + 10 × 10 cm variable label' },
-      ],
-      tznkBadge: 'TZNK VERIFIED • LOT TRACEABILITY',
-      tznkDesc:
-        'Every micro-lot carries verifiable harvest records, Shuar community provenance, and digital attestation in the Proyecto TZNK registry.',
-      tznkLinkLabel: 'Explore Proyecto TZNK registry (tzunki.com) ↗',
-      founderRole: 'FOUNDER & FOOD PROCESS INNOVATION ENGINEER',
+      eyebrow: 'ZAMORA-CHINCHIPE ORIGIN • PROYECTO TZNK & FOUNDER',
+      title: 'Direct traceability from the cradle of cacao',
+      zamoraTitle: 'Zamora Origin & Proyecto TZNK',
+      zamoraBody:
+        'Direct harvest in Zamora-Chinchipe montane forests (900–1,362 m) with Shuar partner families (Napurak & Los Bayanes). Vacuum-sealed in foil pouches with a TZNK QR passport.',
+      tznkBadge: 'TZNK VERIFIED • LOT PASSPORT',
+      tznkLinkLabel: 'Verify at tzunki.com ↗',
+      founderRole: 'FOUNDER • THE INCA TRAIL FOODS / CACAO ZAMORA',
       founderName: 'Eugenio Ayachui',
       founderBio:
-        'Food innovation process engineer based in Zamora, Ecuador. Creator of The Inca Trail Foods / Cacao Zamora, dedicated to preserving the living bioactivity of ancestral Amazonian cacao.',
-      verifiedChannelsLabel: 'Verified founder channels:',
-      packagingTag: 'VARIABLE APOTHECARY LABEL • 10 × 10 CM',
-      packagingMeta: 'EXACT WEIGHT + TZNK QR',
-      packagingCaption:
-        'Vacuum-sealed foil pouch with mineral label printed with each monolith’s exact weight.',
-      terroirTag: 'FOREST CHAKRA • ZAMORA-CHINCHIPE',
+        'Food process innovation engineer in Zamora, Ecuador. Creator of the platform preserving living unfermented purple cacao.',
+      packagingTag: 'VACUUM SEALED + TZNK QR',
+      packagingMeta: 'EXACT WEIGHT',
+      packagingCaption: 'Metallized vacuum pouch with variable label showing exact block weight.',
+      terroirTag: 'SHUAR CHAKRA • ZAMORA',
       terroirMeta: '900–1,362 m',
-      terroirCaption:
-        'Heirloom Cacao Nacional harvested under Amazonian canopy with Shuar partner families.',
+      terroirCaption: 'Heirloom Cacao Nacional grown under Amazonian canopy in Zamora-Chinchipe.',
     },
     b2b: {
       eyebrow: 'B2B PARTNERS • CAFÉS, RETREAT CENTERS, FACILITATORS & SHOPS',
       title: 'Professional supply of living purple cacao',
       priceValue: '$60 / kg',
-      priceLabel: 'Special B2B rate (40% savings vs. D2C)',
+      priceLabel: 'B2B rate — 40% savings vs. D2C',
       minValue: 'From 3 kg / mo',
-      minLabel: 'Minimum recurring monthly order',
+      minLabel: 'Minimum monthly order',
       description:
-        'Direct monolith supply for specialty coffee bars, yoga studios, cacao ceremony facilitators, and retreat centers in Quito, Guayaquil, Cuenca, and Vilcabamba. Servientrega shipping is paid separately at carrier rate.',
+        'Direct monolith supply in Quito, Guayaquil, Cuenca, and Vilcabamba. Servientrega shipping billed separately.',
       ctaLabel: 'Request B2B terms via WhatsApp →',
     },
     logistics: {
-      eyebrow: 'SHIPPING & PAYMENTS IN ECUADOR',
-      title: 'Transparent logistics from Zamora',
-      shippingTitle: 'Nationwide Shipping — Servientrega (24–48 h)',
+      shippingTitle: 'Servientrega Shipping (24–48 h)',
       shippingBody:
-        'Dispatched from Zamora to all 24 provinces of Ecuador via Servientrega (24–48 h). Shipping cost is calculated according to your city and paid separately upon WhatsApp reservation confirmation.',
-      paymentsTitle: 'Local Payment Methods in Ecuador',
-      payments: [
-        {
-          method: 'Deuna! (QR 0% fee)',
-          detail: 'Instant QR payment directly from your banking app with zero surcharge.',
-        },
-        {
-          method: 'Bank Transfer',
-          detail: 'Banco Pichincha • Banco Guayaquil • Produbanco.',
-        },
-        {
-          method: 'Cards via PayPhone Link',
-          detail: 'Visa, Mastercard, and American Express via secure payment link.',
-        },
-      ],
+        'Across all 24 provinces of Ecuador — calculated by city and paid separately.',
+      paymentsTitle: 'Payments in Ecuador',
+      paymentsSummary:
+        'Deuna! (QR) • Bank Transfer (Pichincha / Guayaquil / Produbanco) • Cards via PayPhone.',
     },
     footer: {
       address: 'Zamora, Zamora-Chinchipe, Ecuador',
       ecosystem:
-        'oropurpura.incatrailfoods.com — A project by The Inca Trail Foods / Cacao Zamora & Proyecto TZNK',
+        'oropurpura.incatrailfoods.com • ORO PÚRPURA — A project by The Inca Trail Foods / Cacao Zamora',
       rights: '© 2026 ORO PÚRPURA • ORIGEN 5300',
     },
   },
