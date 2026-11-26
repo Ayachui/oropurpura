@@ -46,12 +46,34 @@ export interface InventoryLot {
   blocks: InventoryBlock[];
 }
 
+export interface WhatsAppTemplates {
+  blockEs: string;
+  blockEn: string;
+  b2bEs: string;
+  b2bEn: string;
+  generalEs: string;
+  generalEn: string;
+}
+
+export interface LogisticsSettings {
+  shippingTitleEs: string;
+  shippingBodyEs: string;
+  shippingTitleEn: string;
+  shippingBodyEn: string;
+  paymentsTitleEs: string;
+  paymentsSummaryEs: string;
+  paymentsTitleEn: string;
+  paymentsSummaryEn: string;
+}
+
 export interface InventoryConfig {
   whatsappPhone: string;
   pricePerGramUsd: number;
   b2bPricePerKgUsd: number;
   b2bMinKgPerMonth: number;
   googleSheetsCsvUrl: string;
+  whatsappTemplates?: Partial<WhatsAppTemplates>;
+  logistics?: Partial<LogisticsSettings>;
 }
 
 export interface InventoryData {

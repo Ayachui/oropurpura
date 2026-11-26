@@ -146,11 +146,15 @@ export function App() {
     0,
   );
 
-  const generalWaMessage = buildGeneralWhatsAppMessage(lang);
+  const generalWaMessage = buildGeneralWhatsAppMessage(
+    lang,
+    inventory.config.whatsappTemplates,
+  );
   const b2bWaMessage = buildB2BWhatsAppMessage(
     lang,
     inventory.config.b2bPricePerKgUsd,
     inventory.config.b2bMinKgPerMonth,
+    inventory.config.whatsappTemplates,
   );
 
   const handleAnchorClick = (
@@ -564,11 +568,17 @@ export function App() {
                   <div className="b2b-offer-panel">
                     <div className="b2b-kpi-grid">
                       <div className="b2b-kpi-cell">
-                        <div className="b2b-kpi-value mono">{t.b2b.priceValue}</div>
+                        <div className="b2b-kpi-value mono">
+                          ${inventory.config.b2bPricePerKgUsd} / kg
+                        </div>
                         <div className="b2b-kpi-label">{t.b2b.priceLabel}</div>
                       </div>
                       <div className="b2b-kpi-cell">
-                        <div className="b2b-kpi-value mono">{t.b2b.minValue}</div>
+                        <div className="b2b-kpi-value mono">
+                          {lang === 'es'
+                            ? `Desde ${inventory.config.b2bMinKgPerMonth} kg / mes`
+                            : `From ${inventory.config.b2bMinKgPerMonth} kg / mo`}
+                        </div>
                         <div className="b2b-kpi-label">{t.b2b.minLabel}</div>
                       </div>
                     </div>
@@ -595,14 +605,34 @@ export function App() {
                 <div className="logistics-grid">
                   <article className="logistics-card">
                     <div className="logistics-tag mono">SERVIENTREGA • 24 PROVINCIAS</div>
-                    <h3>{t.logistics.shippingTitle}</h3>
-                    <p className="logistics-body">{t.logistics.shippingBody}</p>
+                    <h3>
+                      {(lang === 'es'
+                        ? inventory.config.logistics?.shippingTitleEs
+                        : inventory.config.logistics?.shippingTitleEn) ||
+                        t.logistics.shippingTitle}
+                    </h3>
+                    <p className="logistics-body">
+                      {(lang === 'es'
+                        ? inventory.config.logistics?.shippingBodyEs
+                        : inventory.config.logistics?.shippingBodyEn) ||
+                        t.logistics.shippingBody}
+                    </p>
                   </article>
 
                   <article className="logistics-card">
                     <div className="logistics-tag mono">ECUADOR • PAGOS DIRECTOS</div>
-                    <h3>{t.logistics.paymentsTitle}</h3>
-                    <p className="logistics-body">{t.logistics.paymentsSummary}</p>
+                    <h3>
+                      {(lang === 'es'
+                        ? inventory.config.logistics?.paymentsTitleEs
+                        : inventory.config.logistics?.paymentsTitleEn) ||
+                        t.logistics.paymentsTitle}
+                    </h3>
+                    <p className="logistics-body">
+                      {(lang === 'es'
+                        ? inventory.config.logistics?.paymentsSummaryEs
+                        : inventory.config.logistics?.paymentsSummaryEn) ||
+                        t.logistics.paymentsSummary}
+                    </p>
                   </article>
                 </div>
               </div>

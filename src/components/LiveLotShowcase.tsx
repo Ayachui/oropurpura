@@ -232,6 +232,7 @@ export function LiveLotShowcase({
                         blockId: block.blockId,
                         weight_g: block.weight_g,
                         priceFormatted,
+                        templates: config.whatsappTemplates,
                       });
 
                       return (
@@ -320,14 +321,30 @@ export function LiveLotShowcase({
           <div className="logistics-grid">
             <article className="logistics-card">
               <div className="logistics-tag mono">SERVIENTREGA • 24 PROVINCIAS</div>
-              <h3>{t.logistics.shippingTitle}</h3>
-              <p className="logistics-body">{t.logistics.shippingBody}</p>
+              <h3>
+                {(lang === 'es'
+                  ? config.logistics?.shippingTitleEs
+                  : config.logistics?.shippingTitleEn) || t.logistics.shippingTitle}
+              </h3>
+              <p className="logistics-body">
+                {(lang === 'es'
+                  ? config.logistics?.shippingBodyEs
+                  : config.logistics?.shippingBodyEn) || t.logistics.shippingBody}
+              </p>
             </article>
 
             <article className="logistics-card">
               <div className="logistics-tag mono">ECUADOR • PAGOS DIRECTOS</div>
-              <h3>{t.logistics.paymentsTitle}</h3>
-              <p className="logistics-body">{t.logistics.paymentsSummary}</p>
+              <h3>
+                {(lang === 'es'
+                  ? config.logistics?.paymentsTitleEs
+                  : config.logistics?.paymentsTitleEn) || t.logistics.paymentsTitle}
+              </h3>
+              <p className="logistics-body">
+                {(lang === 'es'
+                  ? config.logistics?.paymentsSummaryEs
+                  : config.logistics?.paymentsSummaryEn) || t.logistics.paymentsSummary}
+              </p>
             </article>
           </div>
         </div>

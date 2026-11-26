@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { CONTENT } from '../data/content';
 import type { IncaTrailLotLink, InventoryBlock, InventoryData, InventoryLot } from '../types/inventory';
 import { fetchIncaTrailLots } from '../utils/incaTrailLots';
-import { formatBlockPrice } from '../utils/whatsapp';
+import { DEFAULT_WHATSAPP_TEMPLATES, formatBlockPrice } from '../utils/whatsapp';
 import { LabelPrintModal } from './LabelPrintModal';
 
 interface AdminViewProps {
@@ -43,6 +44,43 @@ export function AdminView({
   const [weightsCsv, setWeightsCsv] = useState<string>('');
   const [extraWeights, setExtraWeights] = useState<string[]>([]);
   const [feedbackMsg, setFeedbackMsg] = useState<string>('');
+
+  // Section 03: Variables & Settings state
+  const [whatsappPhone, setWhatsappPhone] = useState(inventory.config.whatsappPhone);
+  const [pricePerGram, setPricePerGram] = useState(String(inventory.config.pricePerGramUsd));
+  const [b2bPricePerKg, setB2bPricePerKg] = useState(String(inventory.config.b2bPricePerKgUsd));
+  const [b2bMinKg, setB2bMinKg] = useState(String(inventory.config.b2bMinKgPerMonth));
+  const [sheetsUrl, setSheetsUrl] = useState(inventory.config.googleSheetsCsvUrl || '');
+
+  const [tplBlockEs, setTplBlockEs] = useState(
+    inventory.config.whatsappTemplates?.blockEs || DEFAULT_WHATSAPP_TEMPLATES.blockEs,
+  );
+  const [tplBlockEn, setTplBlockEn] = useState(
+    inventory.config.whatsappTemplates?.blockEn || DEFAULT_WHATSAPP_TEMPLATES.blockEn,
+  );
+  const [tplB2bEs, setTplB2bEs] = useState(
+    inventory.config.whatsappTemplates?.b2bEs || DEFAULT_WHATSAPP_TEMPLATES.b2bEs,
+  );
+  const [tplGeneralEs, setTplGeneralEs] = useState(
+    inventory.config.whatsappTemplates?.generalEs || DEFAULT_WHATSAPP_TEMPLATES.generalEs,
+  );
+
+  const [shippingTitleEs, setShippingTitleEs] = useState(
+    inventory.config.logistics?.shippingTitleEs || CONTENT.es.logistics.shippingTitle,
+  );
+  const [shippingBodyEs, setShippingBodyEs] = useState(
+    inventory.config.logistics?.shippingBodyEs || CONTENT.es.logistics.shippingBody,
+  );
+  const [paymentsTitleEs, setPaymentsTitleEs] = useState(
+    inventory.config.logistics?.paymentsTitleEs || CONTENT.es.logistics.paymentsTitle,
+  );
+  const [paymentsSummaryEs, setPaymentsSummaryEs] = useState(
+    inventory.config.logistics?.paymentsSummaryEs || CONTENT.es.logistics.paymentsSummary,
+  );
+  const [paymentsSummaryEn, setPaymentsSummaryEn] = useState(
+    inventory.config.logistics?.paymentsSummaryEn || CONTENT.en.logistics.paymentsSummary,
+  );
+  const [settingsSavedMsg, setSettingsSavedMsg] = useState('');
 
   const [printTarget, setPrintTarget] = useState<{
     lot: InventoryLot;
@@ -421,6 +459,256 @@ export function AdminView({
             })}
           </div>
         </div>
+        {/* SECTION 3: Editor de Variables (WhatsApp, Precios, Mensajes, Pagos, Sheets) */}
+        <form
+          className="admin-card"
+          style={{ marginTop: '28px' }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            const parsedGram = Number.parseFloat(pricePerGram);
+            const parsedB2b = Number.parseFloat(b2bPricePerKg);
+            const parsedMin = Number.parseFloat(b2bMinKg);
+
+            onSaveInventory({
+              ...inventory,
+              config: {
+                ...inventory.config,
+                whatsappPhone: whatsappPhone.replace(/[^\d]/g, '') || '593982873007',
+                pricePerGramUsd:
+                  Number.isFinite(parsedGram) && parsedGram > 0 ? parsedGram : 0.1,
+                b2bPricePerKgUsd:
+                  Number.isFinite(parsedB2b) && parsedB2b > 0 ? parsedB2b : 60,
+                b2bMinKgPerMonth:
+                  Number.isFinite(parsedMin) && parsedMin > 0 ? parsedMin : 3,
+                googleSheetsCsvUrl: sheetsUrl.trim(),
+                whatsappTemplates: {
+                  ...inventory.config.whatsappTemplates,
+                  blockEs: tplBlockEs,
+                  blockEn: tplBlockEn,
+                  b2bEs: tplB2bEs,
+                  generalEs: tplGeneralEs,
+                },
+                logistics: {
+                  ...inventory.config.logistics,
+                  shippingTitleEs,
+                  shippingBodyEs,
+                  paymentsTitleEs,
+                  paymentsSummaryEs,
+                  paymentsSummaryEn,
+                },
+              },
+            });
+            setSettingsSavedMsg('✓ Variables guardadas y aplicadas en vivo.');
+            window.setTimeout(() => setSettingsSavedMsg(''), 4000);
+          }}
+        >
+          <div className="admin-card-head">
+            <div>
+              <span className="mono admin-step-tag">
+                03 // EDITOR DE VARIABLES (WHATSAPP, PAGOS, PRECIOS Y MENSAJES)
+              </span>
+              <h2 className="admin-card-title">Configuración comercial del sitio</h2>
+            </div>
+          </div>
+
+          <div className="admin-form-grid">
+            <div className="admin-field">
+              <label htmlFor="cfg-wa-phone" className="mono admin-label">
+                Teléfono WhatsApp Business (sin +)
+              </label>
+              <input
+                id="cfg-wa-phone"
+                type="text"
+                className="admin-input mono"
+                value={whatsappPhone}
+                onChange={(e) => setWhatsappPhone(e.target.value)}
+                placeholder="593982873007"
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="cfg-price-g" className="mono admin-label">
+                Tarifa D2C ($ USD por gramo — ej: 0.10 = $100/kg)
+              </label>
+              <input
+                id="cfg-price-g"
+                type="number"
+                step="0.01"
+                min="0.01"
+                className="admin-input mono"
+                value={pricePerGram}
+                onChange={(e) => setPricePerGram(e.target.value)}
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="cfg-b2b-price" className="mono admin-label">
+                Tarifa B2B ($ USD / kg)
+              </label>
+              <input
+                id="cfg-b2b-price"
+                type="number"
+                min="1"
+                className="admin-input mono"
+                value={b2bPricePerKg}
+                onChange={(e) => setB2bPricePerKg(e.target.value)}
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="cfg-b2b-min" className="mono admin-label">
+                Pedido mínimo B2B (kg / mes)
+              </label>
+              <input
+                id="cfg-b2b-min"
+                type="number"
+                min="1"
+                className="admin-input mono"
+                value={b2bMinKg}
+                onChange={(e) => setB2bMinKg(e.target.value)}
+              />
+            </div>
+
+            <div className="admin-field admin-field-full">
+              <label htmlFor="cfg-sheets-url" className="mono admin-label">
+                Google Sheets CSV URL (opcional para sincronizar stock externo)
+              </label>
+              <input
+                id="cfg-sheets-url"
+                type="url"
+                className="admin-input mono"
+                value={sheetsUrl}
+                onChange={(e) => setSheetsUrl(e.target.value)}
+                placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"
+              />
+            </div>
+
+            <div className="admin-field admin-field-full">
+              <label htmlFor="cfg-tpl-block-es" className="mono admin-label">
+                Mensaje WhatsApp al reservar bloque (ES) — Variables: {'{blockId}'}, {'{weight_g}'},{' '}
+                {'{price}'}, {'{lotId}'}, {'{lotTitle}'}
+              </label>
+              <textarea
+                id="cfg-tpl-block-es"
+                rows={2}
+                className="admin-input"
+                value={tplBlockEs}
+                onChange={(e) => setTplBlockEs(e.target.value)}
+              />
+            </div>
+
+            <div className="admin-field admin-field-full">
+              <label htmlFor="cfg-tpl-block-en" className="mono admin-label">
+                Mensaje WhatsApp al reservar bloque (EN)
+              </label>
+              <textarea
+                id="cfg-tpl-block-en"
+                rows={2}
+                className="admin-input"
+                value={tplBlockEn}
+                onChange={(e) => setTplBlockEn(e.target.value)}
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="cfg-tpl-b2b-es" className="mono admin-label">
+                Mensaje WhatsApp B2B (ES) — {'{b2bPrice}'}, {'{b2bMin}'}
+              </label>
+              <textarea
+                id="cfg-tpl-b2b-es"
+                rows={2}
+                className="admin-input"
+                value={tplB2bEs}
+                onChange={(e) => setTplB2bEs(e.target.value)}
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="cfg-tpl-gen-es" className="mono admin-label">
+                Mensaje WhatsApp general (Header / Footer, ES)
+              </label>
+              <textarea
+                id="cfg-tpl-gen-es"
+                rows={2}
+                className="admin-input"
+                value={tplGeneralEs}
+                onChange={(e) => setTplGeneralEs(e.target.value)}
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="cfg-ship-title" className="mono admin-label">
+                Título de envío (ES)
+              </label>
+              <input
+                id="cfg-ship-title"
+                type="text"
+                className="admin-input"
+                value={shippingTitleEs}
+                onChange={(e) => setShippingTitleEs(e.target.value)}
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="cfg-pay-title" className="mono admin-label">
+                Título de pagos (ES)
+              </label>
+              <input
+                id="cfg-pay-title"
+                type="text"
+                className="admin-input"
+                value={paymentsTitleEs}
+                onChange={(e) => setPaymentsTitleEs(e.target.value)}
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="cfg-ship-body" className="mono admin-label">
+                Condiciones de envío Servientrega (ES)
+              </label>
+              <textarea
+                id="cfg-ship-body"
+                rows={2}
+                className="admin-input"
+                value={shippingBodyEs}
+                onChange={(e) => setShippingBodyEs(e.target.value)}
+              />
+            </div>
+
+            <div className="admin-field">
+              <label htmlFor="cfg-pay-summary-es" className="mono admin-label">
+                Tipos de pago aceptados (ES)
+              </label>
+              <textarea
+                id="cfg-pay-summary-es"
+                rows={2}
+                className="admin-input"
+                value={paymentsSummaryEs}
+                onChange={(e) => setPaymentsSummaryEs(e.target.value)}
+              />
+            </div>
+
+            <div className="admin-field admin-field-full">
+              <label htmlFor="cfg-pay-summary-en" className="mono admin-label">
+                Tipos de pago aceptados (EN)
+              </label>
+              <input
+                id="cfg-pay-summary-en"
+                type="text"
+                className="admin-input"
+                value={paymentsSummaryEn}
+                onChange={(e) => setPaymentsSummaryEn(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="admin-form-footer">
+            <button type="submit" className="btn btn-primary">
+              Guardar variables del sitio
+            </button>
+            {settingsSavedMsg && <span className="admin-feedback mono">{settingsSavedMsg}</span>}
+          </div>
+        </form>
       </div>
 
       <LabelPrintModal
