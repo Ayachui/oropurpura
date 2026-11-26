@@ -104,25 +104,7 @@ export function App() {
 
   return (
     <div id="top" className={page === 'home' ? 'has-floating-cta' : ''}>
-      {/* SECTION 0: Compact 1-line Top Bar */}
-      <div className="batch-ticker" role="region" aria-label="Lot Status">
-        <div className="batch-ticker-inner">
-          <span className="ticker-stream">{t.ticker.stream(totalAvailableBlocks)}</span>
-          <a href="/bloques" className="ticker-stock" onClick={openStorefront}>
-            <span className="ticker-pulse" aria-hidden="true" />
-            <span>{t.ticker.availablePrefix}</span>
-            <strong>
-              {totalAvailableBlocks > 0
-                ? `${totalAvailableBlocks} ${
-                    totalAvailableBlocks === 1 ? t.ticker.blockSingular : t.ticker.blockPlural
-                  }`
-                : t.ticker.soldOutLabel}
-            </strong>
-          </a>
-        </div>
-      </div>
-
-      {/* SECTION 0B: Sticky Header */}
+      {/* Sticky Header */}
       <header className="site-header">
         <div className="container header-inner">
           <BrandLogo
@@ -245,17 +227,24 @@ export function App() {
           />
         ) : (
           <>
-            {/* SCREEN 1: Asymmetric Hero (45% concise copy / 55% powerful macro photo) */}
-            <section className="hero-section">
-              <div className="container hero-grid">
-                <div className="hero-copy-col">
-                  <p className="eyebrow">{t.hero.eyebrow}</p>
-                  <h1>{t.hero.h1}</h1>
-                  <p className="hero-subtitle">{t.hero.subtitle}</p>
+            {/* SCREEN 1: Full-Width Hero Banner with Overlaid Headline */}
+            <section className="hero-banner">
+              <img
+                src="/hero-oro-purpura-full.jpg"
+                alt={t.hero.visualAlt}
+                className="hero-banner-bg"
+              />
+              <div className="hero-banner-scrim" aria-hidden="true" />
+
+              <div className="container hero-banner-content">
+                <div className="hero-banner-inner">
+                  <p className="hero-banner-eyebrow mono">{t.hero.eyebrow}</p>
+                  <h1 className="hero-banner-title">{t.hero.h1}</h1>
+                  <p className="hero-banner-subtitle">{t.hero.subtitle}</p>
 
                   <div className="hero-chips" role="list">
                     {t.hero.chips.map((chip) => (
-                      <span key={chip} role="listitem" className="hero-chip mono">
+                      <span key={chip} role="listitem" className="hero-chip hero-chip-overlay mono">
                         {chip}
                       </span>
                     ))}
@@ -269,24 +258,14 @@ export function App() {
                     >
                       {t.hero.ctaPrimary}
                     </a>
-                    <a href="#diferencia" className="btn btn-secondary">
+                    <a href="#diferencia" className="btn btn-hero-ghost">
                       {t.hero.ctaSecondary}
                     </a>
                   </div>
                 </div>
-
-                {/* Right 55%: Large High-Contrast Macro Visual */}
-                <figure className="hero-visual-frame">
-                  <img
-                    src="/hero-oro-purpura.jpg"
-                    alt={t.hero.visualAlt}
-                    className="hero-visual-img"
-                  />
-                  <figcaption className="hero-visual-badge mono">
-                    {t.hero.visualBadge}
-                  </figcaption>
-                </figure>
               </div>
+
+              <div className="hero-visual-badge mono">{t.hero.visualBadge}</div>
             </section>
 
             {/* SCREEN 2 (on Home): Visual Contrast — Conventional Cacao vs. ORO PÚRPURA */}
