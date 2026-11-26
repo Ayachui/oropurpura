@@ -269,7 +269,7 @@ export function App() {
             </section>
 
             {/* SCREEN 2 (on Home): Visual Contrast — Conventional Cacao vs. ORO PÚRPURA */}
-            <section id="diferencia" className="section">
+            <section id="diferencia" className="section section-bg section-bg-diferencia">
               <div className="container">
                 <div className="section-header">
                   <p className="eyebrow">{t.difference.eyebrow}</p>
@@ -312,7 +312,7 @@ export function App() {
             </section>
 
             {/* SCREEN 3 (on Home): Medicinal Properties & 30-Second Knife Ritual */}
-            <section id="beneficios" className="section">
+            <section id="beneficios" className="section section-bg section-bg-beneficios">
               <div className="container">
                 <div className="section-header">
                   <p className="eyebrow">{t.benefits.eyebrow}</p>
@@ -380,7 +380,7 @@ export function App() {
             </section>
 
             {/* SCREEN 4 (on Home): Trust (Zamora, TZNK, Founder) + Compact B2B + Logistics */}
-            <section id="origen" className="section">
+            <section id="origen" className="section section-bg section-bg-origen">
               <div className="container">
                 <div className="section-header">
                   <p className="eyebrow">{t.origin.eyebrow}</p>
@@ -468,7 +468,7 @@ export function App() {
             </section>
 
             {/* Compact B2B Partnership Block */}
-            <section id="b2b" className="section section-dark b2b-section">
+            <section id="b2b" className="section section-dark b2b-section section-bg section-bg-b2b">
               <div className="container">
                 <div className="b2b-grid">
                   <div className="b2b-copy">
@@ -506,7 +506,7 @@ export function App() {
             </section>
 
             {/* Compact Logistics & Payments Strip */}
-            <section className="section section-compact">
+            <section className="section section-compact section-bg section-bg-envios">
               <div className="container">
                 <div className="logistics-grid">
                   <article className="logistics-card">

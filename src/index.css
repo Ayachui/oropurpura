@@ -1522,10 +1522,15 @@ h3 {
 
 .tznk-box {
   margin-top: 16px;
-  padding: 15px;
+  padding: 13px 15px;
   border: 1px solid var(--guayusa-emerald);
   background: rgba(6, 95, 70, 0.06);
   border-radius: var(--radius-sharp);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 14px;
 }
 
 .tznk-box-badge {
@@ -2369,6 +2374,46 @@ h3 {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* =========================================================
+   Home Section Photo Backdrops (With WCAG Readability Scrims)
+   ========================================================= */
+.section-bg {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.section-bg-diferencia {
+  background-image:
+    linear-gradient(180deg, rgba(244, 242, 247, 0.88) 0%, rgba(244, 242, 247, 0.8) 50%, rgba(244, 242, 247, 0.9) 100%),
+    url('/images/bg-diferencia.jpg');
+}
+
+.section-bg-beneficios {
+  background-image:
+    linear-gradient(180deg, rgba(244, 242, 247, 0.88) 0%, rgba(244, 242, 247, 0.82) 50%, rgba(244, 242, 247, 0.9) 100%),
+    url('/images/bg-beneficios.jpg');
+}
+
+.section-bg-origen {
+  background-image:
+    linear-gradient(180deg, rgba(244, 242, 247, 0.84) 0%, rgba(244, 242, 247, 0.76) 50%, rgba(244, 242, 247, 0.88) 100%),
+    url('/images/zamora-origin.jpg');
+}
+
+.section-bg-b2b {
+  background-image:
+    linear-gradient(90deg, rgba(18, 16, 22, 0.86) 0%, rgba(18, 16, 22, 0.72) 55%, rgba(18, 16, 22, 0.84) 100%),
+    url('/images/bg-b2b.jpg');
+}
+
+.section-bg-envios {
+  background-image:
+    linear-gradient(180deg, rgba(244, 242, 247, 0.88) 0%, rgba(244, 242, 247, 0.82) 50%, rgba(244, 242, 247, 0.9) 100%),
+    url('/images/apothecary-packaging.jpg');
+}
+
 
 
 
