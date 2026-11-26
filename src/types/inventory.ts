@@ -13,6 +13,22 @@ export interface InventoryBlock {
   status: BlockStatus;
 }
 
+export interface IncaTrailLotLink {
+  id: string;
+  sourceBatchId: string;
+  title: string;
+  farmerName?: string;
+  community?: string;
+  region?: string;
+  harvestDate?: string;
+  thermalShockTempC?: number;
+  secondaryDryingTempC?: number;
+  finalMoisturePercent?: number;
+  nftTokenId?: string;
+  basescanNftUrl?: string;
+  traceUrl: string;
+}
+
 export interface InventoryLot {
   lotId: string;
   active: boolean;
@@ -26,6 +42,7 @@ export interface InventoryLot {
     badge: string;
     url: string;
   };
+  incaTrailLot?: IncaTrailLotLink;
   blocks: InventoryBlock[];
 }
 

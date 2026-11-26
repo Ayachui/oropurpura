@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { AdminView } from './components/AdminView';
 import { BrandLogo } from './components/BrandLogo';
 import { LiveLotShowcase } from './components/LiveLotShowcase';
+import { TraceabilityView } from './components/TraceabilityView';
 import { WhatsAppAction } from './components/WhatsAppAction';
 import { CONTENT } from './data/content';
 import rawInventory from './data/inventory.json';
@@ -13,12 +15,32 @@ import {
 } from './utils/whatsapp';
 
 const INITIAL_INVENTORY = rawInventory as InventoryData;
+const ADMIN_STORAGE_KEY = 'oro_purpura_admin_inventory_v2';
 
-type PageView = 'home' | 'storefront';
+type PageView = 'home' | 'storefront' | 'admin' | 'trace';
+
+function loadInitialInventory(): InventoryData {
+  if (typeof window === 'undefined') return INITIAL_INVENTORY;
+  try {
+    const saved = window.localStorage.getItem(ADMIN_STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved) as InventoryData;
+      if (parsed && Array.isArray(parsed.lots) && parsed.config) {
+        return parsed;
+      }
+    }
+  } catch {
+    // Ignore malformed localStorage
+  }
+  return INITIAL_INVENTORY;
+}
 
 function detectInitialPage(): PageView {
   if (typeof window === 'undefined') return 'home';
   const path = window.location.pathname.toLowerCase();
+  const params = new URLSearchParams(window.location.search);
+  if (path.startsWith('/admin') || params.get('admin') === '1') return 'admin';
+  if (path.startsWith('/trace') || params.has('lote')) return 'trace';
   if (path.startsWith('/bloques') || path.startsWith('/tienda') || path.startsWith('/shop')) {
     return 'storefront';
   }
@@ -29,21 +51,35 @@ export function App() {
   const [lang, setLang] = useState<Lang>('es');
   const [page, setPage] = useState<PageView>(detectInitialPage);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [inventory, setInventory] = useState<InventoryData>(INITIAL_INVENTORY);
+  const [inventory, setInventory] = useState<InventoryData>(loadInitialInventory);
+  const [traceParams, setTraceParams] = useState<{ lote: string | null; bloque: string | null }>(() => {
+    if (typeof window === 'undefined') return { lote: null, bloque: null };
+    const params = new URLSearchParams(window.location.search);
+    return {
+      lote: params.get('lote'),
+      bloque: params.get('bloque'),
+    };
+  });
 
   const t = CONTENT[lang];
 
   useEffect(() => {
     const controller = new AbortController();
-    void fetchInventoryOverride(INITIAL_INVENTORY, controller.signal).then(({ data }) => {
-      setInventory(data);
-    });
+    void fetchInventoryOverride(loadInitialInventory(), controller.signal).then(
+      ({ data, syncedFromSheets }) => {
+        if (syncedFromSheets) {
+          setInventory(data);
+        }
+      },
+    );
     return () => controller.abort();
   }, []);
 
   useEffect(() => {
     const onPopState = () => {
       setPage(detectInitialPage());
+      const params = new URLSearchParams(window.location.search);
+      setTraceParams({ lote: params.get('lote'), bloque: params.get('bloque') });
       window.scrollTo({ top: 0 });
     };
     window.addEventListener('popstate', onPopState);
@@ -52,14 +88,46 @@ export function App() {
 
   useEffect(() => {
     document.documentElement.lang = lang;
-    document.title =
-      page === 'storefront' ? `${t.showcase.title} — ORO PÚRPURA` : t.meta.title;
+    if (page === 'storefront') {
+      document.title = `${t.showcase.title} — ORO PÚRPURA`;
+    } else if (page === 'admin') {
+      document.title = 'Admin Producción — ORO PÚRPURA';
+    } else if (page === 'trace') {
+      document.title = 'Trazabilidad — ORO PÚRPURA';
+    } else {
+      document.title = t.meta.title;
+    }
   }, [lang, page, t.meta.title, t.showcase.title]);
+
+  const handleSaveInventory = (next: InventoryData) => {
+    setInventory(next);
+    try {
+      window.localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(next));
+    } catch {
+      // ignore storage quota errors
+    }
+  };
+
+  const handleResetInventory = () => {
+    try {
+      window.localStorage.removeItem(ADMIN_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+    setInventory(INITIAL_INVENTORY);
+  };
 
   const navigateTo = (nextPage: PageView, anchorId?: string) => {
     setPage(nextPage);
     setMobileMenuOpen(false);
-    const targetPath = nextPage === 'storefront' ? '/bloques' : '/';
+    const targetPath =
+      nextPage === 'storefront'
+        ? '/bloques'
+        : nextPage === 'admin'
+          ? '/admin'
+          : nextPage === 'trace'
+            ? '/trace'
+            : '/';
     if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {
       window.history.pushState({}, '', targetPath);
     }
@@ -89,7 +157,7 @@ export function App() {
     e: React.MouseEvent<HTMLAnchorElement>,
     anchorId: string,
   ) => {
-    if (page === 'storefront') {
+    if (page !== 'home') {
       e.preventDefault();
       navigateTo('home', anchorId);
     } else {
@@ -217,7 +285,23 @@ export function App() {
       </header>
 
       <main>
-        {page === 'storefront' ? (
+        {page === 'admin' ? (
+          <AdminView
+            inventory={inventory}
+            onSaveInventory={handleSaveInventory}
+            onResetToDefault={handleResetInventory}
+            onBackToHome={() => navigateTo('home')}
+            onGoToShop={() => navigateTo('storefront')}
+          />
+        ) : page === 'trace' ? (
+          <TraceabilityView
+            lots={inventory.lots}
+            pricePerGramUsd={inventory.config.pricePerGramUsd}
+            lotParam={traceParams.lote}
+            blockParam={traceParams.bloque}
+            onBackToShop={() => navigateTo('storefront')}
+          />
+        ) : page === 'storefront' ? (
           <LiveLotShowcase
             lang={lang}
             t={t}
@@ -583,6 +667,15 @@ export function App() {
               </a>
               <a href="https://tzunki.com" target="_blank" rel="noopener noreferrer">
                 tzunki.com
+              </a>
+              <a
+                href="/admin"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateTo('admin');
+                }}
+              >
+                Admin
               </a>
             </div>
             <div className="footer-rights mono">{t.footer.rights}</div>
