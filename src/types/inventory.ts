@@ -17,14 +17,19 @@ export interface IncaTrailLotLink {
   id: string;
   sourceBatchId: string;
   title: string;
+  productLabel?: string;
   farmerName?: string;
   community?: string;
   region?: string;
   harvestDate?: string;
+  initialKg?: number | null;
+  allocatedKg?: number | null;
+  availableKg?: number | null;
   thermalShockTempC?: number;
   secondaryDryingTempC?: number;
   finalMoisturePercent?: number;
   nftTokenId?: string;
+  mintTxHash?: string;
   basescanNftUrl?: string;
   traceUrl: string;
 }

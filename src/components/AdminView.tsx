@@ -39,7 +39,9 @@ export function AdminView({
   onGoToShop,
 }: AdminViewProps) {
   const [incaLots, setIncaLots] = useState<IncaTrailLotLink[]>([]);
-  const [lotsSource, setLotsSource] = useState<'loading' | 'api' | 'fallback'>('loading');
+  const [lotsSource, setLotsSource] = useState<'loading' | 'api' | 'empty' | 'error'>('loading');
+  const [lotsError, setLotsError] = useState<string>('');
+  const [lotsRefreshKey, setLotsRefreshKey] = useState<number>(0);
   const [selectedIncaId, setSelectedIncaId] = useState<string>('');
   const [customTitle, setCustomTitle] = useState<string>('');
   const [lotPricePerKgInput, setLotPricePerKgInput] = useState<string>(
@@ -99,15 +101,24 @@ export function AdminView({
 
   useEffect(() => {
     const controller = new AbortController();
-    void fetchIncaTrailLots(inventory.lots, controller.signal).then(({ lots, source }) => {
+    void fetchIncaTrailLots(controller.signal).then(({ lots, source, error }) => {
+      if (controller.signal.aborted) return;
       setIncaLots(lots);
       setLotsSource(source);
-      if (lots[0] && !selectedIncaId) {
-        setSelectedIncaId(lots[0].sourceBatchId);
-      }
+      setLotsError(error || '');
+      setSelectedIncaId((prev) => {
+        if (prev && lots.some((l) => l.sourceBatchId === prev)) return prev;
+        return lots[0]?.sourceBatchId || '';
+      });
     });
     return () => controller.abort();
-  }, [inventory.lots, selectedIncaId]);
+  }, [lotsRefreshKey]);
+
+  const handleRefreshIncaLots = () => {
+    setLotsSource('loading');
+    setLotsError('');
+    setLotsRefreshKey((k) => k + 1);
+  };
 
   const selectedIncaLot =
     incaLots.find((l) => l.sourceBatchId === selectedIncaId) ?? incaLots[0] ?? null;
@@ -250,33 +261,104 @@ export function AdminView({
               <span className="mono admin-step-tag">01 // AGREGAR PRODUCCIÓN AL STOCK</span>
               <h2 className="admin-card-title">Nuevo lote de bloques ({nextLotId})</h2>
             </div>
-            <span className="mono admin-source-pill">
-              {lotsSource === 'api'
-                ? '● Conectado a Inca Trail API'
-                : lotsSource === 'loading'
-                  ? 'Cargando lotes...'
-                  : '● Modo local (Inca Trail cache)'}
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span className="mono admin-source-pill">
+                {lotsSource === 'api'
+                  ? `● ${incaLots.length} lotes publicados con NFT (Almacén)`
+                  : lotsSource === 'loading'
+                    ? 'Cargando lotes con NFT...'
+                    : lotsSource === 'empty'
+                      ? 'Sin lotes publicados con NFT'
+                      : 'Error al conectar con Inca Trail'}
+              </span>
+              <button
+                type="button"
+                className="btn-back-home mono"
+                onClick={handleRefreshIncaLots}
+                disabled={lotsSource === 'loading'}
+              >
+                ↻ Actualizar
+              </button>
+            </div>
           </div>
 
           <div className="admin-form-grid">
             <div className="admin-field">
               <label htmlFor="inca-lot-select" className="mono admin-label">
-                1. Lote de cacao (Inca Trail Foods — activos y vendidos)
+                1. Lote publicado con NFT (Almacén / Inca Trail Foods)
               </label>
               <select
                 id="inca-lot-select"
                 className="admin-input"
                 value={selectedIncaId}
                 onChange={(e) => setSelectedIncaId(e.target.value)}
+                disabled={incaLots.length === 0}
+                required
               >
-                {incaLots.map((lot) => (
-                  <option key={lot.sourceBatchId} value={lot.sourceBatchId}>
-                    {lot.sourceBatchId} — {lot.title}
-                    {lot.community ? ` (${lot.community})` : ''}
+                {incaLots.length === 0 ? (
+                  <option value="">
+                    {lotsSource === 'loading'
+                      ? 'Cargando lotes publicados con NFT...'
+                      : lotsSource === 'error'
+                        ? 'Error al cargar lotes desde Inca Trail / Almacén'
+                        : 'No hay lotes publicados con NFT en Almacén'}
                   </option>
-                ))}
+                ) : (
+                  incaLots.map((lot) => {
+                    const stockTag =
+                      typeof lot.availableKg === 'number'
+                        ? lot.availableKg > 0
+                          ? ` · ${lot.availableKg} kg disp.`
+                          : ' · Distribuido (0 kg)'
+                        : '';
+                    return (
+                      <option key={lot.sourceBatchId} value={lot.sourceBatchId}>
+                        {lot.sourceBatchId} • NFT #{lot.nftTokenId} — {lot.title}
+                        {lot.community ? ` (${lot.community})` : ''}
+                        {stockTag}
+                      </option>
+                    );
+                  })
+                )}
               </select>
+
+              {selectedIncaLot && (
+                <div
+                  className="mono"
+                  style={{
+                    marginTop: '6px',
+                    fontSize: '0.75rem',
+                    color: 'var(--text-secondary)',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '8px',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>NFT #{selectedIncaLot.nftTokenId}</span>
+                  {selectedIncaLot.farmerName && <span>· {selectedIncaLot.farmerName}</span>}
+                  {selectedIncaLot.community && <span>· {selectedIncaLot.community}</span>}
+                  <a
+                    href={selectedIncaLot.traceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: 'var(--accent-gold)', textDecoration: 'underline' }}
+                  >
+                    Ver en Inca Trail ↗
+                  </a>
+                </div>
+              )}
+
+              {lotsSource === 'empty' && (
+                <p className="mono" style={{ marginTop: '6px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                  Solo aparecen lotes cerrados con NFT acuñado en Almacén y publicados en Inca Trail Foods.
+                </p>
+              )}
+              {lotsSource === 'error' && (
+                <p className="mono" style={{ marginTop: '6px', fontSize: '0.75rem', color: '#f87171' }}>
+                  No se pudo cargar /api/itf/showcase ({lotsError || 'error de red'}). Pulsa Actualizar.
+                </p>
+              )}
             </div>
 
             <div className="admin-field">
@@ -395,7 +477,7 @@ export function AdminView({
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={parsedWeights.length === 0 || !recipeText.trim()}
+              disabled={!selectedIncaLot || parsedWeights.length === 0 || !recipeText.trim()}
             >
               Agregar {parsedWeights.length || ''} bloques al stock →
             </button>

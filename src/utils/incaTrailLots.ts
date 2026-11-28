@@ -1,4 +1,4 @@
-import type { IncaTrailLotLink, InventoryLot } from '../types/inventory';
+import type { IncaTrailLotLink } from '../types/inventory';
 
 interface RawShowcaseLot {
   id?: string;
@@ -8,8 +8,10 @@ interface RawShowcaseLot {
   title?: string;
   subtitle?: string;
   initialKg?: number | null;
+  allocatedKg?: number | null;
   availableKg?: number | null;
   nftTokenId?: string;
+  mintTxHash?: string;
   basescanNftUrl?: string;
   origin?: {
     farmerName?: string;
@@ -25,62 +27,85 @@ interface RawShowcaseLot {
   traceUrl?: string;
 }
 
-function mapRawLot(raw: RawShowcaseLot): IncaTrailLotLink | null {
+function mapRawPublishedNftLot(raw: RawShowcaseLot): IncaTrailLotLink | null {
   const id = String(raw.id || raw.sourceBatchId || '').trim();
   const sourceBatchId = String(raw.sourceBatchId || raw.id || '').trim();
-  if (!id && !sourceBatchId) return null;
+  const nftTokenId = typeof raw.nftTokenId === 'string' ? raw.nftTokenId.trim() : '';
+
+  // Strictly require a minted NFT from Almacén / Base L2
+  if ((!id && !sourceBatchId) || !nftTokenId) return null;
 
   return {
     id: id || sourceBatchId,
     sourceBatchId: sourceBatchId || id,
     title: String(raw.title || raw.productLabel || sourceBatchId || id),
+    productLabel: raw.productLabel,
     farmerName: raw.origin?.farmerName,
     community: raw.origin?.community,
     region: raw.origin?.region || 'Zamora-Chinchipe',
     harvestDate: raw.origin?.harvestDate,
+    initialKg: typeof raw.initialKg === 'number' ? raw.initialKg : null,
+    allocatedKg: typeof raw.allocatedKg === 'number' ? raw.allocatedKg : null,
+    availableKg: typeof raw.availableKg === 'number' ? raw.availableKg : null,
     thermalShockTempC: raw.fmadSummary?.thermalShockTempC,
     secondaryDryingTempC: raw.fmadSummary?.secondaryDryingTempC,
     finalMoisturePercent: raw.fmadSummary?.finalMoisturePercent,
-    nftTokenId: raw.nftTokenId,
+    nftTokenId,
+    mintTxHash: typeof raw.mintTxHash === 'string' ? raw.mintTxHash.trim() || undefined : undefined,
     basescanNftUrl: raw.basescanNftUrl,
-    traceUrl: raw.traceUrl || 'https://www.incatrailfoods.com/products',
+    traceUrl:
+      raw.traceUrl ||
+      `https://www.incatrailfoods.com/trace/${encodeURIComponent(sourceBatchId || id)}`,
   };
 }
 
-export function buildFallbackIncaTrailLots(localLots: InventoryLot[]): IncaTrailLotLink[] {
-  return localLots.map((lot) => ({
-    id: lot.incaTrailLot?.id || lot.lotId,
-    sourceBatchId: lot.incaTrailLot?.sourceBatchId || lot.lotId,
-    title: lot.title.es,
-    community: lot.origin.es,
-    region: 'Zamora-Chinchipe',
-    harvestDate: typeof lot.harvestDate === 'string' ? lot.harvestDate : lot.harvestDate.es,
-    traceUrl: lot.incaTrailLot?.traceUrl || 'https://www.incatrailfoods.com/products',
-  }));
+export interface FetchIncaTrailLotsResult {
+  lots: IncaTrailLotLink[];
+  source: 'api' | 'empty' | 'error';
+  error?: string;
 }
 
+/**
+ * Loads ONLY published lots with a minted NFT from Almacén via `/api/itf/showcase`.
+ * Never falls back to local/mock inventory lots.
+ */
 export async function fetchIncaTrailLots(
-  localLots: InventoryLot[],
   signal?: AbortSignal,
-): Promise<{ lots: IncaTrailLotLink[]; source: 'api' | 'fallback' }> {
+): Promise<FetchIncaTrailLotsResult> {
   const endpoints = [
     '/api/itf/showcase',
     'https://www.incatrailfoods.com/api/itf/showcase',
+    'https://www.tzunki.com/api/itf/showcase',
   ];
+
+  let lastError: string | undefined;
 
   for (const url of endpoints) {
     try {
       const res = await fetch(url, { cache: 'no-store', signal });
-      if (!res.ok) continue;
+      if (!res.ok) {
+        lastError = `HTTP ${res.status}`;
+        continue;
+      }
+
       const json = (await res.json()) as {
         ok?: boolean;
+        items?: RawShowcaseLot[];
         lots?: RawShowcaseLot[];
         activeLots?: RawShowcaseLot[];
         pastLots?: RawShowcaseLot[];
+        error?: string;
       };
 
-      // Combine all lots regardless of sold/active status
+      if (json.ok === false) {
+        lastError = json.error || 'API returned ok: false';
+        continue;
+      }
+
+      // `/api/itf/showcase` returns `{ ok: true, items: ItfShowcasePublicCard[] }`
+      // Keep all published NFT lots regardless of whether availableKg is > 0 or 0.
       const rawList: RawShowcaseLot[] = [
+        ...(Array.isArray(json.items) ? json.items : []),
         ...(Array.isArray(json.lots) ? json.lots : []),
         ...(Array.isArray(json.activeLots) ? json.activeLots : []),
         ...(Array.isArray(json.pastLots) ? json.pastLots : []),
@@ -88,19 +113,28 @@ export async function fetchIncaTrailLots(
 
       const deduped = new Map<string, IncaTrailLotLink>();
       for (const item of rawList) {
-        const mapped = mapRawLot(item);
+        const mapped = mapRawPublishedNftLot(item);
         if (mapped && !deduped.has(mapped.sourceBatchId)) {
           deduped.set(mapped.sourceBatchId, mapped);
         }
       }
 
-      if (deduped.size > 0) {
-        return { lots: Array.from(deduped.values()), source: 'api' };
+      const lots = Array.from(deduped.values());
+      return {
+        lots,
+        source: lots.length > 0 ? 'api' : 'empty',
+      };
+    } catch (err) {
+      if (signal?.aborted) {
+        return { lots: [], source: 'error', error: 'aborted' };
       }
-    } catch {
-      // Try next endpoint or fallback
+      lastError = err instanceof Error ? err.message : 'Network error';
     }
   }
 
-  return { lots: buildFallbackIncaTrailLots(localLots), source: 'fallback' };
+  return {
+    lots: [],
+    source: 'error',
+    error: lastError || 'No se pudo conectar con /api/itf/showcase',
+  };
 }
