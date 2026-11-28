@@ -21,10 +21,13 @@ export function TraceabilityView({
       ? lots.find((l) => l.lotId.toUpperCase() === lotParam.toUpperCase())
       : undefined) ?? lots[0];
 
-  const matchedBlock =
-    matchedLot && blockParam
+  const matchedBlock = matchedLot
+    ? blockParam
       ? matchedLot.blocks.find((b) => b.blockId.toUpperCase() === blockParam.toUpperCase())
-      : undefined;
+      : matchedLot.blocks.length === 1
+        ? matchedLot.blocks[0]
+        : undefined
+    : undefined;
 
   if (!matchedLot) {
     return (

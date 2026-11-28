@@ -6,6 +6,7 @@ import { TraceabilityView } from './components/TraceabilityView';
 import { WhatsAppAction } from './components/WhatsAppAction';
 import { CONTENT } from './data/content';
 import rawInventory from './data/inventory.json';
+import { LEGACY_RELEASED_LOTS } from './data/legacyBatches';
 import type { InventoryData, Lang } from './types/inventory';
 import { fetchInventoryOverride } from './utils/inventorySync';
 import {
@@ -35,12 +36,22 @@ function loadInitialInventory(): InventoryData {
   return INITIAL_INVENTORY;
 }
 
+function extractTraceParams(): { lote: string | null; bloque: string | null } {
+  if (typeof window === 'undefined') return { lote: null, bloque: null };
+  const params = new URLSearchParams(window.location.search);
+  const pathMatch = window.location.pathname.match(/\/trace\/([^/]+)/i);
+  const pathLot = pathMatch?.[1] ? decodeURIComponent(pathMatch[1]).trim() : null;
+  const lote = params.get('lote')?.trim() || params.get('batch')?.trim() || pathLot || null;
+  const bloque = params.get('bloque')?.trim() || null;
+  return { lote, bloque };
+}
+
 function detectInitialPage(): PageView {
   if (typeof window === 'undefined') return 'home';
   const path = window.location.pathname.toLowerCase();
   const params = new URLSearchParams(window.location.search);
   if (path.startsWith('/admin') || params.get('admin') === '1') return 'admin';
-  if (path.startsWith('/trace') || params.has('lote')) return 'trace';
+  if (path.startsWith('/trace') || params.has('lote') || params.has('batch')) return 'trace';
   if (path.startsWith('/bloques') || path.startsWith('/tienda') || path.startsWith('/shop')) {
     return 'storefront';
   }
@@ -52,14 +63,9 @@ export function App() {
   const [page, setPage] = useState<PageView>(detectInitialPage);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [inventory, setInventory] = useState<InventoryData>(loadInitialInventory);
-  const [traceParams, setTraceParams] = useState<{ lote: string | null; bloque: string | null }>(() => {
-    if (typeof window === 'undefined') return { lote: null, bloque: null };
-    const params = new URLSearchParams(window.location.search);
-    return {
-      lote: params.get('lote'),
-      bloque: params.get('bloque'),
-    };
-  });
+  const [traceParams, setTraceParams] = useState<{ lote: string | null; bloque: string | null }>(
+    extractTraceParams,
+  );
 
   const t = CONTENT[lang];
 
@@ -78,8 +84,7 @@ export function App() {
   useEffect(() => {
     const onPopState = () => {
       setPage(detectInitialPage());
-      const params = new URLSearchParams(window.location.search);
-      setTraceParams({ lote: params.get('lote'), bloque: params.get('bloque') });
+      setTraceParams(extractTraceParams());
       window.scrollTo({ top: 0 });
     };
     window.addEventListener('popstate', onPopState);
@@ -299,7 +304,7 @@ export function App() {
           />
         ) : page === 'trace' ? (
           <TraceabilityView
-            lots={inventory.lots}
+            lots={[...inventory.lots, ...LEGACY_RELEASED_LOTS]}
             pricePerGramUsd={inventory.config.pricePerGramUsd}
             lotParam={traceParams.lote}
             blockParam={traceParams.bloque}
