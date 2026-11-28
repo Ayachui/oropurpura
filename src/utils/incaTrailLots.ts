@@ -1,4 +1,4 @@
-import type { IncaTrailLotLink } from '../types/inventory';
+import type { IncaTrailLotLink, LotCategoryId } from '../types/inventory';
 
 interface RawShowcaseLot {
   id?: string;
@@ -7,17 +7,24 @@ interface RawShowcaseLot {
   productLabel?: string;
   title?: string;
   subtitle?: string;
+  heroImageUrl?: string;
   initialKg?: number | null;
   allocatedKg?: number | null;
   availableKg?: number | null;
   nftTokenId?: string;
   mintTxHash?: string;
   basescanNftUrl?: string;
+  buyerStory?: string;
+  notes?: string;
+  totalTznkBurned?: number;
   origin?: {
     farmerName?: string;
     community?: string;
     region?: string;
     harvestDate?: string;
+    altitudeM?: number;
+    variety?: string;
+    mucilageBrix?: number;
   };
   fmadSummary?: {
     thermalShockTempC?: number;
@@ -44,6 +51,23 @@ function mapRawPublishedNftLot(raw: RawShowcaseLot): IncaTrailLotLink | null {
     community: raw.origin?.community,
     region: raw.origin?.region || 'Zamora-Chinchipe',
     harvestDate: raw.origin?.harvestDate,
+    altitudeM:
+      typeof raw.origin?.altitudeM === 'number' && Number.isFinite(raw.origin.altitudeM)
+        ? Math.round(raw.origin.altitudeM)
+        : undefined,
+    variety: raw.origin?.variety,
+    mucilageBrix:
+      typeof raw.origin?.mucilageBrix === 'number' && Number.isFinite(raw.origin.mucilageBrix)
+        ? raw.origin.mucilageBrix
+        : undefined,
+    buyerStory: typeof raw.buyerStory === 'string' ? raw.buyerStory.trim() || undefined : undefined,
+    notes: typeof raw.notes === 'string' ? raw.notes.trim() || undefined : undefined,
+    totalTznkBurned:
+      typeof raw.totalTznkBurned === 'number' && raw.totalTznkBurned > 0
+        ? raw.totalTznkBurned
+        : undefined,
+    heroImageUrl:
+      typeof raw.heroImageUrl === 'string' ? raw.heroImageUrl.trim() || undefined : undefined,
     initialKg: typeof raw.initialKg === 'number' ? raw.initialKg : null,
     allocatedKg: typeof raw.allocatedKg === 'number' ? raw.allocatedKg : null,
     availableKg: typeof raw.availableKg === 'number' ? raw.availableKg : null,
@@ -137,4 +161,106 @@ export async function fetchIncaTrailLots(
     source: 'error',
     error: lastError || 'No se pudo conectar con /api/itf/showcase',
   };
+}
+
+export interface GenerateLotImageParams {
+  lotId: string;
+  title: string;
+  categoryId: LotCategoryId;
+  categoryLabel: string;
+  pricePerKgUsd: number;
+  formula: string;
+  tastingNotes?: string;
+  sourceBatchId?: string;
+  almacenFallback?: {
+    farmerName?: string;
+    community?: string;
+    region?: string;
+    altitude?: string;
+    harvestDate?: string;
+    thermalShockTempC?: number;
+    secondaryDryingTempC?: number;
+    finalMoisturePercent?: number;
+    variety?: string;
+    mucilageBrix?: number;
+    buyerStory?: string;
+    notes?: string;
+  };
+  adminToken?: string;
+}
+
+export interface GenerateLotImageResult {
+  ok: boolean;
+  imageUrl?: string;
+  promptSummary?: string;
+  almacenEnriched?: boolean;
+  error?: string;
+}
+
+/**
+ * Generates a bespoke studio product image for a lot via Gemini on the backend,
+ * combining the lot's rarity category, recipe ingredients, and full Almacén metadata.
+ */
+export async function generateOroLotImage(
+  params: GenerateLotImageParams,
+): Promise<GenerateLotImageResult> {
+  const endpoints = [
+    '/api/oropurpura/admin/generate-lot-image',
+    'https://www.tzunki.com/api/oropurpura/admin/generate-lot-image',
+  ];
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (params.adminToken) {
+    headers.Authorization = `Bearer ${params.adminToken}`;
+  }
+
+  const payload = {
+    lotId: params.lotId,
+    title: params.title,
+    categoryId: params.categoryId,
+    categoryLabel: params.categoryLabel,
+    pricePerKgUsd: params.pricePerKgUsd,
+    formula: params.formula,
+    tastingNotes: params.tastingNotes,
+    sourceBatchId: params.sourceBatchId,
+    almacenFallback: params.almacenFallback,
+  };
+
+  let lastError = 'No se pudo generar la imagen del lote';
+
+  for (const url of endpoints) {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers,
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+      const json = (await res.json()) as {
+        ok?: boolean;
+        imageUrl?: string;
+        promptSummary?: string;
+        almacenEnriched?: boolean;
+        error?: string;
+      };
+      if (res.ok && json.ok && json.imageUrl) {
+        return {
+          ok: true,
+          imageUrl: json.imageUrl,
+          promptSummary: json.promptSummary,
+          almacenEnriched: json.almacenEnriched,
+        };
+      }
+      lastError = json.error || `HTTP ${res.status}`;
+      if (res.status === 400 || res.status === 401 || res.status === 403 || res.status === 503) {
+        break;
+      }
+    } catch (e) {
+      lastError = e instanceof Error ? e.message : 'Error de red';
+    }
+  }
+
+  return { ok: false, error: lastError };
 }

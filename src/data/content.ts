@@ -89,6 +89,16 @@ export interface SiteContent {
     eyebrow: string;
     title: string;
     subtitle: string;
+    step1Eyebrow: string;
+    step1Title: string;
+    step1Hint: string;
+    tierScaleLabel: string;
+    selectedBadge: string;
+    chooseLotCta: string;
+    fromPriceLabel: (price: string) => string;
+    compareAllLabel: string;
+    step2Eyebrow: string;
+    step2Title: string;
     steps: string[];
     starterBadge: string;
     filterAvailableOnly: string;
@@ -99,6 +109,7 @@ export interface SiteContent {
     altitudeLabel: string;
     tastingLabel: string;
     formulaLabel: string;
+    almacenLabel: string;
     logisticsNotice: string;
     blockPrefix: string;
     statusAvailable: string;
@@ -332,14 +343,25 @@ export const CONTENT: Record<Lang, SiteContent> = {
       afterOriginBtn: 'Ir a la vitrina de bloques →',
     },
     showcase: {
-      eyebrow: 'VITRINA VIVA • BLOQUES ÚNICOS DEL LOTE ACTUAL',
-      title: 'Bloques Únicos del Lote Actual',
+      eyebrow: 'TIENDA • CACAO PÚRPURA VIVO',
+      title: 'Elige tu Cacao Púrpura',
       subtitle:
-        'Cada monolito se moldea artesanalmente en Zamora con su peso real único y tarifa transparente según la cosecha.',
+        'Cada cosecha tiene su propia receta, origen y nivel de rareza. Primero elige la cosecha que más te atraiga y luego escoge el peso de tu bloque.',
+      step1Eyebrow: 'PASO 1 · ELIGE LA COSECHA',
+      step1Title: '¿Qué cosecha quieres probar?',
+      step1Hint:
+        'El precio por kilo refleja la rareza del origen y la receta — desde $100/kg en nuestra Cosecha Clásica hasta micro-lotes de colección.',
+      tierScaleLabel: 'Guía de categorías por rareza:',
+      selectedBadge: '✓ Seleccionada',
+      chooseLotCta: 'Ver bloques →',
+      fromPriceLabel: (price) => `desde ${price}`,
+      compareAllLabel: 'Ver todas las cosechas',
+      step2Eyebrow: 'PASO 2 · ELIGE EL TAMAÑO DE TU BLOQUE',
+      step2Title: 'Bloques cortados a mano de esta cosecha',
       steps: [
-        '1. Elige un bloque disponible',
-        '2. Toca WhatsApp e indica tu ciudad',
-        '3. Confirmas envío Servientrega y pagas por Deuna! o transferencia',
+        '1. Elige tu cosecha arriba',
+        '2. Escoge un bloque disponible según su peso',
+        '3. Reserva por WhatsApp y recibe por Servientrega',
       ],
       starterBadge: 'IDEAL PARA EMPEZAR',
       filterAvailableOnly: 'Solo disponibles',
@@ -348,10 +370,11 @@ export const CONTENT: Record<Lang, SiteContent> = {
       harvestLabel: 'COSECHA',
       originLabel: 'Origen / Comunidad',
       altitudeLabel: 'Altitud',
-      tastingLabel: 'Notas',
-      formulaLabel: 'Composición',
+      tastingLabel: 'Perfil de sabor',
+      formulaLabel: 'Ingredientes',
+      almacenLabel: 'Datos del lote (Almacén)',
       logisticsNotice:
-        'Precio exacto por peso real según tarifa de este lote. El envío por Servientrega a todo el Ecuador se calcula aparte al confirmar en WhatsApp.',
+        'Pagas el peso exacto de tu bloque según la tarifa de esta cosecha. El envío por Servientrega se calcula aparte al confirmar tu ciudad en WhatsApp.',
       blockPrefix: 'BLOQUE',
       statusAvailable: 'DISPONIBLE',
       statusSold: 'VENDIDO',
@@ -587,14 +610,25 @@ export const CONTENT: Record<Lang, SiteContent> = {
       afterOriginBtn: 'Open block storefront →',
     },
     showcase: {
-      eyebrow: 'LIVE SHOWCASE • CURRENT MICRO-LOTS',
-      title: 'Unique Blocks from the Current Lot',
+      eyebrow: 'SHOP • LIVING PURPLE CACAO',
+      title: 'Choose Your Purple Cacao',
       subtitle:
-        'Every monolith is hand-cast in Zamora with its own exact actual weight and transparent per-lot rate.',
+        'Each harvest has its own recipe, origin, and rarity level. First pick the harvest that speaks to you, then choose your hand-weighed block.',
+      step1Eyebrow: 'STEP 1 · PICK YOUR HARVEST',
+      step1Title: 'Which harvest would you like to try?',
+      step1Hint:
+        'The per-kilo rate reflects origin rarity and recipe — starting at $100/kg for our Classic Harvest up to ultra-rare collector micro-lots.',
+      tierScaleLabel: 'Rarity category guide:',
+      selectedBadge: '✓ Selected',
+      chooseLotCta: 'View blocks →',
+      fromPriceLabel: (price) => `from ${price}`,
+      compareAllLabel: 'Show all harvests',
+      step2Eyebrow: 'STEP 2 · PICK YOUR BLOCK WEIGHT',
+      step2Title: 'Hand-cast blocks from this harvest',
       steps: [
-        '1. Pick an available block',
-        '2. Tap WhatsApp & enter your city',
-        '3. Confirm Servientrega shipping & pay via Deuna! or transfer',
+        '1. Pick a harvest above',
+        '2. Choose an available block by weight',
+        '3. Reserve via WhatsApp for Servientrega delivery',
       ],
       starterBadge: 'GREAT FIRST BLOCK',
       filterAvailableOnly: 'Available only',
@@ -603,10 +637,11 @@ export const CONTENT: Record<Lang, SiteContent> = {
       harvestLabel: 'HARVEST',
       originLabel: 'Origin / Community',
       altitudeLabel: 'Altitude',
-      tastingLabel: 'Notes',
-      formulaLabel: 'Composition',
+      tastingLabel: 'Flavor profile',
+      formulaLabel: 'Ingredients',
+      almacenLabel: 'Almacén lot metrics',
       logisticsNotice:
-        'Exact actual-weight pricing based on this lot rate. Servientrega shipping across Ecuador is calculated separately upon WhatsApp confirmation.',
+        'You pay the exact weight of your block at this harvest rate. Servientrega shipping across Ecuador is calculated separately on WhatsApp.',
       blockPrefix: 'BLOCK',
       statusAvailable: 'AVAILABLE',
       statusSold: 'SOLD',

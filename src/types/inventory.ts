@@ -13,6 +13,8 @@ export interface InventoryBlock {
   status: BlockStatus;
 }
 
+export type LotCategoryId = 'clasico' | 'seleccion' | 'reserva' | 'edicion';
+
 export interface IncaTrailLotLink {
   id: string;
   sourceBatchId: string;
@@ -22,6 +24,13 @@ export interface IncaTrailLotLink {
   community?: string;
   region?: string;
   harvestDate?: string;
+  altitudeM?: number;
+  variety?: string;
+  mucilageBrix?: number;
+  buyerStory?: string;
+  notes?: string;
+  totalTznkBurned?: number;
+  heroImageUrl?: string;
   initialKg?: number | null;
   allocatedKg?: number | null;
   availableKg?: number | null;
@@ -38,6 +47,9 @@ export interface InventoryLot {
   lotId: string;
   active: boolean;
   pricePerKgUsd?: number;
+  category?: LotCategoryId;
+  imageUrl?: string;
+  imagePromptSummary?: string;
   title: LocalizedText;
   origin: LocalizedText;
   altitude: string;

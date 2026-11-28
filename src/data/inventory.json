@@ -11,6 +11,8 @@
       "lotId": "LOTE #01",
       "active": true,
       "pricePerKgUsd": 100,
+      "category": "clasico",
+      "imageUrl": "/images/lot-napurak-clasico.jpg",
       "title": {
         "es": "Cosecha Napurak — Sinergia Ancestral INCA",
         "en": "Napurak Harvest — INCA Ancestral Synergy"
@@ -47,7 +49,9 @@
     {
       "lotId": "LOTE #02",
       "active": true,
-      "pricePerKgUsd": 100,
+      "pricePerKgUsd": 130,
+      "category": "seleccion",
+      "imageUrl": "/images/lot-bayanes-seleccion.jpg",
       "title": {
         "es": "Cosecha Los Bayanes — Terruño Puro & Vainilla",
         "en": "Los Bayanes Harvest — Pure Terroir & Vanilla"

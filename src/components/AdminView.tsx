@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { CONTENT } from '../data/content';
-import type { IncaTrailLotLink, InventoryBlock, InventoryData, InventoryLot } from '../types/inventory';
+import type {
+  IncaTrailLotLink,
+  InventoryBlock,
+  InventoryData,
+  InventoryLot,
+  LotCategoryId,
+} from '../types/inventory';
 import {
   checkAdminSession,
   consumeAdminHashToken,
@@ -10,7 +16,15 @@ import {
   signInAdminWithWallet,
   signOutAdminSession,
 } from '../utils/adminAuth';
-import { fetchIncaTrailLots } from '../utils/incaTrailLots';
+import { fetchIncaTrailLots, generateOroLotImage } from '../utils/incaTrailLots';
+import {
+  LOT_CATEGORIES,
+  LOT_CATEGORY_ORDER,
+  formatAltitudeFromMeters,
+  resolveLotCategory,
+  resolveLotCategoryIdByPrice,
+  resolveLotImageUrl,
+} from '../utils/lotCategories';
 import {
   DEFAULT_WHATSAPP_TEMPLATES,
   formatBlockPrice,
@@ -62,10 +76,19 @@ export function AdminView({
   const [lotPricePerKgInput, setLotPricePerKgInput] = useState<string>(
     String(Math.round(inventory.config.pricePerGramUsd * 1000)),
   );
+  const [categoryOverride, setCategoryOverride] = useState<LotCategoryId | 'auto'>('auto');
   const [recipeText, setRecipeText] = useState<string>(
     inventory.lots[0]?.formula.es ||
       '70% cacao púrpura vivo pelado (sin cascarilla), panela orgánica, sal marina',
   );
+  const [tastingNotesInput, setTastingNotesInput] = useState<string>('');
+  const [autoGenerateImage, setAutoGenerateImage] = useState<boolean>(true);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string>('');
+  const [previewPromptSummary, setPreviewPromptSummary] = useState<string>('');
+  const [creatingLotBusy, setCreatingLotBusy] = useState<boolean>(false);
+  const [imageGenBusy, setImageGenBusy] = useState<boolean>(false);
+  const [imageGenError, setImageGenError] = useState<string>('');
+  const [regenLotId, setRegenLotId] = useState<string>('');
   const [weightsCsv, setWeightsCsv] = useState<string>('');
   const [extraWeights, setExtraWeights] = useState<string[]>([]);
   const [feedbackMsg, setFeedbackMsg] = useState<string>('');
@@ -181,16 +204,149 @@ export function AdminView({
     return Number.isFinite(n) && n > 0 ? n : inventory.config.pricePerGramUsd * 1000;
   })();
   const lotPricePerGramPreview = parsedLotPricePerKg / 1000;
+  const resolvedCategoryId: LotCategoryId =
+    categoryOverride === 'auto'
+      ? resolveLotCategoryIdByPrice(parsedLotPricePerKg)
+      : categoryOverride;
+  const resolvedCategoryMeta = LOT_CATEGORIES[resolvedCategoryId];
 
   const nextLotNumber = inventory.lots.length + 1;
   const nextLotId = `LOTE #${String(nextLotNumber).padStart(2, '0')}`;
 
-  const handleAddProduction = (e: React.FormEvent) => {
+  const requestDraftLotImage = async (lotTitle: string, altitudeText: string) => {
+    if (!selectedIncaLot || !recipeText.trim()) return null;
+    const res = await generateOroLotImage({
+      lotId: nextLotId,
+      title: lotTitle,
+      categoryId: resolvedCategoryId,
+      categoryLabel: resolvedCategoryMeta.name.es,
+      pricePerKgUsd: parsedLotPricePerKg,
+      formula: recipeText.trim(),
+      tastingNotes: tastingNotesInput.trim() || undefined,
+      sourceBatchId: selectedIncaLot.sourceBatchId,
+      almacenFallback: {
+        farmerName: selectedIncaLot.farmerName,
+        community: selectedIncaLot.community,
+        region: selectedIncaLot.region,
+        altitude: altitudeText,
+        harvestDate: selectedIncaLot.harvestDate,
+        thermalShockTempC: selectedIncaLot.thermalShockTempC,
+        secondaryDryingTempC: selectedIncaLot.secondaryDryingTempC,
+        finalMoisturePercent: selectedIncaLot.finalMoisturePercent,
+        variety: selectedIncaLot.variety,
+        mucilageBrix: selectedIncaLot.mucilageBrix,
+        buyerStory: selectedIncaLot.buyerStory,
+        notes: selectedIncaLot.notes,
+      },
+      adminToken: readStoredAdminToken() || undefined,
+    });
+    return res;
+  };
+
+  const handleGeneratePreviewImage = async () => {
+    if (!selectedIncaLot || !recipeText.trim()) return;
+    setImageGenBusy(true);
+    setImageGenError('');
+    try {
+      const lotTitle = customTitle.trim() || selectedIncaLot.title;
+      const altitudeText = formatAltitudeFromMeters(selectedIncaLot.altitudeM);
+      const res = await requestDraftLotImage(lotTitle, altitudeText);
+      if (res?.ok && res.imageUrl) {
+        setPreviewImageUrl(res.imageUrl);
+        setPreviewPromptSummary(res.promptSummary || '');
+      } else {
+        setImageGenError(res?.error || 'No se pudo generar la imagen con IA');
+      }
+    } finally {
+      setImageGenBusy(false);
+    }
+  };
+
+  const handleRegenerateExistingLotImage = async (lot: InventoryLot) => {
+    setRegenLotId(lot.lotId);
+    setImageGenError('');
+    try {
+      const lotPricePerKg = resolveLotPricePerKg(lot, inventory.config);
+      const cat = resolveLotCategory(lot, inventory.config);
+      const harvestStr =
+        typeof lot.harvestDate === 'string' ? lot.harvestDate : lot.harvestDate.es;
+      const res = await generateOroLotImage({
+        lotId: lot.lotId,
+        title: lot.title.es,
+        categoryId: cat.id,
+        categoryLabel: cat.name.es,
+        pricePerKgUsd: lotPricePerKg,
+        formula: lot.formula.es,
+        tastingNotes: lot.tastingNotes.es,
+        sourceBatchId: lot.incaTrailLot?.sourceBatchId,
+        almacenFallback: {
+          farmerName: lot.incaTrailLot?.farmerName,
+          community: lot.incaTrailLot?.community || lot.origin.es,
+          region: lot.incaTrailLot?.region || 'Zamora-Chinchipe, Ecuador',
+          altitude: lot.altitude,
+          harvestDate: lot.incaTrailLot?.harvestDate || harvestStr,
+          thermalShockTempC: lot.incaTrailLot?.thermalShockTempC,
+          secondaryDryingTempC: lot.incaTrailLot?.secondaryDryingTempC,
+          finalMoisturePercent: lot.incaTrailLot?.finalMoisturePercent,
+          variety: lot.incaTrailLot?.variety,
+          mucilageBrix: lot.incaTrailLot?.mucilageBrix,
+          buyerStory: lot.incaTrailLot?.buyerStory,
+          notes: lot.incaTrailLot?.notes,
+        },
+        adminToken: readStoredAdminToken() || undefined,
+      });
+
+      if (res.ok && res.imageUrl) {
+        onSaveInventory({
+          ...inventory,
+          lots: inventory.lots.map((item) =>
+            item.lotId === lot.lotId
+              ? {
+                  ...item,
+                  imageUrl: res.imageUrl,
+                  imagePromptSummary: res.promptSummary || item.imagePromptSummary,
+                }
+              : item,
+          ),
+        });
+        setFeedbackMsg(`✓ Imagen IA actualizada para ${lot.lotId}.`);
+        window.setTimeout(() => setFeedbackMsg(''), 4500);
+      } else {
+        setImageGenError(`${lot.lotId}: ${res.error || 'Error al generar imagen'}`);
+      }
+    } finally {
+      setRegenLotId('');
+    }
+  };
+
+  const handleAddProduction = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedIncaLot || parsedWeights.length === 0 || !recipeText.trim()) return;
+    if (!selectedIncaLot || parsedWeights.length === 0 || !recipeText.trim() || creatingLotBusy) {
+      return;
+    }
+
+    setCreatingLotBusy(true);
+    setImageGenError('');
 
     const lotTitle = customTitle.trim() || selectedIncaLot.title;
     const lotShortNum = String(nextLotNumber).padStart(2, '0');
+    const altitudeText = formatAltitudeFromMeters(selectedIncaLot.altitudeM);
+
+    let finalImageUrl = previewImageUrl.trim();
+    let finalPromptSummary = previewPromptSummary;
+    let imageNote = '';
+
+    if (!finalImageUrl && autoGenerateImage) {
+      const gen = await requestDraftLotImage(lotTitle, altitudeText);
+      if (gen?.ok && gen.imageUrl) {
+        finalImageUrl = gen.imageUrl;
+        finalPromptSummary = gen.promptSummary || '';
+        imageNote = ' · imagen IA generada';
+      } else {
+        imageNote = ' · imagen por defecto (puedes regenerarla con IA en el listado)';
+        if (gen?.error) setImageGenError(gen.error);
+      }
+    }
 
     const newBlocks: InventoryBlock[] = parsedWeights.map((w, idx) => ({
       blockId: `#${lotShortNum}-${String(idx + 1).padStart(2, '0')}`,
@@ -198,10 +354,18 @@ export function AdminView({
       status: 'disponible',
     }));
 
+    const notesEs =
+      tastingNotesInput.trim() || 'Cacao púrpura vivo sin fermentar ni tostar';
+    const notesEn =
+      tastingNotesInput.trim() || 'Unfermented, unroasted living purple cacao';
+
     const newLot: InventoryLot = {
       lotId: nextLotId,
       active: true,
       pricePerKgUsd: parsedLotPricePerKg,
+      category: resolvedCategoryId,
+      imageUrl: finalImageUrl || undefined,
+      imagePromptSummary: finalPromptSummary || undefined,
       title: {
         es: lotTitle,
         en: lotTitle,
@@ -210,18 +374,18 @@ export function AdminView({
         es: selectedIncaLot.community || 'Zamora-Chinchipe, Ecuador',
         en: selectedIncaLot.community || 'Zamora-Chinchipe, Ecuador',
       },
-      altitude: '1,150 m s.n.m.',
+      altitude: altitudeText,
       harvestDate: selectedIncaLot.harvestDate || 'Noviembre 2026',
       tastingNotes: {
-        es: 'Cacao púrpura vivo sin fermentar ni tostar',
-        en: 'Unfermented, unroasted living purple cacao',
+        es: notesEs,
+        en: notesEn,
       },
       formula: {
         es: recipeText.trim(),
         en: recipeText.trim(),
       },
       tznk: {
-        badge: 'TZNK VERIFIED • INCA TRAIL',
+        badge: 'VERIFICADO • INCA TRAIL FOODS',
         url: selectedIncaLot.traceUrl || 'https://www.incatrailfoods.com/products',
       },
       incaTrailLot: selectedIncaLot,
@@ -236,10 +400,15 @@ export function AdminView({
     setWeightsCsv('');
     setExtraWeights([]);
     setCustomTitle('');
+    setTastingNotesInput('');
+    setPreviewImageUrl('');
+    setPreviewPromptSummary('');
+    setCategoryOverride('auto');
+    setCreatingLotBusy(false);
     setFeedbackMsg(
-      `✓ ${newLot.lotId} creado ($${parsedLotPricePerKg}/kg) con ${newBlocks.length} bloques disponibles.`,
+      `✓ ${newLot.lotId} (${resolvedCategoryMeta.name.es} · $${parsedLotPricePerKg}/kg) creado con ${newBlocks.length} bloques${imageNote}.`,
     );
-    window.setTimeout(() => setFeedbackMsg(''), 4500);
+    window.setTimeout(() => setFeedbackMsg(''), 6000);
   };
 
   const handleToggleBlockStatus = (lotId: string, blockId: string) => {
@@ -507,9 +676,37 @@ export function AdminView({
                 placeholder="100"
                 required
               />
+              <div className="admin-category-row">
+                <span
+                  className="admin-category-pill mono"
+                  style={{
+                    background: resolvedCategoryMeta.gradient,
+                    color: resolvedCategoryMeta.textOnGradient,
+                  }}
+                >
+                  {resolvedCategoryMeta.stars} {resolvedCategoryMeta.name.es} · $
+                  {parsedLotPricePerKg}/kg
+                </span>
+                <select
+                  aria-label="Categoría de rareza"
+                  className="admin-input admin-category-select mono"
+                  value={categoryOverride}
+                  onChange={(e) =>
+                    setCategoryOverride(e.target.value as LotCategoryId | 'auto')
+                  }
+                >
+                  <option value="auto">Auto según $/kg</option>
+                  {LOT_CATEGORY_ORDER.map((id) => (
+                    <option key={id} value={id}>
+                      {LOT_CATEGORIES[id].stars} {LOT_CATEGORIES[id].name.es} (
+                      {LOT_CATEGORIES[id].priceRangeLabel})
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
-            <div className="admin-field admin-field-full">
+            <div className="admin-field">
               <label htmlFor="lot-custom-title" className="mono admin-label">
                 Nombre de la partida (opcional)
               </label>
@@ -523,9 +720,23 @@ export function AdminView({
               />
             </div>
 
+            <div className="admin-field">
+              <label htmlFor="lot-tasting-notes" className="mono admin-label">
+                Notas de cata / Perfil de sabor (opcional)
+              </label>
+              <input
+                id="lot-tasting-notes"
+                type="text"
+                className="admin-input"
+                placeholder="Ej. Mora silvestre, flores blancas, vainilla amazónica y sal marina"
+                value={tastingNotesInput}
+                onChange={(e) => setTastingNotesInput(e.target.value)}
+              />
+            </div>
+
             <div className="admin-field admin-field-full">
               <label htmlFor="recipe-input" className="mono admin-label">
-                3. Receta / Fórmula (copiar desde calculadora)
+                3. Receta / Fórmula (copiar desde calculadora — se usa también para la imagen IA)
               </label>
               <textarea
                 id="recipe-input"
@@ -538,9 +749,78 @@ export function AdminView({
               />
             </div>
 
+            {/* Artwork generation block */}
+            <div className="admin-field admin-field-full">
+              <div className="admin-artwork-box">
+                <div className="admin-artwork-head">
+                  <div>
+                    <span className="mono admin-label">
+                      4. Imagen artística del lote (IA · categoría + ingredientes + datos Almacén)
+                    </span>
+                    <label className="admin-checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={autoGenerateImage}
+                        onChange={(e) => setAutoGenerateImage(e.target.checked)}
+                      />
+                      <span>
+                        Generar automáticamente al crear el lote si no hay vista previa
+                      </span>
+                    </label>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    disabled={!selectedIncaLot || !recipeText.trim() || imageGenBusy || creatingLotBusy}
+                    onClick={() => void handleGeneratePreviewImage()}
+                  >
+                    {imageGenBusy
+                      ? 'Generando imagen IA...'
+                      : previewImageUrl
+                        ? '↻ Regenerar vista previa IA'
+                        : '✨ Generar vista previa ahora'}
+                  </button>
+                </div>
+
+                <div className="admin-artwork-preview-row">
+                  <div className="admin-artwork-thumb-box">
+                    <img
+                      src={previewImageUrl || resolvedCategoryMeta.fallbackImage}
+                      alt="Vista previa de imagen del lote"
+                      className="admin-artwork-thumb"
+                    />
+                    <span className="admin-artwork-thumb-tag mono">
+                      {previewImageUrl ? 'IMAGEN IA LISTA' : 'FALLBACK CATEGORÍA'}
+                    </span>
+                  </div>
+                  <div className="admin-artwork-meta">
+                    <label htmlFor="lot-image-url" className="mono admin-label">
+                      URL de imagen (se llena automáticamente con IA o pega una URL propia)
+                    </label>
+                    <input
+                      id="lot-image-url"
+                      type="url"
+                      className="admin-input mono"
+                      placeholder="Se generará automáticamente al crear el lote..."
+                      value={previewImageUrl}
+                      onChange={(e) => setPreviewImageUrl(e.target.value)}
+                    />
+                    {previewPromptSummary && (
+                      <p className="mono admin-artwork-summary">
+                        Contexto usado: {previewPromptSummary}
+                      </p>
+                    )}
+                    {imageGenError && (
+                      <p className="mono admin-artwork-error">{imageGenError}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="admin-field admin-field-full">
               <label htmlFor="weights-csv" className="mono admin-label">
-                4. Gramaje de los bloques (separados por coma, ej: 178, 186, 150)
+                5. Gramaje de los bloques (separados por coma, ej: 178, 186, 150)
               </label>
               <div className="admin-weights-row">
                 <input
@@ -608,9 +888,19 @@ export function AdminView({
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={!selectedIncaLot || parsedWeights.length === 0 || !recipeText.trim()}
+              disabled={
+                !selectedIncaLot ||
+                parsedWeights.length === 0 ||
+                !recipeText.trim() ||
+                creatingLotBusy ||
+                imageGenBusy
+              }
             >
-              Agregar {parsedWeights.length || ''} bloques al stock →
+              {creatingLotBusy
+                ? autoGenerateImage && !previewImageUrl
+                  ? 'Generando imagen IA y creando lote...'
+                  : 'Creando lote...'
+                : `Agregar ${parsedWeights.length || ''} bloques al stock →`}
             </button>
             {feedbackMsg && <span className="admin-feedback mono">{feedbackMsg}</span>}
           </div>
@@ -638,23 +928,54 @@ export function AdminView({
               const availCount = lot.blocks.filter((b) => b.status === 'disponible').length;
               const lotPricePerKg = resolveLotPricePerKg(lot, inventory.config);
               const lotPricePerGram = resolveLotPricePerGram(lot, inventory.config);
+              const lotCat = resolveLotCategory(lot, inventory.config);
+              const lotImg = resolveLotImageUrl(lot, inventory.config);
+              const isRegenerating = regenLotId === lot.lotId;
               return (
                 <div key={lot.lotId} className="admin-lot-group">
                   <div className="admin-lot-header">
-                    <div>
-                      <span className="lot-id-badge">{lot.lotId}</span>
-                      <strong className="admin-lot-title">{lot.title.es}</strong>
-                      <span className="mono admin-lot-count">
-                        ${lotPricePerKg}/kg • ({availCount}/{lot.blocks.length} disp.)
-                      </span>
+                    <div className="admin-lot-title-wrap">
+                      <img
+                        src={lotImg}
+                        alt={lot.title.es}
+                        className="admin-lot-mini-thumb"
+                      />
+                      <div>
+                        <div className="admin-lot-badges-inline">
+                          <span className="lot-id-badge">{lot.lotId}</span>
+                          <span
+                            className="admin-category-pill mono"
+                            style={{
+                              background: lotCat.gradient,
+                              color: lotCat.textOnGradient,
+                            }}
+                          >
+                            {lotCat.stars} {lotCat.name.es} · ${lotPricePerKg}/kg
+                          </span>
+                          <span className="mono admin-lot-count">
+                            ({availCount}/{lot.blocks.length} disp.)
+                          </span>
+                        </div>
+                        <strong className="admin-lot-title">{lot.title.es}</strong>
+                      </div>
                     </div>
-                    <button
-                      type="button"
-                      className="btn-delete-lot mono"
-                      onClick={() => handleDeleteLot(lot.lotId)}
-                    >
-                      Eliminar lote
-                    </button>
+                    <div className="admin-lot-header-actions">
+                      <button
+                        type="button"
+                        className="btn-regen-img mono"
+                        disabled={Boolean(regenLotId)}
+                        onClick={() => void handleRegenerateExistingLotImage(lot)}
+                      >
+                        {isRegenerating ? 'Generando IA...' : '✨ Generar imagen IA'}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-delete-lot mono"
+                        onClick={() => handleDeleteLot(lot.lotId)}
+                      >
+                        Eliminar lote
+                      </button>
+                    </div>
                   </div>
 
                   <p className="admin-lot-formula">{lot.formula.es}</p>
