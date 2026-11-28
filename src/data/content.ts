@@ -198,17 +198,17 @@ export const CONTENT: Record<Lang, SiteContent> = {
       eyebrow: 'ZAMORA-CHINCHIPE • ORIGEN 5300 AÑOS',
       h1: 'NO ES CHOCOLATE. ES CACAO PÚRPURA VIVO.',
       subtitle:
-        'Pasta pura de cacao ancestral sin fermentar ni tostar. Corta virutas con cuchillo y prepárala en 30 segundos para enfoque mental, circulación y vitalidad.',
+        'Pasta pura de cacao ancestral sin fermentar ni tostar. Parte trozos de tu bloque, mídelos a cucharadas y prepárala en 30 segundos para enfoque mental, circulación y vitalidad.',
       chips: [
         '🟣 100% Púrpura Nativo',
         '⚡ Hasta 10× más antioxidantes',
-        '🔪 Bloques únicos de peso real',
+        '⚖️ Bloques únicos de peso real',
       ],
       ctaPrimary: 'Elegir mi bloque disponible →',
       ctaSecondary: '¿Por qué es diferente?',
       visualBadge: 'CORTE REAL • SIN FERMENTAR • ZAMORA, ECUADOR',
       visualAlt:
-        'Monolito artesanal de cacao púrpura vivo sin fermentar con fractura vítrea, virutas cortadas a cuchillo sobre báscula y bebida rubí-púrpura.',
+        'Monolito artesanal de cacao púrpura vivo sin fermentar con fractura mineral, trozos irregulares partidos del bloque y bebida rubí-púrpura.',
     },
     difference: {
       eyebrow: 'EL GRAN CONTRASTE • 5 DIFERENCIAS CLARAS',
@@ -301,32 +301,33 @@ export const CONTENT: Record<Lang, SiteContent> = {
     },
     howToUse: {
       eyebrow: 'CÓMO PREPARARLO EN 30 SEGUNDOS',
-      title: 'Toma un cuchillo y corta virutas finas de tu bloque',
-      subtitle: 'Sin moldes ni cálculos complicados: elige tu dosis según el momento del día.',
+      title: 'Parte trozos de tu bloque y mídelos a cucharadas',
+      subtitle:
+        'Al partir el bloque con cuchillo se quiebra de forma natural en trozos y migas de distintos tamaños: mide tu dosis fácilmente con cucharadas o cucharaditas.',
       doses: [
         {
           amount: '20 g',
-          measure: '2 cdas. de virutas',
+          measure: '2 cdas. soperas de trozos',
           title: 'Taza Diaria',
           tempBadge: '180 ml • 72–75 °C',
           description:
-            'Bate 20 seg en 180 ml de agua caliente a 72–75 °C (sin hervir) para enfoque limpio.',
+            'Mide 2 cucharadas de trozos partidos y bate 20 seg en 180 ml de agua caliente a 72–75 °C (sin hervir) para enfoque limpio.',
         },
         {
           amount: '40 g',
-          measure: '4 cdas. de virutas',
+          measure: '4 cdas. soperas de trozos',
           title: 'Dosis Ceremonial',
           tempBadge: '200 ml • 72–75 °C',
           description:
-            'Bate en 200 ml de agua a 72–75 °C para meditación o trabajo creativo profundo.',
+            'Mide 4 cucharadas de trozos y bate en 200 ml de agua a 72–75 °C para meditación o trabajo creativo profundo.',
         },
         {
-          amount: '10 g',
-          measure: 'Láminas finas',
+          amount: '5–10 g',
+          measure: '1–2 cdtas. o 1 trozo',
           title: 'Directo (Eat)',
           tempBadge: 'SIN AGUA',
           description:
-            'Deja fundir láminas delgadas en la boca antes de entrenar o trabajar.',
+            'Desprende un trozo o 1–2 cucharaditas de fragmentos y déjalos fundir en la boca antes de entrenar o trabajar.',
         },
       ],
     },
@@ -357,7 +358,7 @@ export const CONTENT: Record<Lang, SiteContent> = {
       fromPriceLabel: (price) => `desde ${price}`,
       compareAllLabel: 'Ver todas las cosechas',
       step2Eyebrow: 'PASO 2 · ELIGE EL TAMAÑO DE TU BLOQUE',
-      step2Title: 'Bloques cortados a mano de esta cosecha',
+      step2Title: 'Bloques artesanales de esta cosecha',
       steps: [
         '1. Elige tu cosecha arriba',
         '2. Escoge un bloque disponible según su peso',
@@ -466,17 +467,17 @@ export const CONTENT: Record<Lang, SiteContent> = {
       eyebrow: 'ZAMORA-CHINCHIPE • 5,300-YEAR ORIGIN',
       h1: "IT'S NOT CHOCOLATE. IT'S LIVING PURPLE CACAO.",
       subtitle:
-        'Pure unfermented, unroasted ancestral cacao paste. Shave with a knife and brew in 30 seconds for mental focus, circulation, and vitality.',
+        'Pure unfermented, unroasted ancestral cacao paste. Break off chunks from your block, measure by the spoonful, and brew in 30 seconds for mental focus, circulation, and vitality.',
       chips: [
         '🟣 100% Native Purple',
         '⚡ Up to 10× more antioxidants',
-        '🔪 Unique actual-weight blocks',
+        '⚖️ Unique actual-weight blocks',
       ],
       ctaPrimary: 'Pick my available block →',
       ctaSecondary: 'Why is it different?',
       visualBadge: 'REAL CUT • UNFERMENTED • ZAMORA, ECUADOR',
       visualAlt:
-        'Artisan unfermented deep-purple cacao monolith with glassy fracture, knife shavings on precision scale, and ruby-purple cacao brew.',
+        'Artisan unfermented deep-purple cacao monolith with natural mineral fracture, hand-broken irregular chunks, and ruby-purple cacao brew.',
     },
     difference: {
       eyebrow: 'THE CORE CONTRAST • 5 CLEAR DIFFERENCES',
@@ -569,31 +570,33 @@ export const CONTENT: Record<Lang, SiteContent> = {
     },
     howToUse: {
       eyebrow: 'HOW TO PREPARE IN 30 SECONDS',
-      title: 'Take a kitchen knife and shave fine curls from your block',
-      subtitle: 'No molds or complicated math—pick your dose for the moment.',
+      title: 'Break off chunks from your block and measure by the spoon',
+      subtitle:
+        'When cut with a knife, pure cacao naturally breaks and crumbles into irregular pieces of different sizes—making it easy to dose by tablespoons or teaspoons.',
       doses: [
         {
           amount: '20 g',
-          measure: '2 tbsp shavings',
+          measure: '2 tbsp broken chunks',
           title: 'Daily Cup',
           tempBadge: '180 ml • 72–75 °C',
           description:
-            'Whisk 20 sec in 180 ml hot water at 72–75 °C (do not boil) for clean focus.',
+            'Measure 2 tablespoons of broken pieces and whisk 20 sec in 180 ml hot water at 72–75 °C (do not boil) for clean focus.',
         },
         {
           amount: '40 g',
-          measure: '4 tbsp shavings',
+          measure: '4 tbsp broken chunks',
           title: 'Ceremonial Dose',
           tempBadge: '200 ml • 72–75 °C',
           description:
-            'Whisk in 200 ml water at 72–75 °C for meditation or deep creative sessions.',
+            'Measure 4 tablespoons of broken pieces and whisk in 200 ml water at 72–75 °C for meditation or deep creative sessions.',
         },
         {
-          amount: '10 g',
-          measure: 'Thin slices',
+          amount: '5–10 g',
+          measure: '1–2 tsp or 1 chunk',
           title: 'Direct (Eat)',
           tempBadge: 'NO WATER',
-          description: 'Let thin slices melt slowly on your palate before training or deep work.',
+          description:
+            'Break off a chunk or 1–2 teaspoons of crumbles and let them melt slowly on your palate before training or deep work.',
         },
       ],
     },
@@ -624,7 +627,7 @@ export const CONTENT: Record<Lang, SiteContent> = {
       fromPriceLabel: (price) => `from ${price}`,
       compareAllLabel: 'Show all harvests',
       step2Eyebrow: 'STEP 2 · PICK YOUR BLOCK WEIGHT',
-      step2Title: 'Hand-cast blocks from this harvest',
+      step2Title: 'Artisan blocks from this harvest',
       steps: [
         '1. Pick a harvest above',
         '2. Choose an available block by weight',

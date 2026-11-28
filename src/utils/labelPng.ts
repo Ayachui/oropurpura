@@ -231,7 +231,7 @@ export async function downloadBlockLabelPng(
   drawFooterLine('LOTE INCA TRAIL:', `${rawBatchCode} • ${harvestLabel}`, footerTop + 76);
   drawFooterLine(
     'USO:',
-    'Cortar virutas (20 g / 180 ml agua 72–75 °C)',
+    'Partir trozos (2 cdas. / 20 g en 180 ml agua 72–75 °C)',
     footerTop + 114,
   );
 

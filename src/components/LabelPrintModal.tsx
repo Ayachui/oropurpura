@@ -138,7 +138,7 @@ export function LabelPrintModal({
                 {harvestLabel}
               </div>
               <div>
-                <span className="label-foot-k">USO:</span> Cortar virutas (20 g / 180 ml agua 72–75 °C)
+                <span className="label-foot-k">USO:</span> Partir trozos (2 cdas. / 20 g en 180 ml agua 72–75 °C)
               </div>
             </div>
           </div>
