@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import type { SiteContent } from '../data/content';
 import type { InventoryConfig, InventoryLot, Lang } from '../types/inventory';
-import { buildBlockWhatsAppMessage, formatBlockPrice } from '../utils/whatsapp';
+import {
+  buildBlockWhatsAppMessage,
+  formatBlockPrice,
+  resolveLotPricePerGram,
+  resolveLotPricePerKg,
+} from '../utils/whatsapp';
 import { WhatsAppAction } from './WhatsAppAction';
 
 interface LiveLotShowcaseProps {
@@ -143,6 +148,8 @@ export function LiveLotShowcase({
           <div className="lots-stack">
             {visibleLots.map((lot) => {
               const lotTitle = lot.title[lang];
+              const lotPricePerKg = resolveLotPricePerKg(lot, config);
+              const lotPricePerGram = resolveLotPricePerGram(lot, config);
               const availableBlocks = lot.blocks
                 .filter((b) => b.status === 'disponible')
                 .sort((a, b) => a.weight_g - b.weight_g);
@@ -209,7 +216,7 @@ export function LiveLotShowcase({
 
                     <div className="lot-logistics-strip">
                       <span className="lot-logistics-marker mono" aria-hidden="true">
-                        $100/KG
+                        ${lotPricePerKg}/KG
                       </span>
                       <p className="lot-logistics-text">{t.showcase.logisticsNotice}</p>
                     </div>
@@ -220,10 +227,7 @@ export function LiveLotShowcase({
                     {orderedBlocks.map((block) => {
                       const isAvailable = block.status === 'disponible';
                       const isStarter = isAvailable && block.blockId === starterBlockId;
-                      const priceFormatted = formatBlockPrice(
-                        block.weight_g,
-                        config.pricePerGramUsd,
-                      );
+                      const priceFormatted = formatBlockPrice(block.weight_g, lotPricePerGram);
                       const cupsEstimate = Math.max(1, Math.round(block.weight_g / 20));
                       const waMessage = buildBlockWhatsAppMessage({
                         lang,

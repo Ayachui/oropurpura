@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react';
 import { CONTENT } from '../data/content';
 import type { IncaTrailLotLink, InventoryBlock, InventoryData, InventoryLot } from '../types/inventory';
 import { fetchIncaTrailLots } from '../utils/incaTrailLots';
-import { DEFAULT_WHATSAPP_TEMPLATES, formatBlockPrice } from '../utils/whatsapp';
+import {
+  DEFAULT_WHATSAPP_TEMPLATES,
+  formatBlockPrice,
+  resolveLotPricePerGram,
+  resolveLotPricePerKg,
+} from '../utils/whatsapp';
 import { LabelPrintModal } from './LabelPrintModal';
 
 interface AdminViewProps {
@@ -37,6 +42,9 @@ export function AdminView({
   const [lotsSource, setLotsSource] = useState<'loading' | 'api' | 'fallback'>('loading');
   const [selectedIncaId, setSelectedIncaId] = useState<string>('');
   const [customTitle, setCustomTitle] = useState<string>('');
+  const [lotPricePerKgInput, setLotPricePerKgInput] = useState<string>(
+    String(Math.round(inventory.config.pricePerGramUsd * 1000)),
+  );
   const [recipeText, setRecipeText] = useState<string>(
     inventory.lots[0]?.formula.es ||
       '70% cacao púrpura vivo pelado (sin cascarilla), panela orgánica, sal marina',
@@ -48,7 +56,9 @@ export function AdminView({
   // Section 03: Variables & Settings state
   const [whatsappPhone, setWhatsappPhone] = useState(inventory.config.whatsappPhone);
   const [pricePerGram, setPricePerGram] = useState(String(inventory.config.pricePerGramUsd));
-  const [b2bPricePerKg, setB2bPricePerKg] = useState(String(inventory.config.b2bPricePerKgUsd));
+  const [b2bDiscount, setB2bDiscount] = useState(
+    String(inventory.config.b2bDiscountPercent ?? 40),
+  );
   const [b2bMinKg, setB2bMinKg] = useState(String(inventory.config.b2bMinKgPerMonth));
   const [sheetsUrl, setSheetsUrl] = useState(inventory.config.googleSheetsCsvUrl || '');
 
@@ -103,6 +113,11 @@ export function AdminView({
     incaLots.find((l) => l.sourceBatchId === selectedIncaId) ?? incaLots[0] ?? null;
 
   const parsedWeights = parseWeightList(weightsCsv, extraWeights);
+  const parsedLotPricePerKg = (() => {
+    const n = Number.parseFloat(lotPricePerKgInput);
+    return Number.isFinite(n) && n > 0 ? n : inventory.config.pricePerGramUsd * 1000;
+  })();
+  const lotPricePerGramPreview = parsedLotPricePerKg / 1000;
 
   const nextLotNumber = inventory.lots.length + 1;
   const nextLotId = `LOTE #${String(nextLotNumber).padStart(2, '0')}`;
@@ -123,6 +138,7 @@ export function AdminView({
     const newLot: InventoryLot = {
       lotId: nextLotId,
       active: true,
+      pricePerKgUsd: parsedLotPricePerKg,
       title: {
         es: lotTitle,
         en: lotTitle,
@@ -158,7 +174,7 @@ export function AdminView({
     setExtraWeights([]);
     setCustomTitle('');
     setFeedbackMsg(
-      `✓ ${newLot.lotId} creado con ${newBlocks.length} bloques disponibles en la tienda.`,
+      `✓ ${newLot.lotId} creado ($${parsedLotPricePerKg}/kg) con ${newBlocks.length} bloques disponibles.`,
     );
     window.setTimeout(() => setFeedbackMsg(''), 4500);
   };
@@ -264,6 +280,23 @@ export function AdminView({
             </div>
 
             <div className="admin-field">
+              <label htmlFor="lot-price-kg" className="mono admin-label">
+                2. Precio por kg de este lote ($ USD / kg)
+              </label>
+              <input
+                id="lot-price-kg"
+                type="number"
+                step="1"
+                min="1"
+                className="admin-input mono"
+                value={lotPricePerKgInput}
+                onChange={(e) => setLotPricePerKgInput(e.target.value)}
+                placeholder="100"
+                required
+              />
+            </div>
+
+            <div className="admin-field admin-field-full">
               <label htmlFor="lot-custom-title" className="mono admin-label">
                 Nombre de la partida (opcional)
               </label>
@@ -279,7 +312,7 @@ export function AdminView({
 
             <div className="admin-field admin-field-full">
               <label htmlFor="recipe-input" className="mono admin-label">
-                2. Receta / Fórmula (copiar desde calculadora)
+                3. Receta / Fórmula (copiar desde calculadora)
               </label>
               <textarea
                 id="recipe-input"
@@ -294,7 +327,7 @@ export function AdminView({
 
             <div className="admin-field admin-field-full">
               <label htmlFor="weights-csv" className="mono admin-label">
-                3. Gramaje de los bloques (separados por coma, ej: 178, 186, 150)
+                4. Gramaje de los bloques (separados por coma, ej: 178, 186, 150)
               </label>
               <div className="admin-weights-row">
                 <input
@@ -350,7 +383,7 @@ export function AdminView({
                   {parsedWeights.map((w, idx) => (
                     <span key={`${w}-${idx}`} className="admin-preview-chip mono">
                       #{String(nextLotNumber).padStart(2, '0')}-{String(idx + 1).padStart(2, '0')} •{' '}
-                      {w} g • {formatBlockPrice(w, inventory.config.pricePerGramUsd)}
+                      {w} g • {formatBlockPrice(w, lotPricePerGramPreview)}
                     </span>
                   ))}
                 </div>
@@ -390,6 +423,8 @@ export function AdminView({
           <div className="admin-lots-list">
             {inventory.lots.map((lot) => {
               const availCount = lot.blocks.filter((b) => b.status === 'disponible').length;
+              const lotPricePerKg = resolveLotPricePerKg(lot, inventory.config);
+              const lotPricePerGram = resolveLotPricePerGram(lot, inventory.config);
               return (
                 <div key={lot.lotId} className="admin-lot-group">
                   <div className="admin-lot-header">
@@ -397,7 +432,7 @@ export function AdminView({
                       <span className="lot-id-badge">{lot.lotId}</span>
                       <strong className="admin-lot-title">{lot.title.es}</strong>
                       <span className="mono admin-lot-count">
-                        ({availCount}/{lot.blocks.length} disp.)
+                        ${lotPricePerKg}/kg • ({availCount}/{lot.blocks.length} disp.)
                       </span>
                     </div>
                     <button
@@ -423,7 +458,7 @@ export function AdminView({
                             <span className="mono admin-block-id">{block.blockId}</span>
                             <span className="admin-block-weight">{block.weight_g} g</span>
                             <span className="mono admin-block-price">
-                              {formatBlockPrice(block.weight_g, inventory.config.pricePerGramUsd)}
+                              {formatBlockPrice(block.weight_g, lotPricePerGram)}
                             </span>
                             <span
                               className={`block-status-badge mono ${
@@ -466,7 +501,7 @@ export function AdminView({
           onSubmit={(e) => {
             e.preventDefault();
             const parsedGram = Number.parseFloat(pricePerGram);
-            const parsedB2b = Number.parseFloat(b2bPricePerKg);
+            const parsedDiscount = Number.parseFloat(b2bDiscount);
             const parsedMin = Number.parseFloat(b2bMinKg);
 
             onSaveInventory({
@@ -476,8 +511,8 @@ export function AdminView({
                 whatsappPhone: whatsappPhone.replace(/[^\d]/g, '') || '593982873007',
                 pricePerGramUsd:
                   Number.isFinite(parsedGram) && parsedGram > 0 ? parsedGram : 0.1,
-                b2bPricePerKgUsd:
-                  Number.isFinite(parsedB2b) && parsedB2b > 0 ? parsedB2b : 60,
+                b2bDiscountPercent:
+                  Number.isFinite(parsedDiscount) && parsedDiscount > 0 ? parsedDiscount : 40,
                 b2bMinKgPerMonth:
                   Number.isFinite(parsedMin) && parsedMin > 0 ? parsedMin : 3,
                 googleSheetsCsvUrl: sheetsUrl.trim(),
@@ -528,7 +563,7 @@ export function AdminView({
 
             <div className="admin-field">
               <label htmlFor="cfg-price-g" className="mono admin-label">
-                Tarifa D2C ($ USD por gramo — ej: 0.10 = $100/kg)
+                Tarifa base por defecto ($ USD por gramo — ej: 0.10 = $100/kg)
               </label>
               <input
                 id="cfg-price-g"
@@ -542,16 +577,17 @@ export function AdminView({
             </div>
 
             <div className="admin-field">
-              <label htmlFor="cfg-b2b-price" className="mono admin-label">
-                Tarifa B2B ($ USD / kg)
+              <label htmlFor="cfg-b2b-discount" className="mono admin-label">
+                Descuento B2B (%)
               </label>
               <input
-                id="cfg-b2b-price"
+                id="cfg-b2b-discount"
                 type="number"
                 min="1"
+                max="90"
                 className="admin-input mono"
-                value={b2bPricePerKg}
-                onChange={(e) => setB2bPricePerKg(e.target.value)}
+                value={b2bDiscount}
+                onChange={(e) => setB2bDiscount(e.target.value)}
               />
             </div>
 
@@ -612,7 +648,7 @@ export function AdminView({
 
             <div className="admin-field">
               <label htmlFor="cfg-tpl-b2b-es" className="mono admin-label">
-                Mensaje WhatsApp B2B (ES) — {'{b2bPrice}'}, {'{b2bMin}'}
+                Mensaje WhatsApp B2B (ES) — {'{b2bDiscount}'}, {'{b2bMin}'}
               </label>
               <textarea
                 id="cfg-tpl-b2b-es"

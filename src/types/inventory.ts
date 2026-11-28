@@ -32,6 +32,7 @@ export interface IncaTrailLotLink {
 export interface InventoryLot {
   lotId: string;
   active: boolean;
+  pricePerKgUsd?: number;
   title: LocalizedText;
   origin: LocalizedText;
   altitude: string;
@@ -69,7 +70,8 @@ export interface LogisticsSettings {
 export interface InventoryConfig {
   whatsappPhone: string;
   pricePerGramUsd: number;
-  b2bPricePerKgUsd: number;
+  b2bDiscountPercent?: number;
+  b2bPricePerKgUsd?: number;
   b2bMinKgPerMonth: number;
   googleSheetsCsvUrl: string;
   whatsappTemplates?: Partial<WhatsAppTemplates>;

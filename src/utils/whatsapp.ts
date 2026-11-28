@@ -1,4 +1,4 @@
-import type { Lang, WhatsAppTemplates } from '../types/inventory';
+import type { InventoryConfig, InventoryLot, Lang, WhatsAppTemplates } from '../types/inventory';
 
 export const DEFAULT_WHATSAPP_PHONE = '593982873007';
 
@@ -8,14 +8,31 @@ export const DEFAULT_WHATSAPP_TEMPLATES: WhatsAppTemplates = {
   blockEn:
     'Hello ORO PÚRPURA! I would like to reserve Block {blockId} ({weight_g} g — {price}) from {lotId} ({lotTitle}). My city for Servientrega shipping calculation is: ',
   b2bEs:
-    '¡Hola Eugenio / ORO PÚRPURA! Me interesa el programa B2B (${b2bPrice}/kg desde {b2bMin} kg/mes) para mi cafetería, tienda o centro de retiro en: ',
+    '¡Hola Eugenio / ORO PÚRPURA! Me interesa el programa B2B ({b2bDiscount}% de descuento desde {b2bMin} kg/mes) para mi cafetería, tienda o centro de retiro en: ',
   b2bEn:
-    'Hello Eugenio / ORO PÚRPURA! I am interested in the B2B program (${b2bPrice}/kg starting at {b2bMin} kg/month) for my café, store, or retreat center in: ',
+    'Hello Eugenio / ORO PÚRPURA! I am interested in the B2B program ({b2bDiscount}% discount starting at {b2bMin} kg/month) for my café, store, or retreat center in: ',
   generalEs:
-    '¡Hola ORO PÚRPURA! Quiero consultar los bloques disponibles de cacao púrpura vivo ($100/kg) y coordinar envío Servientrega a mi ciudad: ',
+    '¡Hola ORO PÚRPURA! Quiero consultar los bloques disponibles de cacao púrpura vivo y coordinar envío Servientrega a mi ciudad: ',
   generalEn:
-    'Hello ORO PÚRPURA! I would like to check available living purple cacao blocks ($100/kg) and coordinate Servientrega shipping to my city: ',
+    'Hello ORO PÚRPURA! I would like to check available living purple cacao blocks and coordinate Servientrega shipping to my city: ',
 };
+
+export function resolveLotPricePerKg(
+  lot: Pick<InventoryLot, 'pricePerKgUsd'>,
+  config: Pick<InventoryConfig, 'pricePerGramUsd'>,
+): number {
+  if (typeof lot.pricePerKgUsd === 'number' && Number.isFinite(lot.pricePerKgUsd) && lot.pricePerKgUsd > 0) {
+    return lot.pricePerKgUsd;
+  }
+  return Math.round(config.pricePerGramUsd * 1000 * 100) / 100;
+}
+
+export function resolveLotPricePerGram(
+  lot: Pick<InventoryLot, 'pricePerKgUsd'>,
+  config: Pick<InventoryConfig, 'pricePerGramUsd'>,
+): number {
+  return resolveLotPricePerKg(lot, config) / 1000;
+}
 
 export function formatBlockPrice(weightGrams: number, pricePerGram = 0.1): string {
   const price = Math.round(weightGrams * pricePerGram * 100) / 100;
@@ -54,7 +71,7 @@ export function buildBlockWhatsAppMessage(params: Omit<BlockWhatsAppParams, 'pho
 
 export function buildB2BWhatsAppMessage(
   lang: Lang,
-  pricePerKg = 60,
+  discountPercent = 40,
   minKg = 3,
   templates?: Partial<WhatsAppTemplates>,
 ): string {
@@ -64,7 +81,7 @@ export function buildB2BWhatsAppMessage(
       : templates?.b2bEn?.trim() || DEFAULT_WHATSAPP_TEMPLATES.b2bEn;
 
   return tpl
-    .replace(/\{b2bPrice\}/g, String(pricePerKg))
+    .replace(/\{b2bDiscount\}/g, String(discountPercent))
     .replace(/\{b2bMin\}/g, String(minKg));
 }
 

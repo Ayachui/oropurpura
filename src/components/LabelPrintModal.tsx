@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import type { InventoryBlock, InventoryLot } from '../types/inventory';
-import { formatBlockPrice } from '../utils/whatsapp';
+import { formatBlockPrice, resolveLotPricePerGram } from '../utils/whatsapp';
 
 interface LabelPrintModalProps {
   lot: InventoryLot | null;
@@ -52,7 +52,8 @@ export function LabelPrintModal({
 
   if (!lot || !block) return null;
 
-  const priceFormatted = formatBlockPrice(block.weight_g, pricePerGramUsd);
+  const lotPricePerGram = resolveLotPricePerGram(lot, { pricePerGramUsd });
+  const priceFormatted = formatBlockPrice(block.weight_g, lotPricePerGram);
   const harvestLabel = typeof lot.harvestDate === 'string' ? lot.harvestDate : lot.harvestDate.es;
   const originLabel = lot.incaTrailLot?.community || lot.origin.es;
   const rawBatchCode = lot.incaTrailLot?.sourceBatchId || lot.lotId;

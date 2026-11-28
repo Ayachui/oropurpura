@@ -1,5 +1,5 @@
 import type { InventoryLot } from '../types/inventory';
-import { formatBlockPrice } from '../utils/whatsapp';
+import { formatBlockPrice, resolveLotPricePerGram } from '../utils/whatsapp';
 
 interface TraceabilityViewProps {
   lots: InventoryLot[];
@@ -50,6 +50,7 @@ export function TraceabilityView({
       : matchedLot.harvestDate.es;
   const inca = matchedLot.incaTrailLot;
   const incaTraceUrl = inca?.traceUrl || 'https://www.incatrailfoods.com/products';
+  const lotPricePerGram = resolveLotPricePerGram(matchedLot, { pricePerGramUsd });
 
   return (
     <section className="section trace-page">
@@ -85,7 +86,7 @@ export function TraceabilityView({
               <div>
                 <div className="mono trace-k">VALOR DEL BLOQUE</div>
                 <div className="trace-v-big mono">
-                  {formatBlockPrice(matchedBlock.weight_g, pricePerGramUsd)} USD
+                  {formatBlockPrice(matchedBlock.weight_g, lotPricePerGram)} USD
                 </div>
               </div>
               <div>

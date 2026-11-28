@@ -320,7 +320,7 @@ export const CONTENT: Record<Lang, SiteContent> = {
       ],
     },
     homeCtas: {
-      afterRitualEyebrow: 'MICRO-LOTES ACTIVOS • DESDE $26.50 SEGÚN PESO REAL',
+      afterRitualEyebrow: 'MICRO-LOTES ACTIVOS • PRECIO POR PESO REAL',
       afterRitualTitle: '¿Listo para probar tu primer monolito vivo?',
       afterRitualSub:
         'Explora los bloques disponibles del lote actual y reserva el tuyo en 1 clic por WhatsApp.',
@@ -328,14 +328,14 @@ export const CONTENT: Record<Lang, SiteContent> = {
       afterOriginEyebrow: 'ENVÍOS SERVIENTREGA (24–48 H) A LAS 24 PROVINCIAS',
       afterOriginTitle: 'Reserva tu bloque único del lote actual',
       afterOriginSub:
-        'Precio exacto por peso real ($100 / kg). El envío se calcula aparte al confirmar tu ciudad.',
+        'Precio exacto calculado según el peso real y la rareza de cada cosecha. El envío se calcula aparte al confirmar tu ciudad.',
       afterOriginBtn: 'Ir a la vitrina de bloques →',
     },
     showcase: {
       eyebrow: 'VITRINA VIVA • BLOQUES ÚNICOS DEL LOTE ACTUAL',
       title: 'Bloques Únicos del Lote Actual',
       subtitle:
-        'Cada monolito se moldea artesanalmente en Zamora con su peso real único. Tarifa transparente de $100 / kg ($0.10 / g).',
+        'Cada monolito se moldea artesanalmente en Zamora con su peso real único y tarifa transparente según la cosecha.',
       steps: [
         '1. Elige un bloque disponible',
         '2. Toca WhatsApp e indica tu ciudad',
@@ -351,7 +351,7 @@ export const CONTENT: Record<Lang, SiteContent> = {
       tastingLabel: 'Notas',
       formulaLabel: 'Composición',
       logisticsNotice:
-        'Precio exacto por peso real: $100 / kg ($0.10 / g). El envío por Servientrega a todo el Ecuador se calcula aparte al confirmar en WhatsApp.',
+        'Precio exacto por peso real según tarifa de este lote. El envío por Servientrega a todo el Ecuador se calcula aparte al confirmar en WhatsApp.',
       blockPrefix: 'BLOQUE',
       statusAvailable: 'DISPONIBLE',
       statusSold: 'VENDIDO',
@@ -384,12 +384,12 @@ export const CONTENT: Record<Lang, SiteContent> = {
     b2b: {
       eyebrow: 'ALIADOS B2B • CAFETERÍAS, CENTROS DE RETIRO, FACILITADORES Y TIENDAS',
       title: 'Abastecimiento profesional de cacao púrpura vivo',
-      priceValue: '$60 / kg',
-      priceLabel: 'Tarifa B2B — 40% de ahorro frente a D2C',
+      priceValue: '40% DCTO',
+      priceLabel: 'Descuento permanente para socios B2B sobre la tarifa de cada lote',
       minValue: 'Desde 3 kg / mes',
-      minLabel: 'Pedido mínimo mensual',
+      minLabel: 'Pedido mínimo mensual recurrente',
       description:
-        'Suministro directo de bloques vivos en Quito, Guayaquil, Cuenca y Vilcabamba. Envío Servientrega aparte según tarifa.',
+        'Los socios comerciales que realizan pedidos mensuales desde 3 kg reciben un 40% de descuento en cualquier lote disponible en Quito, Guayaquil, Cuenca y Vilcabamba. Envío Servientrega aparte según tarifa.',
       ctaLabel: 'Solicitar condiciones B2B por WhatsApp →',
     },
     logistics: {
@@ -575,7 +575,7 @@ export const CONTENT: Record<Lang, SiteContent> = {
       ],
     },
     homeCtas: {
-      afterRitualEyebrow: 'ACTIVE MICRO-LOTS • FROM $26.50 BY EXACT WEIGHT',
+      afterRitualEyebrow: 'ACTIVE MICRO-LOTS • ACTUAL-WEIGHT PRICING',
       afterRitualTitle: 'Ready to try your first living monolith?',
       afterRitualSub:
         'Browse available blocks from the current lot and reserve yours in 1 click on WhatsApp.',
@@ -583,14 +583,14 @@ export const CONTENT: Record<Lang, SiteContent> = {
       afterOriginEyebrow: 'SERVIENTREGA SHIPPING (24–48 H) ACROSS ALL 24 PROVINCES',
       afterOriginTitle: 'Reserve your unique block from the current lot',
       afterOriginSub:
-        'Exact actual-weight pricing ($100 / kg). Shipping is calculated separately for your city.',
+        'Exact pricing calculated from actual weight and harvest rarity. Shipping is calculated separately for your city.',
       afterOriginBtn: 'Open block storefront →',
     },
     showcase: {
       eyebrow: 'LIVE SHOWCASE • CURRENT MICRO-LOTS',
       title: 'Unique Blocks from the Current Lot',
       subtitle:
-        'Every monolith is hand-cast in Zamora with its own exact actual weight. Flat $100 / kg ($0.10 / g).',
+        'Every monolith is hand-cast in Zamora with its own exact actual weight and transparent per-lot rate.',
       steps: [
         '1. Pick an available block',
         '2. Tap WhatsApp & enter your city',
@@ -606,7 +606,7 @@ export const CONTENT: Record<Lang, SiteContent> = {
       tastingLabel: 'Notes',
       formulaLabel: 'Composition',
       logisticsNotice:
-        'Exact actual-weight pricing: $100 / kg ($0.10 / g). Servientrega shipping across Ecuador is calculated separately upon WhatsApp confirmation.',
+        'Exact actual-weight pricing based on this lot rate. Servientrega shipping across Ecuador is calculated separately upon WhatsApp confirmation.',
       blockPrefix: 'BLOCK',
       statusAvailable: 'AVAILABLE',
       statusSold: 'SOLD',
@@ -639,12 +639,12 @@ export const CONTENT: Record<Lang, SiteContent> = {
     b2b: {
       eyebrow: 'B2B PARTNERS • CAFÉS, RETREAT CENTERS, FACILITATORS & SHOPS',
       title: 'Professional supply of living purple cacao',
-      priceValue: '$60 / kg',
-      priceLabel: 'B2B rate — 40% savings vs. D2C',
+      priceValue: '40% OFF',
+      priceLabel: 'Permanent B2B partner discount off any lot rate',
       minValue: 'From 3 kg / mo',
-      minLabel: 'Minimum monthly order',
+      minLabel: 'Minimum monthly recurring order',
       description:
-        'Direct monolith supply in Quito, Guayaquil, Cuenca, and Vilcabamba. Servientrega shipping billed separately.',
+        'Business partners ordering 3 kg or more per month receive a 40% discount across any available lot in Quito, Guayaquil, Cuenca, and Vilcabamba. Servientrega shipping billed separately.',
       ctaLabel: 'Request B2B terms via WhatsApp →',
     },
     logistics: {

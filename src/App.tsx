@@ -151,13 +151,14 @@ export function App() {
     0,
   );
 
+  const b2bDiscount = inventory.config.b2bDiscountPercent ?? 40;
   const generalWaMessage = buildGeneralWhatsAppMessage(
     lang,
     inventory.config.whatsappTemplates,
   );
   const b2bWaMessage = buildB2BWhatsAppMessage(
     lang,
-    inventory.config.b2bPricePerKgUsd,
+    b2bDiscount,
     inventory.config.b2bMinKgPerMonth,
     inventory.config.whatsappTemplates,
   );
@@ -574,7 +575,7 @@ export function App() {
                     <div className="b2b-kpi-grid">
                       <div className="b2b-kpi-cell">
                         <div className="b2b-kpi-value mono">
-                          ${inventory.config.b2bPricePerKgUsd} / kg
+                          {lang === 'es' ? `${b2bDiscount}% DCTO` : `${b2bDiscount}% OFF`}
                         </div>
                         <div className="b2b-kpi-label">{t.b2b.priceLabel}</div>
                       </div>

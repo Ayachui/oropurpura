@@ -2,7 +2,7 @@
   "config": {
     "whatsappPhone": "593982873007",
     "pricePerGramUsd": 0.10,
-    "b2bPricePerKgUsd": 60,
+    "b2bDiscountPercent": 40,
     "b2bMinKgPerMonth": 3,
     "googleSheetsCsvUrl": ""
   },
@@ -10,6 +10,7 @@
     {
       "lotId": "LOTE #01",
       "active": true,
+      "pricePerKgUsd": 100,
       "title": {
         "es": "Cosecha Napurak — Sinergia Ancestral INCA",
         "en": "Napurak Harvest — INCA Ancestral Synergy"
@@ -46,6 +47,7 @@
     {
       "lotId": "LOTE #02",
       "active": true,
+      "pricePerKgUsd": 100,
       "title": {
         "es": "Cosecha Los Bayanes — Terruño Puro & Vainilla",
         "en": "Los Bayanes Harvest — Pure Terroir & Vanilla"
