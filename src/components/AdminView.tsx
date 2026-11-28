@@ -31,7 +31,7 @@ import {
   resolveLotPricePerGram,
   resolveLotPricePerKg,
 } from '../utils/whatsapp';
-import { LabelPrintModal } from './LabelPrintModal';
+import { downloadBlockLabelPng } from '../utils/labelPng';
 
 interface AdminViewProps {
   inventory: InventoryData;
@@ -132,10 +132,17 @@ export function AdminView({
   );
   const [settingsSavedMsg, setSettingsSavedMsg] = useState('');
 
-  const [printTarget, setPrintTarget] = useState<{
-    lot: InventoryLot;
-    block: InventoryBlock;
-  } | null>(null);
+  const [pngBusyKey, setPngBusyKey] = useState<string>('');
+
+  const handleSaveBlockPng = async (lot: InventoryLot, block: InventoryBlock) => {
+    const key = `${lot.lotId}-${block.blockId}`;
+    setPngBusyKey(key);
+    try {
+      await downloadBlockLabelPng(lot, block, inventory.config);
+    } finally {
+      setPngBusyKey('');
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -1014,9 +1021,12 @@ export function AdminView({
                             <button
                               type="button"
                               className="btn-print-label mono"
-                              onClick={() => setPrintTarget({ lot, block })}
+                              disabled={pngBusyKey === `${lot.lotId}-${block.blockId}`}
+                              onClick={() => void handleSaveBlockPng(lot, block)}
                             >
-                              Etiqueta 10×10 🖨
+                              {pngBusyKey === `${lot.lotId}-${block.blockId}`
+                                ? 'Guardando...'
+                                : 'Guardar PNG ⬇'}
                             </button>
                           </div>
                         </div>
@@ -1280,13 +1290,6 @@ export function AdminView({
           </div>
         </form>
       </div>
-
-      <LabelPrintModal
-        lot={printTarget?.lot ?? null}
-        block={printTarget?.block ?? null}
-        pricePerGramUsd={inventory.config.pricePerGramUsd}
-        onClose={() => setPrintTarget(null)}
-      />
     </section>
   );
 }
