@@ -1,6 +1,15 @@
 import { useEffect, useState } from 'react';
 import { CONTENT } from '../data/content';
 import type { IncaTrailLotLink, InventoryBlock, InventoryData, InventoryLot } from '../types/inventory';
+import {
+  checkAdminSession,
+  consumeAdminHashToken,
+  hasInjectedWallet,
+  openBaseAdminSso,
+  readStoredAdminToken,
+  signInAdminWithWallet,
+  signOutAdminSession,
+} from '../utils/adminAuth';
 import { fetchIncaTrailLots } from '../utils/incaTrailLots';
 import {
   DEFAULT_WHATSAPP_TEMPLATES,
@@ -38,6 +47,12 @@ export function AdminView({
   onBackToHome,
   onGoToShop,
 }: AdminViewProps) {
+  const [sessionWallet, setSessionWallet] = useState<string>('');
+  const [authChecking, setAuthChecking] = useState<boolean>(true);
+  const [authBusy, setAuthBusy] = useState<boolean>(false);
+  const [authError, setAuthError] = useState<string>('');
+  const [walletDetected] = useState<boolean>(() => hasInjectedWallet());
+
   const [incaLots, setIncaLots] = useState<IncaTrailLotLink[]>([]);
   const [lotsSource, setLotsSource] = useState<'loading' | 'api' | 'empty' | 'error'>('loading');
   const [lotsError, setLotsError] = useState<string>('');
@@ -100,6 +115,43 @@ export function AdminView({
   } | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+    const fromHash = consumeAdminHashToken();
+    const saved = fromHash || readStoredAdminToken();
+    void checkAdminSession(saved).then((res) => {
+      if (cancelled) return;
+      setSessionWallet(res.valid && res.wallet ? res.wallet : '');
+      setAuthChecking(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleWalletSignIn = async () => {
+    setAuthBusy(true);
+    setAuthError('');
+    try {
+      const result = await signInAdminWithWallet();
+      setSessionWallet(result.wallet);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Error de autenticación';
+      if (msg !== 'NO_INJECTED_WALLET') {
+        setAuthError(msg);
+      }
+    } finally {
+      setAuthBusy(false);
+    }
+  };
+
+  const handleWalletSignOut = async () => {
+    await signOutAdminSession();
+    setSessionWallet('');
+    setAuthError('');
+  };
+
+  useEffect(() => {
+    if (!sessionWallet) return;
     const controller = new AbortController();
     void fetchIncaTrailLots(controller.signal).then(({ lots, source, error }) => {
       if (controller.signal.aborted) return;
@@ -112,7 +164,7 @@ export function AdminView({
       });
     });
     return () => controller.abort();
-  }, [lotsRefreshKey]);
+  }, [sessionWallet, lotsRefreshKey]);
 
   const handleRefreshIncaLots = () => {
     setLotsSource('loading');
@@ -231,6 +283,75 @@ export function AdminView({
     URL.revokeObjectURL(url);
   };
 
+  if (authChecking || !sessionWallet) {
+    return (
+      <section className="section admin-page">
+        <div className="container">
+          <div className="storefront-page-bar">
+            <button type="button" className="btn-back-home mono" onClick={onBackToHome}>
+              ← Volver al inicio
+            </button>
+            <button type="button" className="btn-back-home mono" onClick={onGoToShop}>
+              Ver tienda (/bloques) →
+            </button>
+          </div>
+
+          <div
+            className="admin-card"
+            style={{
+              maxWidth: '520px',
+              margin: '48px auto',
+              textAlign: 'center',
+              padding: '36px 28px',
+            }}
+          >
+            <span className="mono admin-step-tag">UNIFIED BASE L2 ADMIN AUTH</span>
+            <h1 className="admin-card-title" style={{ marginTop: '10px', fontSize: '1.6rem' }}>
+              Acceso restringido · Admin Oro Púrpura
+            </h1>
+            <p className="section-subtitle" style={{ margin: '12px auto 24px', maxWidth: '420px' }}>
+              {authChecking
+                ? 'Verificando sesión administrativa de Base L2...'
+                : 'Conecta la misma billetera administrativa de Base L2 usada en Campo y Tzunki (rol creador o administrador) para gestionar stock, etiquetas y variables.'}
+            </p>
+
+            {!authChecking && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+                {walletDetected ? (
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    disabled={authBusy}
+                    onClick={() => void handleWalletSignIn()}
+                    style={{ width: '100%' }}
+                  >
+                    {authBusy ? 'Esperando firma de billetera...' : 'Conectar y firmar con billetera Base L2'}
+                  </button>
+                ) : null}
+
+                <button
+                  type="button"
+                  className={walletDetected ? 'btn btn-secondary' : 'btn btn-primary'}
+                  disabled={authBusy}
+                  onClick={openBaseAdminSso}
+                  style={{ width: '100%' }}
+                >
+                  {walletDetected ? 'Entrar vía Base SSO (Tzunki) ↗' : 'Iniciar sesión con Base SSO (Tzunki) ↗'}
+                </button>
+
+                {authError && (
+                  <p className="mono" style={{ color: '#f87171', fontSize: '0.8rem', marginTop: '4px' }}>
+                    {authError}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="section admin-page">
       <div className="container">
@@ -238,7 +359,17 @@ export function AdminView({
           <button type="button" className="btn-back-home mono" onClick={onBackToHome}>
             ← Volver al inicio
           </button>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <span className="mono admin-source-pill">
+              ● {sessionWallet.slice(0, 6)}…{sessionWallet.slice(-4)}
+            </span>
+            <button
+              type="button"
+              className="btn-back-home mono"
+              onClick={() => void handleWalletSignOut()}
+            >
+              Cerrar sesión
+            </button>
             <button type="button" className="btn-back-home mono" onClick={onGoToShop}>
               Ver tienda (/bloques) →
             </button>
