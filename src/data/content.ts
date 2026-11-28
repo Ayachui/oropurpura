@@ -368,8 +368,8 @@ export const CONTENT: Record<Lang, SiteContent> = {
       zamoraTitle: 'Origen Zamora & Proyecto TZNK',
       zamoraBody:
         'Recolección directa en bosques montanos de Zamora-Chinchipe (900–1,362 m) junto a familias Shuar (Napurak y Los Bayanes). Cada bloque viaja al vacío en bolsa metalizada con QR-pasaporte TZNK.',
-      tznkBadge: 'TZNK VERIFIED • PASAPORTE DE LOTE',
-      tznkLinkLabel: 'Verificar en tzunki.com ↗',
+      tznkBadge: 'TRAZABILIDAD VERIFICADA • INCA TRAIL FOODS',
+      tznkLinkLabel: 'Verificar en incatrailfoods.com ↗',
       founderRole: 'FUNDADOR • THE INCA TRAIL FOODS / CACAO ZAMORA',
       founderName: 'Eugenio Ayachui',
       founderBio:
@@ -623,8 +623,8 @@ export const CONTENT: Record<Lang, SiteContent> = {
       zamoraTitle: 'Zamora Origin & Proyecto TZNK',
       zamoraBody:
         'Direct harvest in Zamora-Chinchipe montane forests (900–1,362 m) with Shuar partner families (Napurak & Los Bayanes). Vacuum-sealed in foil pouches with a TZNK QR passport.',
-      tznkBadge: 'TZNK VERIFIED • LOT PASSPORT',
-      tznkLinkLabel: 'Verify at tzunki.com ↗',
+      tznkBadge: 'VERIFIED TRACEABILITY • INCA TRAIL FOODS',
+      tznkLinkLabel: 'Verify at incatrailfoods.com ↗',
       founderRole: 'FOUNDER • THE INCA TRAIL FOODS / CACAO ZAMORA',
       founderName: 'Eugenio Ayachui',
       founderBio:

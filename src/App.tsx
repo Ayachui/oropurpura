@@ -489,7 +489,7 @@ export function App() {
                     <div className="tznk-box">
                       <span className="tznk-box-badge mono">{t.origin.tznkBadge}</span>
                       <a
-                        href="https://tzunki.com"
+                        href="https://www.incatrailfoods.com/products"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="tznk-link mono"
@@ -701,8 +701,8 @@ export function App() {
               <a href="https://incatrailfoods.com" target="_blank" rel="noopener noreferrer">
                 incatrailfoods.com
               </a>
-              <a href="https://tzunki.com" target="_blank" rel="noopener noreferrer">
-                tzunki.com
+              <a href="https://www.incatrailfoods.com/products" target="_blank" rel="noopener noreferrer">
+                Trazabilidad Inca Trail
               </a>
               <a
                 href="/admin"

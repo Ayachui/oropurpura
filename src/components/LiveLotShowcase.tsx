@@ -173,7 +173,7 @@ export function LiveLotShowcase({
                       </div>
 
                       <a
-                        href={lot.tznk.url}
+                        href={lot.incaTrailLot?.traceUrl || lot.tznk.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="tznk-verified-badge mono"
